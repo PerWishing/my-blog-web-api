@@ -1,0 +1,30 @@
+﻿@using MyBlog.Web.ViewModels.Post
+@model PostViewModel
+
+
+<div id="card-@Model.Id" class="card border-primary">
+
+    @if (Model.ImagesNames?.Count() > 0)
+    {
+        string img = Model.ImagesNames.First();
+
+        <img src="@("~/postsImages/" + img)" asp-append-version="true" class="card-img-top" />
+    }
+    @*<img src="~/postsImages/Post-19_231840753.png" class="card-img-top" alt="...">*@
+    <div class="card-body">
+        @*_UserHeadPartial.cshtml*@
+        <div id="js-userhead-@(Model.AuthorsName)-@(Model.Id)" class="user-head  border-primary rounded">
+        </div>
+        <h5 class="card-title">@Model.Title</h5>
+
+        <p class="trimed-text">@Model.Text</p>
+        <p class="fs-6 fw-light">@Model.PublishDate</p>
+        <a class="stretched-link js-card" data-postid="@Model.Id" data-postauthor="@(Model.AuthorsName)" data-bs-toggle="modal" data-bs-target="#usersPostsModal">
+
+        </a>
+    </div>
+</div>
+
+<script>
+    $('#js-userhead-' + '@(Model.AuthorsName)' + '-' + '@(Model.Id)').load("/User/UserHead?username=" + '@(Model.AuthorsName)');
+</script>

@@ -1,0 +1,52 @@
+﻿@using MyBlog.Web.ViewModels.User
+@model UserViewModel
+
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authService
+
+<div class="p-3 mb-2 border" style="background-color: powderblue">
+    <h3>@Model.UserName</h3>
+    @if ((await authService.AuthorizeAsync(User, "AdminPolicy")).Succeeded)
+    {
+        @if (!Model.isBlocked)
+        {
+            <button id="blockUserBtn" class="btn btn-danger">Block User</button>
+
+            <br />
+        }
+        else
+        {
+            <button id="unblockUserBtn" class="btn btn-success">Unblock User</button>
+
+            <br />
+        }
+    }
+    <img src="@("~/avatars/" + Model.AvatarName)" asp-append-version="true" width="180px" />
+    @if (Model.isBlocked)
+    {
+        <p class="text-danger">BLOCKED</p>
+    }
+    else
+    {
+        <p>Info about user: @Model.AboutMyself</p>
+        @if (Model.isReader)
+        {
+            <p class="text-primary">Your Reader</p>
+        }
+
+        @if (Model.isFollowedByYou)
+        {
+            <p class="text-success">Followed by You</p>
+            <form onsubmit="return startOrStopReadUserFunc(this)" asp-controller="User" asp-action="StopRead" asp-route-readername="@Model.UserName" method="post">
+                <input type="submit" value="Stop Read" />
+            </form>
+        }
+        else if (User.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name != Model.UserName)
+        {
+            <form onsubmit="return startOrStopReadUserFunc(this)" asp-controller="User" asp-action="BecomeReader" asp-route-readername="@Model.UserName" method="post">
+                <input type="submit" value="Become Reader" />
+            </form>
+        }
+    }
+
+</div>

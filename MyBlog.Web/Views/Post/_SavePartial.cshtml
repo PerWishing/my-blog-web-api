@@ -1,0 +1,23 @@
+﻿@using MyBlog.Web.ViewModels.Post
+@model PostViewModel
+
+<span>Saves: @Model.SavesCount</span>
+
+@if (User.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name != Model.AuthorsName)
+{
+    @if (Model.IsSaved)
+    {
+        <p class="text-success">Saved</p>
+        <form onsubmit="return saveOrDeletePostFunc(this, @Model.Id)"
+        asp-controller="Post" asp-action="DeleteFormSavePost" asp-route-id="@Model.Id" method='post'>
+            <input class="btn btn-danger m-1" type='submit' value='Delete from saved' />
+        </form>
+    }
+    else
+    {
+        <form onsubmit="return saveOrDeletePostFunc(this, @Model.Id)"
+        asp-controller="Post" asp-action="SavePost" asp-route-id="@Model.Id" method='post'>
+            <input class="btn btn-info m-1" type='submit' value='Save post' />
+        </form>
+    }
+}

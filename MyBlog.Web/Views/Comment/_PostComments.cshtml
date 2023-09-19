@@ -1,0 +1,10 @@
+﻿@using MyBlog.Web.ViewModels.Comment
+@model IList<CommentViewModel>
+@{
+}
+<div class="p-3 mb-2 border">
+    @foreach (var c in Model)
+    {
+        @await Html.PartialAsync("_Comment", c)
+    }
+</div>

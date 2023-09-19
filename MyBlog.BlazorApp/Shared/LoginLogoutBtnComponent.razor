@@ -1,0 +1,27 @@
+﻿@using MyBlog.BlazorApp.Services.User.UserService;
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IUserService UserService
+
+<AuthorizeView>
+    <Authorized>
+        <button @onclick="Logout" class="btn btn-danger">Sign Out</button>
+    </Authorized>
+    <NotAuthorized>
+        <button @onclick="Login" class="btn btn-primary">Sign In</button>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    void Login()
+    {
+        NavigationManager.NavigateTo("login");
+    }
+
+    async Task Logout()
+    {
+        var result = await AuthStateProvider.GetAuthenticationStateAsync();
+        await UserService.SignOutAsync(result.User.Identity!.Name!);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+}

@@ -1,0 +1,53 @@
+﻿@using MyBlog.Web.ViewModels.User
+@model List<UserViewModel>
+@{
+}
+<input type="hidden" value="@ViewBag.ReaderOrFollowed" id="ReaderOrFollowed" />
+
+@if (Model.Count() > 0)
+{
+    <input type="hidden" value="@ViewBag.CurrentPage" id="currentUserPageHidden" />
+    <div class="my-1">
+        Current Page: @ViewBag.CurrentPage / @ViewBag.PageCount
+        @if ((int)ViewBag.CurrentPage > 1)
+        {
+            <button class="btn btn-primary js-prevPageForUserBtn"
+                    data-reader-or-followed="@ViewBag.ReaderOrFollowed" data-next-page="@((int)ViewBag.CurrentPage - 1)">
+                Previous
+            </button>
+        }
+        @if ((int)ViewBag.CurrentPage < (int)ViewBag.PageCount)
+        {
+            <button class="btn btn-primary js-nextPageForUserBtn"
+                    data-reader-or-followed="@ViewBag.ReaderOrFollowed" data-next-page="@((int)ViewBag.CurrentPage + 1)">
+                Next
+            </button>
+        }
+    </div>
+
+    <div class="list-unstyled my-2">
+        <ul>
+            @foreach (var r in Model)
+            {
+                <li style="list-style-type: none;" class="my-1">
+                    @await Html.PartialAsync("_UserHeadPartial", r)
+                </li>
+            }
+        </ul>
+    </div>
+}
+else
+{
+    if (ViewBag.ReaderOrFollowed < 1)
+    {
+        <p>
+            There are no readers.
+        </p>
+    }
+    else
+    {
+        <p>
+            There are no followed yet.
+        </p>
+    }
+}

@@ -1,0 +1,42 @@
+﻿@page "/register"
+
+<PageTitle>Register</PageTitle>
+
+<AuthorizeView Context="Auth">
+    <Authorized>
+        <span>You're authorized successfully!</span>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Register</h3>
+        <EditForm id="registerForm" Model="register" OnSubmit="HandleRegister">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class='registerfield'>
+                <label>UserName</label><br />
+                <InputText @bind-Value="register.UserName" class="js-userRegex" /><br />
+                <ValidationMessage For="@(() => register.UserName)" />
+            </div>
+            <div class='registerfield'>
+                <label>Password</label><br />
+                <InputText @bind-Value="register.Password" type='password' /><br />
+                <ValidationMessage For="@(() => register.Password)" />
+            </div>
+            <div class='registerfield'>
+                <label>Email</label><br />
+                <InputText @bind-Value="register.Email" /><br />
+                <ValidationMessage For="@(() => register.Email)" />
+            </div>
+            <div>
+                <a href="login">Sign In</a>
+            </div>
+
+            <div class='registeractions'>
+                <input id="registerBtn" type="submit" class="btn btn-primary" value="Register" />
+            </div>
+        </EditForm>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+}

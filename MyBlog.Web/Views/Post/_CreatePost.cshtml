@@ -1,0 +1,44 @@
+﻿@using MyBlog.Web.ViewModels.Post;
+@model PostViewModel
+@{
+}
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="createPostModalLabel">Create new post</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="formCreatePost" method='post' enctype="multipart/form-data">
+            <div class="modal-body">
+                <h2>Post Form</h2>
+                <div class='cpostfield'>
+                    <label>Title</label><br />
+                    <input asp-for="Title" /><br />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class='cpostfield'>
+                    <label>Text</label><br />
+                    <textarea asp-for="Text" class="form-control"></textarea>
+                    <span asp-validation-for="Text" class="text-danger"></span>
+                </div>
+                @*<input asp-for="Images" id="selectPostImage" type="file" accept="image/*" multiple />*@
+
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                    @*<div id="filediv"><input name="images" type="file" id="file" /></div>*@
+                    <input type="button" id="add_more" class="btn btn-primary" disabled="disabled" value="Add More Files" /><br><br>
+
+                </div>
+                <div class="modal-footer">
+                    <div class='cpostactions'>
+                        <input id="subCreatePost" type='submit' class="btn btn-primary"
+                        data-bs-dismiss="modal" disabled="disabled" value='Create' />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $('#add_more').attr('disabled', false);
+</script>

@@ -1,0 +1,41 @@
+﻿@using MyBlog.Web.ViewModels.Post;
+@model EditPostViewModel
+
+
+<div class="modal-header">
+    <h5 class="modal-title" id="createPostModalLabel">Update Post</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+@Html.HiddenFor(x=>x.Id)
+<form id="formEditPost" onsubmit="return editPostFunc(this, @Model.Id)" asp-controller="Post" asp-action="Update" asp-route-id="@Model.Id" method='post'>
+    <div class="modal-body">
+        <div class='epostfield'>
+            <label>Title</label><br />
+            <input asp-for="Title" value="@Model.Title" /><br />
+            <span asp-validation-for="Title"></span>
+        </div>
+        <div class='epostfield'>
+            <label>Text</label><br />
+            <textarea asp-for="Text" class="form-control"></textarea>
+            <span asp-validation-for="Text"></span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class='epostactions'>
+            <input id="subEditPost" type='submit' class="btn btn-success" data-bs-dismiss="modal" disabled="disabled" value='Save' />
+        </div>
+        <a onclick="editInPopup('@Url.Action("Index","Post",new {id = @Model.Id}, Context.Request.Scheme)')"
+           class="btn btn-danger text-white">Cancel</a>
+    </div>
+</form>
+<div id="imagesEditPartial">
+</div>
+
+
+<script>
+    var postId = $("#Id").val();
+
+    $('#imagesEditPartial').load("/Post/GetPostImagesNames?postid=" + postId)
+
+    $('#subEditPost').attr('disabled', false);
+</script>

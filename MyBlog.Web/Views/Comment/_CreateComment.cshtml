@@ -1,0 +1,18 @@
+﻿@using MyBlog.Web.ViewModels.Comment;
+@model CommentViewModel
+@{
+}
+<div>
+    <form onsubmit="return createCommentFunc(this,@Model.PostId, '@Model.PostAuthorsName')"
+    asp-controller="Comment" asp-action="Create" method='post'>
+        <div asp-validation-summary="All"></div>
+        <input asp-for="PostId" type="hidden" value="@Model.PostId" />
+        <p>
+            <label>Text</label><br />
+            <textarea asp-for="Text" class="form-control"></textarea><br />
+            <span asp-validation-for="Text"></span>
+        </p>
+
+        <input type='submit' value='Create' />
+    </form>
+</div>

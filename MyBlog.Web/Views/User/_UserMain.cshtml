@@ -1,0 +1,81 @@
+﻿
+<div>
+    <input type="hidden" value="@(User.Identity!.Name!)" id='userMainHidden'>
+    <div class="container">
+        <div class="row">
+            <div class="col-1">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <button class="btn btn-info mb-1 mt-1" id="myPostsButton">My posts</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-info mb-1" id="savedPostsButton">My saved</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-11">
+                <div class="row">
+                    <div class="col-9">
+                        <div id="userInfo">
+                        </div>
+
+                        <!-- Button trigger UploadUserAvatar modal -->
+                        <button id="uploadUserAvatarBtn" type="button" class="btn btn-primary js-useraction" data-bs-toggle="modal" data-bs-target="#uploadUserAvatarModal">
+                            Upload Avatar
+                        </button>
+                        <!-- UploadUserAvatar Modal PartialView -->
+                        <div class="modal fade" id="uploadUserAvatarModal" tabindex="-1" aria-labelledby="uploadUserAvatarModalLabel" aria-hidden="true">
+                        </div>
+
+                        <!-- Button trigger EditUser modal -->
+                        <button id="editUserBtn" type="button" class="btn btn-primary js-useraction" data-bs-toggle="modal" data-bs-target="#editUserModal">
+                            Edit user profile
+                        </button>
+                        <!-- EditUser Modal PartialView -->
+                        <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                        </div>
+
+                        <!-- Button trigger modal -->
+                        <button id="createPostBtn" type="button" class="btn btn-primary js-useraction" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                            Create new post
+                        </button>
+
+
+                        <!-- CreatePost Modal PartialView -->
+                        <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+                            <div id="createPost">
+                            </div>
+                        </div>
+
+
+                        <div id="userPosts" class="p-3 mb-2 border">
+                        </div>
+
+                    </div>
+                    <div class="col-3">
+                        <div class="p-3 mb-2 border" style="background-color: lightblue">
+                            <h4>Readers</h4>
+                            <input id="readersSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <div id="userReaders">
+                                
+                            </div>
+                        </div>
+                        <div class="p-3 mb-2 border" style="background-color: lightblue">
+                            <h4>Followed</h4>
+                            <input id="followedSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <div id="userFollowed">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        loadUserLayout($('#userMainHidden').val());
+    </script>
+
+</div>

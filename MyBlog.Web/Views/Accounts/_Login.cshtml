@@ -1,0 +1,48 @@
+﻿@using MyBlog.Web.ViewModels.Accounts;
+@model LoginViewModel
+@{
+}
+
+
+<!-- Login Modal -->
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="loginLabel">Log in</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="loginForm" onsubmit="return loginFunc(this)" asp-controller="Accounts" asp-action="Login" method="post">
+            <div class="modal-body">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class='loginfield'>
+                    <label>UserName</label><br />
+                    <input asp-for="UserName" class="js-userRegex" /><br />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class='loginfield'>
+                    <label>Password</label><br />
+                    <input type='password' asp-for="Password" /><br />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div id="valMes"></div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <div>
+                    <a onclick="returnRegisterView()" class="btn btn-link">Register</a>
+                </div>
+
+                <div class='loginactions'>
+                    <input id="loginBtn" type="submit" class="btn btn-primary" value="Log in" disabled="disabled" />
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+<script>
+   
+</script>

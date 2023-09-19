@@ -1,0 +1,36 @@
+﻿@using MyBlog.Web.ViewModels.User
+@model UserViewModel
+
+<div class="row">
+    <input type="hidden" value="@(Model.UserName)" id='userPublicHidden'>
+    <div class="col-8">
+        <div id="userInfo">
+        </div>
+        @if (!Model.isBlocked)
+        {
+            <div id="userPosts">
+            </div>
+        }
+    </div>
+    @if (!Model.isBlocked)
+    {
+        <div class="col-4">
+            <div class="p-3 mb-2 border" style="background-color: lightblue">
+                <h4>Readers</h4>
+                <input id="readersSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <div id="userReaders">
+                </div>
+            </div>
+            <div class="p-3 mb-2 border" style="background-color: lightblue">
+                <h4>Followed</h4>
+                <input id="followedSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <div id="userFollowed">
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    loadUserLayout($('#userPublicHidden').val());
+</script>

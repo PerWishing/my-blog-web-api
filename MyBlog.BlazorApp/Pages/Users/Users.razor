@@ -1,0 +1,20 @@
+﻿@page "/users"
+
+<PageTitle>Users</PageTitle>
+
+<h3>Users</h3>
+<p>
+    Current Page: @_usersPage.CurrentPage / @_usersPage.PageCount
+</p>
+
+@if (_usersPage.Users != null && _usersPage.Users.Any())
+{
+    @foreach (var user in _usersPage.Users)
+    {
+        <span>@user.UserName - @user.AboutMyself</span> <br />
+    }
+}
+
+@code {
+
+}
