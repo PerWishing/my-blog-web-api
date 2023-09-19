@@ -1,0 +1,10 @@
+﻿@page "/user/{Username?}"
+
+<h3>UserProfile</h3>
+
+<p>@Username</p>
+
+@code {
+    [Parameter]
+    public string? Username { get; set; }
+}

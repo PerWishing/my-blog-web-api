@@ -8,6 +8,6 @@ namespace MyBlog.BlazorApp.Services.User.UserService
         Task<JwtTokenDto?> RefreshTokenAsync(string accessToken, string refreshToken);
         Task<string?> SignInAsync(LoginDto login);
         Task<bool> SignOutAsync(string username);
-        Task<bool> RegisterAsync(RegisterDto register);
+        Task<string?> RegisterAsync(RegisterDto register);
     }
 }

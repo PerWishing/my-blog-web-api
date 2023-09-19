@@ -17,7 +17,7 @@
           "Microsoft.EntityFrameworkCore.Tools": "7.0.11",
           "Microsoft.Extensions.Identity.Core": "7.0.11",
           "Microsoft.jQuery.Unobtrusive.Validation": "4.0.0",
-          "MyBlog.BlazerApp": "1.0.0",
+          "MyBlog.BlazorApp": "1.0.0",
           "MyBlog.Domain": "1.0.0",
           "MyBlog.Persistance": "1.0.0",
           "SixLabors.ImageSharp": "3.0.2",
@@ -918,7 +918,7 @@
           "System.Text.Encodings.Web": "7.0.0"
         }
       },
-      "MyBlog.BlazerApp/1.0.0": {
+      "MyBlog.BlazorApp/1.0.0": {
         "dependencies": {
           "Blazor.Bootstrap": "1.10.1",
           "Blazored.LocalStorage": "4.4.0",
@@ -926,7 +926,7 @@
           "Microsoft.AspNetCore.Components.WebAssembly": "7.0.11"
         },
         "runtime": {
-          "MyBlog.BlazerApp.dll": {}
+          "MyBlog.BlazorApp.dll": {}
         }
       },
       "MyBlog.Domain/1.0.0": {
@@ -1656,7 +1656,7 @@
       "path": "system.text.json/7.0.0",
       "hashPath": "system.text.json.7.0.0.nupkg.sha512"
     },
-    "MyBlog.BlazerApp/1.0.0": {
+    "MyBlog.BlazorApp/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

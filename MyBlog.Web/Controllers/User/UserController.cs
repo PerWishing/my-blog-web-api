@@ -119,7 +119,6 @@ namespace MyBlog.Web.Controllers.User
         [Route("api/users")]
         [Route("api/users/{page?}")]
         [Route("api/users/{page?}/{search?}")]
-        [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
         public async Task<ActionResult<UsersPageViewModel>> Users(int page = 1, string? search = null)
         {

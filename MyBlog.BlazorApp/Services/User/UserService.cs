@@ -62,6 +62,14 @@ namespace MyBlog.BlazorApp.Services.User.UserService
                 {
                     return "User not found.";
                 }
+                if (apiResponse.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return "Wrong password.";
+                }
+                if (apiResponse.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return "User is blocked.";
+                }
                 return null;
             }
             catch (Exception ex)
@@ -80,7 +88,7 @@ namespace MyBlog.BlazorApp.Services.User.UserService
             await localStorage.RemoveItemAsync("RefreshToken");
             return true;
         }
-        public async Task<bool> RegisterAsync(RegisterDto register)
+        public async Task<string?> RegisterAsync(RegisterDto register)
         {
             try
             {
@@ -93,14 +101,18 @@ namespace MyBlog.BlazorApp.Services.User.UserService
                         UserName = register.UserName, 
                         Password = register.Password
                     });
-                    return true;
+                    return null;
                 }
-                return false;
+                if (apiResponse.StatusCode == HttpStatusCode.Conflict)
+                {
+                    return "User already exists.";
+                }
+                return null;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return false;
+                return null;
             }
         }
 

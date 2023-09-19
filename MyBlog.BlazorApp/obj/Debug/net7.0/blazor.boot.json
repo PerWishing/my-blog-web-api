@@ -2,7 +2,7 @@
   "cacheBootResources": true,
   "config": [ ],
   "debugBuild": true,
-  "entryAssembly": "MyBlog.BlazerApp",
+  "entryAssembly": "MyBlog.BlazorApp",
   "icuDataMode": 0,
   "linkerEnabled": false,
   "resources": {
@@ -201,13 +201,13 @@
       "mscorlib.dll": "sha256-3H8zsATEgIcRSRoZhWYtgfKT5VniJvhcYxLruf8koAY=",
       "netstandard.dll": "sha256-bbx+pnJNmXZyPqAgESJnWLJsbfuAl0UflLCdl9slPYE=",
       "System.Private.CoreLib.dll": "sha256-pUYF+nr8SzfBMCLc3FM2i\/YivXJlzztdLin+aUsoqP0=",
-      "MyBlog.BlazerApp.dll": "sha256-VcDj0UG\/Vrp\/WBfwOLRP3IWXaow5MAVhOaSQTliDMt8="
+      "MyBlog.BlazorApp.dll": "sha256-x78VylG0NlNYC7N+t\/5iAV7ICYYM9KCRq7yqFMyXu1I="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
-      "MyBlog.BlazerApp.pdb": "sha256-qGwQWHokNk85BuIQkantG8\/k8T1Wc8jZClZrfUxCdj0="
+      "MyBlog.BlazorApp.pdb": "sha256-JVLrzWMNq1RCijV8dnc0YiADmiq4d35SfC8aGe7FJpk="
     },
     "runtime": {
       "dotnet.7.0.4.jpwgd5bchg.js": "sha256-3l+4ZYRWpGMbBjNqeIqO9T\/65euaOzIvRlVX2SySvFQ=",

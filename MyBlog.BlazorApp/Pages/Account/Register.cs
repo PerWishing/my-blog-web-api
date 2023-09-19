@@ -14,12 +14,18 @@ namespace MyBlog.BlazorApp.Pages.Account
         private NavigationManager NavigationManager { get; set; } = null!;
 
         RegisterDto register = new RegisterDto();
+        List<string> ErrorMessages = new List<string>();
+
 
         async Task HandleRegister()
         {
-            await userService.RegisterAsync(register);
+            var error = await userService.RegisterAsync(register);
+            if (error != null)
+            {
+                ErrorMessages.Add(error);
+            }
+
             await AuthStateProvider.GetAuthenticationStateAsync();
-            NavigationManager.NavigateTo("/");
         }
         protected async override Task OnInitializedAsync()
         {
