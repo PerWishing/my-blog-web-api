@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyBlog.Persistance.Database;
 using MyBlog.Persistance.Identity;
 using MyBlog.Domain.Entities;
+using System.Xml.Linq;
 
 namespace MyBlog.Persistance.Repositories.ImageRepository
 {
@@ -155,6 +156,30 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
             return false;
         }
 
+        public async Task<string> GetAvatarAsync(string username)
+        {
+            var avatarQuery = await context.Avatars.Include(x => x.UserProfile)
+                .Where(x => x.UserProfile.UserName == username).FirstOrDefaultAsync();
+
+            string avatarName = "avatarSample.png";
+
+            if (avatarQuery != null)
+            {
+                avatarName = avatarQuery.ImageName;
+            }
+            var path = Path.Combine(webRootPath, "avatars", $"{avatarName}");
+            var imageFileStream = File.OpenRead(path);
+
+            using (var memoryStream = new MemoryStream())
+            {
+                imageFileStream.CopyTo(memoryStream);
+
+                byte[] byteImage = memoryStream.ToArray();
+                var base64String = Convert.ToBase64String(byteImage);
+                return base64String;
+            }
+        }
+
         public async Task<bool> UploadUserAvatarAsync(UploadAvatarRequest request)
         {
             var avatarQuery = await context.Avatars.Include(x => x.UserProfile)
@@ -165,7 +190,14 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
                 var imagePath = Path.Combine(webRootPath + "/avatars/" + avatarQuery.ImageName);
                 if (File.Exists(imagePath))
                 {
-                    File.Delete(imagePath);
+                    try
+                    {
+                        File.Delete(imagePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        await Console.Out.WriteLineAsync(ex.Message);
+                    }
                 }
                 //delete image record from db
                 context.Avatars.Remove(avatarQuery);
@@ -174,7 +206,7 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
             //Save image to wwwroot/avatars
             string wwwRootPath = webRootPath;
             string fileName = request.Username;
-            string extention = Path.GetExtension(request.ImageName);
+            string extention = Path.GetExtension(request.ImageFile.FileName);
             fileName = fileName + "_" + DateTime.Now.ToString("yymmssfff") + extention;
             string path = Path.Combine(wwwRootPath + "/avatars/" + fileName);
             //Resize by ImageSharp lib
@@ -201,12 +233,11 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
                 UploadDate = DateTime.Now,
             };
 
-            var user = await userManager.FindByNameAsync(request.Username);
+            var userProfile = await context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == request.Username);
 
-            if (user != null)
+            if (userProfile != null)
             {
-                //Uncomm
-                //userAvatar.User = user;
+                userAvatar.UserProfile = userProfile;
             }
 
             //Insert image record into db

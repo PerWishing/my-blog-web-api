@@ -21,7 +21,7 @@
             <br />
         }
     }
-    <img src="@("~/avatars/" + Model.AvatarName)" asp-append-version="true" width="180px" />
+    @*<img src="@("~/avatars/" + Model.AvatarName)" asp-append-version="true" width="180px" />*@
     @if (Model.isBlocked)
     {
         <p class="text-danger">BLOCKED</p>
@@ -29,7 +29,7 @@
     else
     {
         <p>Info about user: @Model.AboutMyself</p>
-        @if (Model.isReader)
+        @*@if (Model.isReader)
         {
             <p class="text-primary">Your Reader</p>
         }
@@ -40,13 +40,13 @@
             <form onsubmit="return startOrStopReadUserFunc(this)" asp-controller="User" asp-action="StopRead" asp-route-readername="@Model.UserName" method="post">
                 <input type="submit" value="Stop Read" />
             </form>
-        }
-        else if (User.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name != Model.UserName)
+        }*@
+        @*else if (User.Identity != null && User.Identity.IsAuthenticated && User.Identity.Name != Model.UserName)
         {
             <form onsubmit="return startOrStopReadUserFunc(this)" asp-controller="User" asp-action="BecomeReader" asp-route-readername="@Model.UserName" method="post">
                 <input type="submit" value="Become Reader" />
             </form>
-        }
+        }*@
     }
 
 </div>

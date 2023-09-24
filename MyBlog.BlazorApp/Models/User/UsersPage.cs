@@ -1,4 +1,4 @@
-﻿namespace MyBlog.BlazorApp.Models
+﻿namespace MyBlog.BlazorApp.Models.User
 {
     public class UsersPageDto
     {

@@ -1,6 +1,38 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\Flexer_232408964.png",
+      "PackagePath": "staticwebassets\\avatars\\Flexer_232408964.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\Jojo_232459843.png",
+      "PackagePath": "staticwebassets\\avatars\\Jojo_232459843.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\SomeNick_232308703.png",
+      "PackagePath": "staticwebassets\\avatars\\SomeNick_232308703.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\User1_234646242.png",
+      "PackagePath": "staticwebassets\\avatars\\User1_234646242.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\User2_231456427.png",
+      "PackagePath": "staticwebassets\\avatars\\User2_231456427.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\User4_233443356.png",
+      "PackagePath": "staticwebassets\\avatars\\User4_233443356.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\User5_235630282.png",
+      "PackagePath": "staticwebassets\\avatars\\User5_235630282.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\User6_232804848.png",
+      "PackagePath": "staticwebassets\\avatars\\User6_232804848.png"
+    },
+    {
       "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\avatarSample.png",
       "PackagePath": "staticwebassets\\avatars\\avatarSample.png"
     },

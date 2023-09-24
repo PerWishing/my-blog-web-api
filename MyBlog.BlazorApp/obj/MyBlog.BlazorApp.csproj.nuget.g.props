@@ -14,6 +14,7 @@
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)microsoft.aspnetcore.components.webassembly\7.0.11\build\net7.0\Microsoft.AspNetCore.Components.WebAssembly.props" Condition="Exists('$(NuGetPackageRoot)microsoft.aspnetcore.components.webassembly\7.0.11\build\net7.0\Microsoft.AspNetCore.Components.WebAssembly.props')" />
+    <Import Project="$(NuGetPackageRoot)chronos.blazor.cropper\1.2.16\buildTransitive\Chronos.Blazor.Cropper.props" Condition="Exists('$(NuGetPackageRoot)chronos.blazor.cropper\1.2.16\buildTransitive\Chronos.Blazor.Cropper.props')" />
     <Import Project="$(NuGetPackageRoot)blazor.bootstrap\1.10.1\buildTransitive\Blazor.Bootstrap.props" Condition="Exists('$(NuGetPackageRoot)blazor.bootstrap\1.10.1\buildTransitive\Blazor.Bootstrap.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">

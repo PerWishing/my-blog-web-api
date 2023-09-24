@@ -40,6 +40,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Users/ReadersOrFollowed.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnNcUmVhZGVyc09yRm9sbG93ZWQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Users/UploadAvatar.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnNcVXBsb2FkQXZhdGFyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Users/UserHead.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnNcVXNlckhlYWQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Users/UserHeadBig.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnNcVXNlckhlYWRCaWcucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Users/UserProfile.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnNcVXNlclByb2ZpbGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 

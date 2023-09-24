@@ -1,6 +1,4 @@
-loadAvatarScript = () => {
-
-
+function loadAvatarScript(){
     //Get Username from hidden input
     var username = $("#Username").val();
     //initialize Croppie

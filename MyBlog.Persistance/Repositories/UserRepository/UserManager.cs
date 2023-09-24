@@ -41,18 +41,7 @@ namespace MyBlog.Persistance.Repositories.UserRepository
             foreach (var item in queryResult)
             {
                 var response = new GetUserResponse();
-
-                var avatarQuery = new UserAvatar();
-                if (!item.UserProfile.IsBlocked)
-                {
-                    avatarQuery = await context.Avatars.Include(x => x.UserProfile)
-                    .Where(x => x.UserProfile == item.UserProfile).FirstOrDefaultAsync();
-                    if (avatarQuery != null)
-                    {
-                        response.AvatarName = avatarQuery.ImageName;
-                    }
-                }
-
+                                
                 response.UserName = item.UserName!;
                 response.AboutMyself = item.UserProfile.AboutMyself!;
                 response.IsBlocked = item.UserProfile.IsBlocked;
@@ -79,6 +68,7 @@ namespace MyBlog.Persistance.Repositories.UserRepository
             var pageCount = Math.Ceiling(queryCount / pageResults);
 
             var queryResult = await context.Users
+                .Include(u => u.UserProfile)
                 .Where(x => EF.Functions.Like(x.UserName!.ToUpper(), $"%{searchString}%"))
                 .Skip((page - 1) * (int)pageResults)
                 .Take((int)pageResults)
@@ -89,18 +79,7 @@ namespace MyBlog.Persistance.Repositories.UserRepository
             foreach (var item in queryResult)
             {
                 var response = new GetUserResponse();
-
-                var avatarQuery = new UserAvatar();
-                if (!item.UserProfile.IsBlocked)
-                {
-                    avatarQuery = await context.Avatars.Include(x => x.UserProfile)
-                    .Where(x => x.UserProfile == item.UserProfile).FirstOrDefaultAsync();
-                    if (avatarQuery != null)
-                    {
-                        response.AvatarName = avatarQuery.ImageName;
-                    }
-                }
-
+                                
                 response.UserName = item.UserName!;
                 response.AboutMyself = item.UserProfile.AboutMyself!;
                 response.IsBlocked = item.UserProfile.IsBlocked;
@@ -136,17 +115,6 @@ namespace MyBlog.Persistance.Repositories.UserRepository
             foreach (var item in queryResult)
             {
                 var response = new GetUserResponse();
-
-                var avatarQuery = new UserAvatar();
-                if (!item.Reader.IsBlocked)
-                {
-                    avatarQuery = await context.Avatars.Include(x => x.UserProfile)
-                    .Where(x => x.UserProfile == item.Reader).FirstOrDefaultAsync();
-                    if (avatarQuery != null)
-                    {
-                        response.AvatarName = avatarQuery.ImageName;
-                    }
-                }
 
                 response.UserName = item.Reader.UserName!;
                 response.IsBlocked = item.Reader.IsBlocked;
@@ -188,17 +156,6 @@ namespace MyBlog.Persistance.Repositories.UserRepository
             {
                 var response = new GetUserResponse();
 
-                var avatarQuery = new UserAvatar();
-                if (!item.Reader.IsBlocked)
-                {
-                    avatarQuery = await context.Avatars.Include(x => x.UserProfile)
-                    .Where(x => x.UserProfile == item.Reader).FirstOrDefaultAsync();
-                    if (avatarQuery != null)
-                    {
-                        response.AvatarName = avatarQuery.ImageName;
-                    }
-                }
-
                 response.UserName = item.Reader.UserName!;
                 response.IsBlocked = item.Reader.IsBlocked;
 
@@ -233,17 +190,6 @@ namespace MyBlog.Persistance.Repositories.UserRepository
             foreach (var item in queryResult)
             {
                 var response = new GetUserResponse();
-
-                var avatarQuery = new UserAvatar();
-                if (!item.User.IsBlocked)
-                {
-                    avatarQuery = await context.Avatars.Include(x => x.UserProfile)
-                    .Where(x => x.UserProfile == item.User).FirstOrDefaultAsync();
-                    if (avatarQuery != null)
-                    {
-                        response.AvatarName = avatarQuery.ImageName;
-                    }
-                }
 
                 response.UserName = item.User.UserName!;
                 response.IsBlocked = item.User.IsBlocked;
@@ -284,17 +230,6 @@ namespace MyBlog.Persistance.Repositories.UserRepository
             foreach (var item in queryResult)
             {
                 var response = new GetUserResponse();
-
-                var avatarQuery = new UserAvatar();
-                if (!item.User.IsBlocked)
-                {
-                    avatarQuery = await context.Avatars.Include(x => x.UserProfile)
-                    .Where(x => x.UserProfile == item.User).FirstOrDefaultAsync();
-                    if (avatarQuery != null)
-                    {
-                        response.AvatarName = avatarQuery.ImageName;
-                    }
-                }
 
                 response.UserName = item.User.UserName!;
                 response.IsBlocked = item.User.IsBlocked;
@@ -413,17 +348,6 @@ namespace MyBlog.Persistance.Repositories.UserRepository
                 response.AboutMyself = user.AboutMyself;
             }
 
-            var avatarQuery = new UserAvatar();
-            if (!user.IsBlocked)
-            {
-                avatarQuery = await context.Avatars.Include(x => x.UserProfile)
-                .FirstOrDefaultAsync(x => x.UserProfile == user);
-                if (avatarQuery != null)
-                {
-                    response.AvatarName = avatarQuery.ImageName;
-                }
-            }
-
             return response;
         }
 
@@ -441,6 +365,8 @@ namespace MyBlog.Persistance.Repositories.UserRepository
             user!.AboutMyself = request.AboutMyself;
 
             var result = context.UserProfiles.Update(user);
+
+            await context.SaveChangesAsync();
 
             return true;
         }

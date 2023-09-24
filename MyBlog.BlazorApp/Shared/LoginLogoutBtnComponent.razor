@@ -5,10 +5,16 @@
 
 <AuthorizeView>
     <Authorized>
-        <button @onclick="Logout" class="btn btn-danger">Sign Out</button>
+            <NavLink class="nav-link" @onclick="Logout">
+            <span class="oi oi-account-logout me-2"></span>Sign Out
+            </NavLink>
+        @*<button  class="btn btn-danger">Sign Out</button>*@
     </Authorized>
     <NotAuthorized>
-        <button @onclick="Login" class="btn btn-primary">Sign In</button>
+            <NavLink class="nav-link" @onclick="Login">
+            <span class="oi oi-account-login me-2"></span>Sign In
+            </NavLink>
+        @*<button @onclick="Login" class="btn btn-primary">Sign In</button>*@
     </NotAuthorized>
 </AuthorizeView>
 
@@ -23,5 +29,6 @@
         var result = await AuthStateProvider.GetAuthenticationStateAsync();
         await UserService.SignOutAsync(result.User.Identity!.Name!);
         await AuthStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/");
     }
 }

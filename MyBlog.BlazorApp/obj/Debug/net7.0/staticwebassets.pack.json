@@ -69,6 +69,10 @@
       "PackagePath": "staticwebassets\\icon-192.png"
     },
     {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\img\\1.png",
+      "PackagePath": "staticwebassets\\img\\1.png"
+    },
+    {
       "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },

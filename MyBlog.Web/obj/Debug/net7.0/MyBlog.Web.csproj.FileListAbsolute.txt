@@ -228,3 +228,4 @@ C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\refint\MyBlog.Web.
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.pdb
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.genruntimeconfig.cache
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\ref\MyBlog.Web.dll
+C:\Users\User\source\repos\MyBlog\MyBlog.Web\bin\Debug\net7.0\Blazor.Cropper.dll

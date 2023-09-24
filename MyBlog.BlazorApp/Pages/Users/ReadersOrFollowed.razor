@@ -1,0 +1,40 @@
+﻿<div class="p-3 mb-2 rounded my-grad-blue">
+    @if (IsReaders)
+    {
+        <h4>Readers</h4>
+    }
+    @if (IsFollowedUsers)
+    {
+        <h4>Followed</h4>
+    }
+    <input class="form-control me-2" type="search" placeholder="Enter user..." aria-label="Search"
+           @bind="@Search" @bind:event="oninput" @bind:after="PerformSearch">
+
+    @if (_usersPage.Users != null && _usersPage.Users.Any())
+    {
+        @foreach (var user in _usersPage.Users)
+        {
+            <NavLink href="@($"user/{user.UserName}")">
+                <UserHead Username="@user.UserName" />
+            </NavLink>
+        }
+        <div class="d-flex justify-content-end">
+            <span class="align-middle me-1">@_usersPage.CurrentPage / @_usersPage.PageCount</span>
+            @if ((int)_usersPage.CurrentPage > 1)
+            {
+                <button class="btn btn-outline-light" @onclick="OnPrevPage">
+                    <span class="oi oi-arrow-left"></span>
+                </button>
+            }
+            @if ((int)_usersPage.CurrentPage < (int)_usersPage.PageCount)
+            {
+                <button class="btn btn-outline-light" @onclick="OnNextPage">
+                    <span class="oi oi-arrow-right"></span>
+                </button>
+            }
+        </div>
+    }
+</div>
+@code {
+
+}

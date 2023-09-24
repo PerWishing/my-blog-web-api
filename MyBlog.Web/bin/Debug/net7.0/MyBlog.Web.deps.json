@@ -49,6 +49,18 @@
           }
         }
       },
+      "Chronos.Blazor.Cropper/1.2.16": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Components.Web": "7.0.11",
+          "SixLabors.ImageSharp": "3.0.2"
+        },
+        "runtime": {
+          "lib/net6.0/Blazor.Cropper.dll": {
+            "assemblyVersion": "1.2.16.0",
+            "fileVersion": "1.2.16.0"
+          }
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "runtime": {
           "lib/net6.0/Humanizer.dll": {
@@ -922,8 +934,10 @@
         "dependencies": {
           "Blazor.Bootstrap": "1.10.1",
           "Blazored.LocalStorage": "4.4.0",
+          "Chronos.Blazor.Cropper": "1.2.16",
           "Microsoft.AspNetCore.Components.Authorization": "7.0.11",
-          "Microsoft.AspNetCore.Components.WebAssembly": "7.0.11"
+          "Microsoft.AspNetCore.Components.WebAssembly": "7.0.11",
+          "Microsoft.AspNetCore.Http": "2.2.0"
         },
         "runtime": {
           "MyBlog.BlazorApp.dll": {}
@@ -969,6 +983,13 @@
       "sha512": "sha512-zuXZB4/WW3Pr1761peemffdkjt09lbOP1wAkSDTKl7BTbA9V5e8LxS6MNfmyHW+BJzXrNDq90E2Y+AfIfnIbWQ==",
       "path": "blazored.localstorage/4.4.0",
       "hashPath": "blazored.localstorage.4.4.0.nupkg.sha512"
+    },
+    "Chronos.Blazor.Cropper/1.2.16": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BJCydzD77J4r1QoNDnprfIUNv6sy8XwIQF93n5cuGMgIiOMylsBCJrqudrRZTjvDfecdTuaR0sEc8KaVNPSfnw==",
+      "path": "chronos.blazor.cropper/1.2.16",
+      "hashPath": "chronos.blazor.cropper.1.2.16.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",

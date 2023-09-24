@@ -4,6 +4,13 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Net;
+using System.IO;
+using Microsoft.Win32;
+using System.Collections;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+using MyBlog.BlazorApp.Models.User;
 
 namespace MyBlog.BlazorApp.Services.User.UserService
 {
@@ -17,11 +24,66 @@ namespace MyBlog.BlazorApp.Services.User.UserService
             this.httpClient = httpClient;
             this.localStorage = localStorage;
         }
-        public async Task<UsersPageDto?> GetUsersAsync()
+
+        public async Task<string?> UploadAvatarAsync(byte[] blob)
         {
             try
             {
-                var apiResponse = await httpClient.GetStreamAsync("api/users");
+                var multipartContent = new MultipartFormDataContent();
+                var byteArrayContent = new ByteArrayContent(blob);
+                multipartContent.Add(byteArrayContent, "blob", "img.png");
+                var apiResponse = await httpClient.PostAsync("api/avatars/upload", multipartContent);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<UserDto?> GetUserByNameAsync(string username)
+        {
+            try
+            {
+                var apiResponse = await httpClient.GetStreamAsync($"api/user/{username}");
+
+                var userDto = await JsonSerializer.DeserializeAsync<UserDto>(apiResponse, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
+
+                var avatarBase64Str = await httpClient.GetStringAsync($"api/avatars/{username}");
+                avatarBase64Str = avatarBase64Str.Replace("\"", "");
+                userDto!.AvatarSrc = "data:image/png;base64," + avatarBase64Str;
+
+                return userDto;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<UsersPageDto?> GetUsersAsync(int page = 1, string? search = null)
+        {
+            try
+            {
+                Stream apiResponse = null;
+                if (string.IsNullOrEmpty(search))
+                {
+                    apiResponse = await httpClient.GetStreamAsync($"api/users/{page}");
+                }
+                else
+                {
+                    apiResponse = await httpClient.GetStreamAsync($"api/users/{search}/{page}");
+                }
 
                 var usersPage = await JsonSerializer.DeserializeAsync<UsersPageDto>(apiResponse, new JsonSerializerOptions
                 {
@@ -29,6 +91,173 @@ namespace MyBlog.BlazorApp.Services.User.UserService
                 });
 
                 return usersPage;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<UserDto?> GetUserAvatarAsync(string username)
+        {
+            try
+            {
+                var userDto = new UserDto { UserName = username };
+
+                var avatarBase64Str = await httpClient.GetStringAsync($"api/avatars/{username}");
+                avatarBase64Str = avatarBase64Str.Replace("\"", "");
+                userDto!.AvatarSrc = "data:image/png;base64," + avatarBase64Str;
+
+                return userDto;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<string?> EditUserAsync(UserDto userDto)
+        {
+            try
+            {
+                var editUserDto = new EditUserDto
+                {
+                    UserName = userDto.UserName,
+                    AboutMyself = userDto.AboutMyself
+                };
+
+                var itemJson = new StringContent(JsonSerializer.Serialize(editUserDto), Encoding.UTF8, "application/json");
+                var apiResponse = await httpClient.PutAsync("api/user/edit", itemJson);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                if (apiResponse.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return "You can't edit this user.";
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<IsReaderOrFollowedDto?> IsReaderOrFollowedAsync(string username)
+        {
+            try
+            {
+                var apiResponse = await httpClient.GetStreamAsync($"api/user/reader-or-followed/{username}");
+
+                var isReaderOrFollowedDto = await JsonSerializer.DeserializeAsync<IsReaderOrFollowedDto>(apiResponse,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    });
+
+                return isReaderOrFollowedDto;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<UsersPageDto?> GetReadersAsync(string username, int page = 1, string? search = null)
+        {
+            try
+            {
+                Stream apiResponse = null;
+
+                if (string.IsNullOrEmpty(search))
+                {
+                    apiResponse = await httpClient.GetStreamAsync($"api/readers/{username}/{page}");
+                }
+                else
+                {
+                    apiResponse = await httpClient.GetStreamAsync($"api/readers/{username}/{search}/{page}");
+                }
+                var usersPage = await JsonSerializer.DeserializeAsync<UsersPageDto>(apiResponse, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
+
+                return usersPage;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<UsersPageDto?> GetFollowedUsersAsync(string username, int page = 1, string? search = null)
+        {
+            try
+            {
+                Stream apiResponse = null;
+
+                if (string.IsNullOrEmpty(search))
+                {
+                    apiResponse = await httpClient.GetStreamAsync($"api/followed/{username}/{page}");
+                }
+                else
+                {
+                    apiResponse = await httpClient.GetStreamAsync($"api/followed/{username}/{search}/{page}");
+                }
+
+                var usersPage = await JsonSerializer.DeserializeAsync<UsersPageDto>(apiResponse, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
+
+                return usersPage;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<string?> StartReadAsync(string username)
+        {
+            try
+            {
+                var itemJson = new StringContent(JsonSerializer.Serialize(username), Encoding.UTF8, "application/json");
+                var apiResponse = await httpClient.PostAsync($"api/user/start-read/{username}", itemJson);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                return "Wrong user name.";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<string?> StopReadAsync(string username)
+        {
+            try
+            {
+                var itemJson = new StringContent(JsonSerializer.Serialize(username), Encoding.UTF8, "application/json");
+                var apiResponse = await httpClient.PostAsync($"api/user/stop-read/{username}", itemJson);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                return "Wrong user name.";
             }
             catch (Exception ex)
             {
@@ -97,8 +326,9 @@ namespace MyBlog.BlazorApp.Services.User.UserService
 
                 if (apiResponse.IsSuccessStatusCode)
                 {
-                    await SignInAsync(new LoginDto { 
-                        UserName = register.UserName, 
+                    await SignInAsync(new LoginDto
+                    {
+                        UserName = register.UserName,
                         Password = register.Password
                     });
                     return null;

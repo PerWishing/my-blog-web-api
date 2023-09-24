@@ -24,6 +24,7 @@ namespace MyBlog.BlazorApp.Pages.Account
                 ErrorMessages.Add(error);
             }
             await AuthStateProvider.GetAuthenticationStateAsync();
+            NavigationManager.NavigateTo("/user");
         }
         protected async override Task OnInitializedAsync()
         {
