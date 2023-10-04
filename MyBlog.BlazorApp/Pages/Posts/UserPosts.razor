@@ -1,0 +1,41 @@
+﻿@if (_posts.Posts != null && _posts.Posts.Any())
+{
+    <div>
+        @if (!IsSaved)
+        {
+            <span class="fs-4 me-1">@(Username)'s posts:</span>
+        }
+        else
+        {
+            <span class="fs-4 me-1">@(Username)'s saved posts:</span>
+        }
+        <span class="fs-4 me-1">@_posts.CurrentPage / @_posts.PageCount</span>
+        @if ((int)_posts.CurrentPage > 1)
+        {
+            <button class="btn btn-outline-light" @onclick="OnPrevPage">
+                <span class="oi oi-arrow-left"></span>
+            </button>
+        }
+        @if ((int)_posts.CurrentPage < (int)_posts.PageCount)
+        {
+            <button class="btn btn-outline-light" @onclick="OnNextPage">
+                <span class="oi oi-arrow-right"></span>
+            </button>
+        }
+    </div>
+
+    <div id="myMasonry" class="row" data-masonry='{"percentPosition": true }'>
+        @foreach (var post in _posts.Posts)
+        {
+            <div class="col-md-4 mb-3">
+                <NavLink href="@($"post/{post.Id}")">
+                    <PostCard PostId="@(post.Id)" />
+                </NavLink>
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+}

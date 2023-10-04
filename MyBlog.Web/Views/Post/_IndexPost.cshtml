@@ -18,16 +18,16 @@
     <h4>@Model.Title</h4>
     <p>@Model.Text</p>
 
-    @if (Model.ImagesNames?.Count() == 1)
+    @*@if (Model.ImagesNames?.Count() == 1)
     {
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <img src="@("~/postsImages/" + Model.ImagesNames.First())" asp-append-version="true" class="mx-auto d-block" />
             </div>
         </div>
-    }
+    }*@
 
-    @if (Model.ImagesNames?.Count() > 1)
+    @*@if (Model.ImagesNames?.Count() > 1)
     {
         <!-- Carousel -->
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-interval="false" data-bs-ride="carousel">
@@ -74,7 +74,7 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-    }
+    }*@
 
     <p class="fs-6 fw-light">@Model.PublishDate</p>
 

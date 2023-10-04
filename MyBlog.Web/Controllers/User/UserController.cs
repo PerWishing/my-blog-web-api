@@ -90,8 +90,8 @@ namespace MyBlog.Web.Controllers.User
                 isBlocked = user.IsBlocked
             };
 
-            //userViewModel.isReader = await userManager.IsReaderAsync(User.Identity!.Name!, username);
-            //userViewModel.isFollowedByYou = await userManager.isFollowedByYouAsync(User.Identity!.Name!, username);
+            var roles = await userManager.GetRolesAsync(username);
+            userViewModel.isAdmin = roles.Where(r => r == "Admin").Any();
 
             return Ok(userViewModel);
         }
@@ -134,7 +134,6 @@ namespace MyBlog.Web.Controllers.User
         [Route("api/readers/{username}")]
         [Route("api/readers/{username}/{page?}")]
         [Route("api/readers/{username}/{search?}/{page?}")]
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<UsersPageViewModel>> UserReaders(string username, int page = 1, string? search = null)
         {
@@ -180,7 +179,6 @@ namespace MyBlog.Web.Controllers.User
         [Route("api/followed/{username}")]
         [Route("api/followed/{username}/{page?}")]
         [Route("api/followed/{username}/{search?}/{page?}")]
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<UsersPageViewModel>> UserFollowedUsers(string username, int page = 1, string search = "")
         {

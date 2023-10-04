@@ -22,7 +22,7 @@ namespace MyBlog.Persistance.Repositories.PostRepository
 
         public async Task<int> CreateAsync(CreatePostRequest request)
         {
-            var author = await userManager.FindByNameAsync(request.AuthorsName);
+            var author = await context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == request.AuthorsName!);
             if (author == null)
             {
                 return 0;
@@ -33,7 +33,7 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                 Title = request.Title,
                 Text = request.Text,
                 PublishDate = DateTime.Now,
-                //Author = author
+                Author = author
             };
 
             context.Add(post);
@@ -115,14 +115,6 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                     AuthorsName = p.Author.UserName!
                 };
 
-                if (p.Images != null)
-                {
-                    post.ImagesNames = new List<string>();
-                    foreach (var image in p.Images)
-                    {
-                        post.ImagesNames.Add(image.ImageName);
-                    }
-                }
                 posts.Add(post);
             }
 
@@ -148,7 +140,6 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                 .Where(x => x.Author.IsBlocked == false)
                 .OrderByDescending(x => x.PublishDate)
                 .Include(x => x.Author)
-                .Include(x => x.Images)
                 .Skip((page - 1) * (int)pageResultsForUserPosts)
                 .Take((int)pageResultsForUserPosts)
                 .ToListAsync();
@@ -166,14 +157,6 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                     AuthorsName = p.Author.UserName!
                 };
 
-                if (p.Images != null)
-                {
-                    post.ImagesNames = new List<string>();
-                    foreach (var image in p.Images)
-                    {
-                        post.ImagesNames.Add(image.ImageName);
-                    }
-                }
                 posts.Add(post);
             }
 
@@ -226,14 +209,6 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                     AuthorsName = p.Author.UserName!
                 };
 
-                if (p.Images != null)
-                {
-                    post.ImagesNames = new List<string>();
-                    foreach (var image in p.Images)
-                    {
-                        post.ImagesNames.Add(image.ImageName);
-                    }
-                }
                 posts.Add(post);
             }
 
@@ -246,11 +221,15 @@ namespace MyBlog.Persistance.Repositories.PostRepository
             return GetPostsPageResponse;
         }
 
-        public async Task<GetPostResponse> GetByIdAsync(int id)
+        public async Task<GetPostResponse?> GetByIdAsync(int id)
         {
             var queryResult = await context.Posts.Include(x => x.Author)
-                .Include(x => x.Images)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (queryResult == null)
+            {
+                return null;
+            }
 
             var post = new GetPostResponse
             {
@@ -260,15 +239,6 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                 PublishDate = queryResult.PublishDate,
                 AuthorsName = queryResult.Author.UserName!
             };
-
-            if (queryResult.Images != null)
-            {
-                post.ImagesNames = new List<string>();
-                foreach (var image in queryResult.Images)
-                {
-                    post.ImagesNames.Add(image.ImageName);
-                }
-            }
 
             return post;
         }
@@ -281,21 +251,22 @@ namespace MyBlog.Persistance.Repositories.PostRepository
         public async Task<GetPostsPageResponse> GetAllSavedAsync(string username, int page)
         {
             var queryCount = await context.SavedPosts
-                //.Include(x => x.ApplicationUser)
-                //.Where(x => x.ApplicationUser.UserName == username)
+                .Include(x => x.UserProfile)
+                .Where(x => x.UserProfile.UserName == username)
                 .Include(x => x.Post)
+                .ThenInclude(x => x.Author)
                 .Where(x => x.Post.Author.IsBlocked == false)
                 .CountAsync();
 
             var pageCount = Math.Ceiling(queryCount / pageResultsForUserPosts);
 
             var queryResult = await context.SavedPosts
+                .Include(x => x.UserProfile)
+                .Where(x => x.UserProfile.UserName == username)
                 .Include(x => x.Post)
                 .ThenInclude(x => x.Author)
                 .Where(x => x.Post.Author.IsBlocked == false)
                 .OrderByDescending(x => x.Post.PublishDate)
-                .Include(x => x.Post.Images)
-                //.Where(x => x.ApplicationUser.UserName == username)
                 .Skip((page - 1) * (int)pageResultsForUserPosts)
                 .Take((int)pageResultsForUserPosts)
                 .ToListAsync();
@@ -313,14 +284,6 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                     AuthorsName = p.Post.Author.UserName!
                 };
 
-                if (p.Post.Images != null)
-                {
-                    post.ImagesNames = new List<string>();
-                    foreach (var image in p.Post.Images)
-                    {
-                        post.ImagesNames.Add(image.ImageName);
-                    }
-                }
                 posts.Add(post);
             }
 
@@ -336,7 +299,7 @@ namespace MyBlog.Persistance.Repositories.PostRepository
         public async Task<bool> IsSavedAsync(int id, string username)
         {
             var isSaved = await context.SavedPosts.Where(x =>
-            //x.ApplicationUser.UserName == username &&
+            x.UserProfile.UserName == username &&
             x.Post.Id == id).AnyAsync();
 
             if (isSaved)
@@ -353,14 +316,14 @@ namespace MyBlog.Persistance.Repositories.PostRepository
         {
             var post = await context.Posts.FirstOrDefaultAsync(x => x.Id == id);
 
-            var user = await userManager.FindByNameAsync(username);
+            var user = await context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == username);
 
             context.SavedPosts.Add(new SavedPosts
             {
                 PostsId = id,
                 Post = post!,
-                //ApplicationUserId = user!.Id,
-                //ApplicationUser = user
+                UserProfileId = user!.Id,
+                UserProfile = user!
             });
 
             var result = await context.SaveChangesAsync();
@@ -379,14 +342,14 @@ namespace MyBlog.Persistance.Repositories.PostRepository
         {
             var post = await context.Posts.FirstOrDefaultAsync(x => x.Id == id);
 
-            var user = await userManager.FindByNameAsync(username);
+            var user = await context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == username);
 
             context.SavedPosts.Remove(new SavedPosts
             {
                 PostsId = id,
                 Post = post!,
-                //ApplicationUserId = user!.Id,
-                //ApplicationUser = user
+                UserProfileId = user!.Id,
+                UserProfile = user!
             });
 
             var result = await context.SaveChangesAsync();

@@ -20,7 +20,7 @@ namespace MyBlog.Persistance.Repositories.CommentRepository
 
         public async Task<bool> CreateAsync(CreateCommentRequest request)
         {
-            var author = await userManager.FindByNameAsync(request.AuthorsName);
+            var author = await context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == request.AuthorsName);
             if (author == null)
             {
                 return false;
@@ -32,7 +32,7 @@ namespace MyBlog.Persistance.Repositories.CommentRepository
             {
                 Text = request.Text,
                 Date = DateTime.Now,
-                //Author = author,
+                Author = author,
                 Post = post!
             };
 
@@ -45,11 +45,18 @@ namespace MyBlog.Persistance.Repositories.CommentRepository
                 return false;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id, string username)
         {
-            var commentForDelete = await context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+            var commentForDelete = await context.Comments
+                .Include(x=> x.Author)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (commentForDelete == null)
+            {
+                return false;
+            }
+
+            if(commentForDelete.Author.UserName != username)
             {
                 return false;
             }
@@ -93,7 +100,7 @@ namespace MyBlog.Persistance.Repositories.CommentRepository
         public async Task<bool> IsLikedAsync(int id, string username)
         {
             var IsLiked = await context.LikedComments.Where(x =>
-            //x.ApplicationUser.UserName == username &&
+            x.UserProfile.UserName == username &&
             x.Comment.Id == id).AnyAsync();
 
             if (IsLiked)
@@ -110,14 +117,14 @@ namespace MyBlog.Persistance.Repositories.CommentRepository
         {
             var comment = await context.Comments.FirstOrDefaultAsync(x => x.Id == id);
 
-            var user = await userManager.FindByNameAsync(username);
+            var user = await context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == username);
 
             context.LikedComments.Add(new LikedComments
             {
                 CommentId = id,
                 Comment = comment!,
-                //ApplicationUserId = user!.Id,
-                //ApplicationUser = user
+                UserProfileId = user!.Id,
+                UserProfile = user
             });
 
             var result = await context.SaveChangesAsync();
@@ -136,14 +143,14 @@ namespace MyBlog.Persistance.Repositories.CommentRepository
         {
             var comment = await context.Comments.FirstOrDefaultAsync(x => x.Id == id);
 
-            var user = await userManager.FindByNameAsync(username);
+            var user = await context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == username);
 
             context.LikedComments.Remove(new LikedComments
             {
                 CommentId = id,
                 Comment = comment!,
-                //ApplicationUserId = user!.Id,
-                //ApplicationUser = user
+                UserProfileId = user!.Id,
+                UserProfile = user
             });
 
             var result = await context.SaveChangesAsync();

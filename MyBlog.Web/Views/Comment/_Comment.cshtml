@@ -21,7 +21,7 @@
             }
             else
             {
-                @if (Model.IsLiked)
+               @* @if (Model.IsLiked)
                 {
                     <button class="btn btn-danger d-inline" type='button' id='likeBtn' data-isliked="1" data-commentid="@Model.Id">
                         <span class="btn-label"><i class="fa fa-thumbs-up"></i></span>
@@ -32,7 +32,7 @@
                     <button class="btn btn-secondary d-inline" type='button' id='likeBtn' data-isliked="0" data-commentid="@Model.Id">
                         <span class="btn-label"><i class="fa fa-thumbs-up"></i></span>
                     </button>
-                }
+                }*@
             }
             <div id="likesCount" class="d-inline fw-bold">
                 @Model.LikesCount
@@ -43,15 +43,15 @@
         </p>
         @if (User.Identity != null && User.Identity.IsAuthenticated
         && (User.Identity.Name == Model.AuthorsName 
-        || User.Identity.Name == Model.PostAuthorsName
+        @*|| User.Identity.Name == Model.PostAuthorsName*@
         || (await authService.AuthorizeAsync(User, "AdminPolicy")).Succeeded))
         {
-            <div>
+            @*<div>
                 <form onsubmit="return deleteCommentFunc(this, @Model.PostId , '@Model.PostAuthorsName')"
                   asp-controller="Comment" asp-action="Delete" asp-route-id="@Model.Id" method='post'>
                     <input class="btn btn-link" type='submit' value='Delete comment' />
                 </form>
-            </div>
+            </div>*@
         }
     </div>
 </div>

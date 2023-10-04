@@ -13,6 +13,5 @@ namespace MyBlog.Persistance.Repositories.PostRepository
         public string Text { get; set; } = null!;
         public DateTime PublishDate { get; set; }
         public string AuthorsName { get; set; } = null!;
-        public List<string>? ImagesNames { get; set; }
     }
 }

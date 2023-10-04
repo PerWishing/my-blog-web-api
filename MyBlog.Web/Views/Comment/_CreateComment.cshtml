@@ -2,7 +2,7 @@
 @model CommentViewModel
 @{
 }
-<div>
+@*<div>
     <form onsubmit="return createCommentFunc(this,@Model.PostId, '@Model.PostAuthorsName')"
     asp-controller="Comment" asp-action="Create" method='post'>
         <div asp-validation-summary="All"></div>
@@ -15,4 +15,4 @@
 
         <input type='submit' value='Create' />
     </form>
-</div>
+</div>*@

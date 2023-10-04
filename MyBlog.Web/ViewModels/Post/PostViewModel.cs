@@ -15,7 +15,6 @@ namespace MyBlog.Web.ViewModels.Post
         public string AuthorsName { get; set; } = null!;
         public bool IsSaved { get; set; }
         public int SavesCount { get; set; }
-        public IEnumerable<string>? ImagesNames { get; set; }
-        public IEnumerable<IFormFile>? Images { get; set; }
+        public IEnumerable<string>? Images64s { get; set; }
     }
 }

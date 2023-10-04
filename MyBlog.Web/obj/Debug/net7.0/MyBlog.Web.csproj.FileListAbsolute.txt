@@ -210,7 +210,6 @@ C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.Generat
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.AssemblyInfoInputs.cache
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.AssemblyInfo.cs
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.csproj.CoreCompileInputs.cache
-C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.RazorAssemblyInfo.cache
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.RazorAssemblyInfo.cs
@@ -229,3 +228,4 @@ C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.pdb
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.genruntimeconfig.cache
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\ref\MyBlog.Web.dll
 C:\Users\User\source\repos\MyBlog\MyBlog.Web\bin\Debug\net7.0\Blazor.Cropper.dll
+C:\Users\User\source\repos\MyBlog\MyBlog.Web\obj\Debug\net7.0\MyBlog.Web.MvcApplicationPartsAssemblyInfo.cs

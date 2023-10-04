@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MyBlog.BlazorApp.Models.User;
-using MyBlog.BlazorApp.Services.User.UserService;
+using MyBlog.BlazorApp.Services.User;
 
 namespace MyBlog.BlazorApp.Pages.Users
 {

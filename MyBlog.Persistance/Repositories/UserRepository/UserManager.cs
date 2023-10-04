@@ -406,6 +406,8 @@ namespace MyBlog.Persistance.Repositories.UserRepository
 
             var result = context.UserProfiles.Update(user);
 
+            await context.SaveChangesAsync();
+
             return true;
         }
 
@@ -417,7 +419,34 @@ namespace MyBlog.Persistance.Repositories.UserRepository
 
             var result = context.UserProfiles.Update(user);
 
+            await context.SaveChangesAsync();
+
             return true;
+        }
+
+        public async Task<bool> GiveAdminRoleAsync(string username)
+        {
+            var user = await userManager.FindByNameAsync(username);
+
+            var userClaim = new Claim(ClaimTypes.Role, "User");
+            var adminClaim = new Claim(ClaimTypes.Role, "Admin");
+
+            var userRemoveResult = await userManager.RemoveClaimAsync(user!, userClaim);
+            var adminAddResult = await userManager.AddClaimAsync(user!, adminClaim);
+
+            return userRemoveResult.Succeeded && adminAddResult.Succeeded;
+        }
+
+        public async Task<bool> DeleteAdminRoleAsync(string username)
+        {
+            var user = await userManager.FindByNameAsync(username);
+
+            var userClaim = new Claim(ClaimTypes.Role, "User");
+            var adminClaim = new Claim(ClaimTypes.Role, "Admin");
+
+            var adminRemoveResult = await userManager.RemoveClaimAsync(user!, adminClaim);
+            var userAddResult = await userManager.AddClaimAsync(user!, userClaim);
+            return adminRemoveResult.Succeeded && userAddResult.Succeeded;
         }
 
         public async Task<int> CheckPasswordSignInAsync(string username, string password)

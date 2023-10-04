@@ -28,6 +28,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWNjb3VudFxSZWdpc3Rlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Comments/Comment.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tbWVudHNcQ29tbWVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Comments/Comments.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tbWVudHNcQ29tbWVudHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -36,8 +44,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmV0Y2hEYXRhLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Index.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Posts/AllPosts.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUG9zdHNcQWxsUG9zdHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Posts/CreatePost.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUG9zdHNcQ3JlYXRlUG9zdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Posts/EditPost.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUG9zdHNcRWRpdFBvc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Posts/Post.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUG9zdHNcUG9zdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Posts/PostCard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUG9zdHNcUG9zdENhcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Posts/UserPosts.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUG9zdHNcVXNlclBvc3RzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/source/repos/MyBlog/MyBlog.BlazorApp/Pages/Users/ReadersOrFollowed.razor]

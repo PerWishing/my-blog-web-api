@@ -1,0 +1,36 @@
+﻿@page "/create-post"
+
+<h3>CreatePost</h3>
+
+<EditForm Model="_createPost" OnSubmit="HandleCreatePost">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label>Title</label><br />
+    <InputText @bind-Value="_createPost.Title" /><br />
+    <ValidationMessage For="@(() => _createPost.Title)" />
+    <label>Text</label><br />
+    <InputText @bind-Value="_createPost.Text" /><br />
+    <ValidationMessage For="@(() => _createPost.Text)" />
+
+    <br />
+    <InputFile OnChange="OnInputFileChange"></InputFile> <br />
+
+    @if (images.Any())
+    {
+        foreach(var image in images)
+        {
+            <img src="@($"{image.Key}")" width="180"/>
+            <button class="btn btn-danger" @onclick="@(e => HandleDeleteImg(image.Key))">Delete</button>
+
+            <br />
+        }
+    }
+
+    <div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</EditForm>
+
+@code {
+
+}

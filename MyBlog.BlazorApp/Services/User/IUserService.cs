@@ -1,7 +1,7 @@
 ﻿using MyBlog.BlazorApp.Models;
 using MyBlog.BlazorApp.Models.User;
 
-namespace MyBlog.BlazorApp.Services.User.UserService
+namespace MyBlog.BlazorApp.Services.User
 {
     public interface IUserService
     {
@@ -16,6 +16,10 @@ namespace MyBlog.BlazorApp.Services.User.UserService
         Task<UsersPageDto?> GetReadersAsync(string username, int page = 1, string? search = null);
         Task<UsersPageDto?> GetFollowedUsersAsync(string username, int page = 1, string? search = null);
         Task<JwtTokenDto?> RefreshTokenAsync(string accessToken, string refreshToken);
+        Task<string?> BlockUserAsync(string username);
+        Task<string?> UnblockUserAsync(string username);
+        Task<string?> GiveAdminAsync(string username);
+        Task<string?> DeleteAdminAsync(string username);
         Task<string?> SignInAsync(LoginDto login);
         Task<bool> SignOutAsync(string username);
         Task<string?> RegisterAsync(RegisterDto register);

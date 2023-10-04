@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets\\avatars\\User6_232804848.png"
     },
     {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\admin_234928388.png",
+      "PackagePath": "staticwebassets\\avatars\\admin_234928388.png"
+    },
+    {
       "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\avatars\\avatarSample.png",
       "PackagePath": "staticwebassets\\avatars\\avatarSample.png"
     },
@@ -315,6 +319,54 @@
     {
       "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\lib\\jquery\\dist\\jquery.pjax.js",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.pjax.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-10_230852492.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-10_230852492.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-12_233152123.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-12_233152123.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-14_232624948.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-14_232624948.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-14_232625344.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-14_232625344.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-16_230510820.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-16_230510820.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-16_230511259.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-16_230511259.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-5_233636802.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-5_233636802.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-5_233648216.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-5_233648216.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-6_233315184.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-6_233315184.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-7_233250997.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-7_233250997.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-7_233251014.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-7_233251014.png"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\postsImages\\Post-9_230809102.png",
+      "PackagePath": "staticwebassets\\postsImages\\Post-9_230809102.png"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.MyBlog.Web.Microsoft.AspNetCore.StaticWebAssets.props",

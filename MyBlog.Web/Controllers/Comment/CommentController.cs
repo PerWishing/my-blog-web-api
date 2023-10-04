@@ -8,7 +8,6 @@ namespace MyBlog.Web.Controllers.Comment
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/[controller]/[action]")]
     public class CommentController : ControllerBase
     {
         private readonly ICommentManager commentManager;
@@ -18,30 +17,23 @@ namespace MyBlog.Web.Controllers.Comment
             this.commentManager = commentManager;
         }
 
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/comment/create")]
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(CommentViewModel commentViewModel)
+        public async Task<IActionResult> Create(CreateCommentRequest request)
         {
             if (User.Identity == null)
             {
                 return Unauthorized();
             }
 
-            commentViewModel.AuthorsName = User.Identity.Name!;
-
             ModelState.Remove("AuthorsName");
-            ModelState.Remove("PostAuthorsName");
             if (!ModelState.IsValid)
             {
-                return BadRequest(commentViewModel);
+                return BadRequest(request);
             }
 
-            var request = new CreateCommentRequest
-            {
-                PostId = commentViewModel.PostId,
-                Text = commentViewModel.Text,
-                AuthorsName = commentViewModel.AuthorsName
-            };
+            request.AuthorsName = User.Identity.Name!; 
 
             var result = await commentManager.CreateAsync(request);
 
@@ -52,8 +44,9 @@ namespace MyBlog.Web.Controllers.Comment
 
         }
 
+        [Route("api/comments/{postId}")]
         [HttpGet]
-        public async Task<ActionResult<IList<CommentViewModel>>> PostComments(int postId, string postauthor)
+        public async Task<ActionResult<IList<CommentViewModel>>> PostComments(int postId)
         {
             var response = await commentManager.GetAllByPostAsync(postId);
 
@@ -68,14 +61,8 @@ namespace MyBlog.Web.Controllers.Comment
                     Date = c.Date,
                     AuthorsName = c.AuthorsName,
                     PostId = c.PostId,
-                    PostAuthorsName = postauthor,
                     LikesCount = c.LikesCount,
                 };
-
-                if (User.Identity != null && User.Identity.IsAuthenticated)
-                {
-                    comment.IsLiked = await commentManager.IsLikedAsync(c.Id, User.Identity.Name!);
-                }
 
                 comments.Add(comment);
             }
@@ -86,19 +73,31 @@ namespace MyBlog.Web.Controllers.Comment
             return Ok(comments);
         }
 
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/comments/is-liked/{id}")]
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<bool>> IsLiked(int id)
+        {
+            var isLiked = await commentManager.IsLikedAsync(id, User.Identity!.Name!);
+
+            return Ok(isLiked);
+        }
+
+        [Route("api/comments/delete/{id}")]
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await commentManager.DeleteAsync(id);
+            var result = await commentManager.DeleteAsync(id, User.Identity!.Name!);
 
             if (result)
                 return Ok();
             else
-                return StatusCode(StatusCodes.Status500InternalServerError/*, result.Error*/);
+                return BadRequest();
         }
 
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/comments/like/{id}")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> LikeComment(int id)
         {
@@ -109,7 +108,8 @@ namespace MyBlog.Web.Controllers.Comment
                 return StatusCode(StatusCodes.Status500InternalServerError/*, result.Error*/);
         }
 
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/comments/unlike/{id}")]
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteLike(int id)
         {

@@ -2,9 +2,7 @@
 {
     public interface IImageManager
     {
-        Task<IEnumerable<string>> GetImagesNamesByPostIdAsync(int id);
-        Task<bool> UploadPostImageAsync(UploadImageRequest request);
-        Task<bool> DeletePostImageAsync(string imagename);
+        Task<IEnumerable<string>> GetImages64ByPostIdAsync(int id, bool firstOnly = false);
         Task<bool> UploadPostImagesAsync(IEnumerable<UploadImageRequest> requests);
         Task<bool> DeletePostImagesAsync(int id);
         Task<string> GetAvatarAsync(string username);

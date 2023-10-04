@@ -4,73 +4,74 @@ using MyBlog.Persistance.Database;
 using MyBlog.Persistance.Identity;
 using MyBlog.Domain.Entities;
 using System.Xml.Linq;
+using System.Linq;
+using System.IO;
 
 namespace MyBlog.Persistance.Repositories.ImageRepository
 {
     public partial class ImageManager : IImageManager
     {
         private readonly ApplicationDbContext context;
-        private readonly UserManager<ApplicationUser> userManager;
 
         static string slnPath = Directory.GetParent(Directory.GetCurrentDirectory()).ToString();
         static string webRootPath = Path.Combine(slnPath, "MyBlog.Web", "wwwroot");
+        static string postsFolder = "postsImages";
 
-        public ImageManager(ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager)
+        public ImageManager(ApplicationDbContext context)
         {
             this.context = context;
-            this.userManager = userManager;
         }
 
-        public async Task<IEnumerable<string>> GetImagesNamesByPostIdAsync(int id)
+        public async Task<IEnumerable<string>> GetImages64ByPostIdAsync(int id, bool firstOnly = false)
         {
-            var queryResult = await context.PostImages.Include(x => x.Post).Where(x => x.Post.Id == id).ToListAsync();
+            List<PostImage> queryResult = new List<PostImage>();
+            if (firstOnly)
+            {
+                var img = await context.PostImages.Include(x => x.Post).FirstOrDefaultAsync(x => x.Post.Id == id);
+                if (img != null)
+                {
+                    queryResult.Add(img);
+                }
+            }
+            else
+            {
+                queryResult = await context.PostImages.Include(x => x.Post).Where(x => x.Post.Id == id).ToListAsync();
+            }
 
-            var imageNames = new List<string>();
-            if (queryResult != null)
+            var images64s = new List<string>();
+            if (queryResult.Any())
             {
                 foreach (var imageName in queryResult)
                 {
-                    imageNames.Add(imageName.ImageName);
+                    var path = Path.Combine(webRootPath, postsFolder, imageName.ImageName);
+
+
+                    if (File.Exists(path))
+                    {
+                        using (var imageFileStream = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.Delete))
+                        {
+                            //imageFileStream = File.OpenRead(path);
+                            try
+                            {
+                                using (var memoryStream = new MemoryStream())
+                                {
+                                    imageFileStream.CopyTo(memoryStream);
+
+                                    byte[] byteImage = memoryStream.ToArray();
+                                    var base64String = Convert.ToBase64String(byteImage);
+                                    images64s.Add(base64String);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                await Console.Out.WriteLineAsync(ex.Message);
+                            }
+                        }
+                    }
                 }
             }
-            return imageNames;
-        }
 
-        public async Task<bool> UploadPostImageAsync(UploadImageRequest request)
-        {
-            var post = context.Posts.Where(x => x.Id == request.PostId).FirstOrDefault();
-
-            if (post == null)
-            {
-                return false;
-            }
-
-            //Save image to wwwroot/postsImages
-            string wwwRootPath = webRootPath;
-
-            string fileName = "Post-" + request.PostId;
-            string extention = ".png";
-            fileName = fileName + "_" + DateTime.Now.ToString("yymmssfff") + extention;
-            string path = Path.Combine(wwwRootPath + "/postsImages/" + fileName);
-            //Resize by ImageSharp lib
-            using (var image = SixLabors.ImageSharp.Image.Load(request.ImageFile.OpenReadStream()))
-            {
-                //image.Mutate(x => x.Resize(180, 180));
-                image.Save(path);
-            }
-
-            var postImage = new PostImage
-            {
-                ImageName = fileName,
-                Post = post
-            };
-
-            //Insert image record into db
-            context.PostImages.Add(postImage);
-
-            await context.SaveChangesAsync();
-            return true;
+            return images64s;
         }
 
         public async Task<bool> DeletePostImageAsync(string imagename)
@@ -105,6 +106,7 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
 
             //Save image to wwwroot/postsImages
             string wwwRootPath = webRootPath;
+            var imgs = new List<PostImage>();
             foreach (var request in requests)
             {
                 string fileName = "Post-" + requests.First().PostId;
@@ -112,10 +114,24 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
                 fileName = fileName + "_" + DateTime.Now.ToString("yymmssfff") + extention;
                 string path = Path.Combine(wwwRootPath + "/postsImages/" + fileName);
                 //Resize by ImageSharp lib
-                using (var image = SixLabors.ImageSharp.Image.Load(request.ImageFile.OpenReadStream()))
+
+                try
                 {
-                    //image.Mutate(x => x.Resize(180, 180));
-                    image.Save(path);
+                    using (var image = Image.Load(request.ImageFile.OpenReadStream()))
+                    {
+                        var b = image.Bounds;
+                        var prop = b.Width / b.Height;
+                        if (b.Height > 400)
+                        {
+                            image.Mutate(x => x.Resize((400 * prop), 400));
+                        }
+                        image.Save(path);
+                        image.Dispose();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await Console.Out.WriteLineAsync(ex.Message);
                 }
 
                 var postImage = new PostImage
@@ -124,9 +140,9 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
                     Post = post
                 };
 
-                //Insert image record into db
-                context.PostImages.Add(postImage);
+                imgs.Add(postImage);
             }
+            await context.PostImages.AddRangeAsync(imgs);
             await context.SaveChangesAsync();
             return true;
         }
@@ -145,7 +161,14 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
                     var imagePath = Path.Combine(webRootPath + "/postsImages/" + image.ImageName);
                     if (File.Exists(imagePath))
                     {
-                        File.Delete(imagePath);
+                        try
+                        {
+                            File.Delete(imagePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                     //delete image record from db
                     context.PostImages.Remove(image);
@@ -158,12 +181,14 @@ namespace MyBlog.Persistance.Repositories.ImageRepository
 
         public async Task<string> GetAvatarAsync(string username)
         {
-            var avatarQuery = await context.Avatars.Include(x => x.UserProfile)
-                .Where(x => x.UserProfile.UserName == username).FirstOrDefaultAsync();
+            var avatarQuery = await context.Avatars
+                .Include(x => x.UserProfile)
+                .Where(x => x.UserProfile.UserName == username)
+                .FirstOrDefaultAsync();
 
             string avatarName = "avatarSample.png";
 
-            if (avatarQuery != null)
+            if (avatarQuery != null && !avatarQuery.UserProfile.IsBlocked)
             {
                 avatarName = avatarQuery.ImageName;
             }

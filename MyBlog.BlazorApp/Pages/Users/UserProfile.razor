@@ -4,12 +4,36 @@
     <div class="col-9">
         <div class="p-3 mb-2 rounded my-grad-blue">
             <h3>@Username</h3>
-
-            <img src="@(_userDto.AvatarSrc)" class="rounded"/> <br />
+            @if (_userDto.isAdmin)
+            {
+                <h5 class="text-danger">Admin</h5>
+            }
+            <img src="@(_userDto.AvatarSrc)" class="rounded" /> <br />
 
             @if (IsAuth)
             {
-                @if (IsCurrentUser)
+                @if (IsAdmin && !IsCurrentUser)
+                {
+                    @if (!IsBlocked)
+                    {
+                        <button class="btn btn-outline-danger me-2 my-2" @onclick="@OnToggleBlock">Block</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-success me-2 my-2" @onclick="@OnToggleBlock">Unblock</button>
+                    }
+
+                    @if (!_userDto.isAdmin)
+                    {
+                        <button class="btn btn-outline-danger my-2" @onclick="@OnToggleGiveAdmin">Give admin</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-success my-2" @onclick="@OnToggleGiveAdmin">Delete admin</button>
+                    }
+                }
+
+                @if (!IsBlocked && (IsCurrentUser || IsAdmin))
                 {
                     <div class="mb-2">
                         <a href="upload-avatar">Upload Avatar</a>
@@ -29,7 +53,7 @@
                         <br />
                     }
                 }
-                else
+                @if (!IsBlocked && (!IsCurrentUser || IsAdmin))
                 {
                     if (IsFollowed)
                     {
@@ -47,23 +71,44 @@
                 }
             }
         </div>
+        @if (!IsBlocked)
+        {
+            @if (IsAuth && IsCurrentUser)
+            {
+                <div class="mb-2">
+                    <a href="create-post">Create new post</a>
+                </div>
+            }
+            <div>
+                <button class="btn btn-outline-primary me-2" @onclick="@(() => IsSaved=false)">User's posts</button>
+                <button class="btn btn-outline-primary" @onclick="@(() => IsSaved=true)">User's saved posts</button>
+            </div>
+            <div>
+                <CascadingValue Value="@Username" Name="Username">
+                    <CascadingValue Value="@IsSaved" Name="IsSaved">
+                        <MyBlog.BlazorApp.Pages.Posts.UserPosts />
+                    </CascadingValue>
+                </CascadingValue>
+            </div>
+        }
     </div>
+    @if (!IsBlocked)
+    {
+        <div class="col-3">
 
-    <div class="col-3">
-
-        <CascadingValue Value="@Username" Name="Username">
-            <CascadingValue Value="@yes" Name="IsReaders">
-                <ReadersOrFollowed @ref="childReaders" />
+            <CascadingValue Value="@Username" Name="Username">
+                <CascadingValue Value="@yes" Name="IsReaders">
+                    <ReadersOrFollowed @ref="childReaders" />
+                </CascadingValue>
             </CascadingValue>
-        </CascadingValue>
 
-        <CascadingValue Value="@Username" Name="Username">
-            <CascadingValue Value="@yes" Name="IsFollowedUsers">
-                <ReadersOrFollowed />
+            <CascadingValue Value="@Username" Name="Username">
+                <CascadingValue Value="@yes" Name="IsFollowedUsers">
+                    <ReadersOrFollowed />
+                </CascadingValue>
             </CascadingValue>
-        </CascadingValue>
-    </div>
-
+        </div>
+    }
 </div>
 
 

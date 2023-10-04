@@ -1,0 +1,53 @@
+﻿<div class="col-6" >
+    <NavLink href="@($"user/{_comment.AuthorsName}")" class="btn-link-dark">
+        <MyBlog.BlazorApp.Pages.Users.UserHead Username="@(_comment.AuthorsName)" />
+    </NavLink>
+    <div class="rounded p-2" style="background-color:#383f8f; color:azure;">
+        <p>@_comment.Text</p>
+        <div class="justify-content-end fs-6 fw-light">
+            @_comment.Date
+        </div>
+    </div>
+</div>
+
+<div class="col-4">
+    <div class="mb-5">
+
+    </div>
+    <div class="py-2">
+        @if (IsAuth)
+        {
+            if (_comment.IsLiked)
+            {
+                <button class="btn btn-outline-danger me-2" @onclick="UnlikeComAsync">
+                    <span class="oi oi-thumb-up"></span>
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-outline-primary me-2" @onclick="LikeComAsync">
+                    <span class="oi oi-thumb-up"></span>
+                </button>
+            }
+        }
+        @if (_comment.LikesCount > 0)
+        {
+            <div class="d-inline fw-bold">
+                @_comment.LikesCount
+                <span class="oi oi-thumb-up me-2"></span>
+            </div>
+        }
+    </div>
+    @if (_comment.AuthorsName == Username)
+    {
+        <div>
+            <button class="btn btn-outline-danger me-2" @onclick="DeleteComAsync">
+                Delete
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+
+}

@@ -1,0 +1,17 @@
+﻿<div class="card border-primary">
+
+    @if (_post.Images64s?.Count() > 0)
+    {
+        <img src="@(_post.Images64s.First())" class="card-img-top" />
+    }
+    <div class="card-body" style="color:indigo">
+        <MyBlog.BlazorApp.Pages.Users.UserHead Username="@(_post.AuthorsName)"/>
+        <h5 class="card-title">@_post.Title</h5>
+
+        <p class="trimed-text">@_post.Text</p>
+        <p class="fs-6 fw-light">@_post.PublishDate</p>
+    </div>
+</div>
+@code {
+    
+}

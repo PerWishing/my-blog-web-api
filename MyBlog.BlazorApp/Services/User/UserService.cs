@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using MyBlog.BlazorApp.Models.User;
 
-namespace MyBlog.BlazorApp.Services.User.UserService
+namespace MyBlog.BlazorApp.Services.User
 {
     public class UserService : IUserService
     {
@@ -258,6 +258,102 @@ namespace MyBlog.BlazorApp.Services.User.UserService
                     return null;
                 }
                 return "Wrong user name.";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<string?> BlockUserAsync(string username)
+        {
+            try
+            {
+                var itemJson = new StringContent(JsonSerializer.Serialize(username), Encoding.UTF8, "application/json");
+                var apiResponse = await httpClient.PutAsync($"api/admin/block-user/{username}", itemJson);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                if (apiResponse.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return "You can't block this user.";
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<string?> UnblockUserAsync(string username)
+        {
+            try
+            {
+                var itemJson = new StringContent(JsonSerializer.Serialize(username), Encoding.UTF8, "application/json");
+                var apiResponse = await httpClient.PutAsync($"api/admin/unblock-user/{username}", itemJson);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                if (apiResponse.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return "You can't unblock this user.";
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<string?> GiveAdminAsync(string username)
+        {
+            try
+            {
+                var itemJson = new StringContent(JsonSerializer.Serialize(username), Encoding.UTF8, "application/json");
+                var apiResponse = await httpClient.PutAsync($"api/admin/give-admin/{username}", itemJson);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                if (apiResponse.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return "You can't give admin role to this user.";
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<string?> DeleteAdminAsync(string username)
+        {
+            try
+            {
+                var itemJson = new StringContent(JsonSerializer.Serialize(username), Encoding.UTF8, "application/json");
+                var apiResponse = await httpClient.PutAsync($"api/admin/delete-admin/{username}", itemJson);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+                if (apiResponse.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    return "You can't delete admin role from this user.";
+                }
+                return null;
             }
             catch (Exception ex)
             {

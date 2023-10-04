@@ -77,6 +77,30 @@
       "PackagePath": "staticwebassets\\index.html"
     },
     {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\javascript\\jquery.js",
+      "PackagePath": "staticwebassets\\javascript\\jquery.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\javascript\\jquery.min.js",
+      "PackagePath": "staticwebassets\\javascript\\jquery.min.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\javascript\\jquery.min.map",
+      "PackagePath": "staticwebassets\\javascript\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\javascript\\jquery.pjax.js",
+      "PackagePath": "staticwebassets\\javascript\\jquery.pjax.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\javascript\\masonry.js",
+      "PackagePath": "staticwebassets\\javascript\\masonry.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\javascript\\masonry.pkgd.js",
+      "PackagePath": "staticwebassets\\javascript\\masonry.pkgd.js"
+    },
+    {
       "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.BlazorApp\\wwwroot\\sample-data\\weather.json",
       "PackagePath": "staticwebassets\\sample-data\\weather.json"
     },

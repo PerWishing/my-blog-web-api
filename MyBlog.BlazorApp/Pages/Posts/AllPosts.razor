@@ -1,0 +1,49 @@
+﻿@page "/"
+@page "/all-posts"
+@page "/all-posts/{Page:int?}"
+@page "/all-posts/{Search?}/{Page:int?}"
+
+<PageTitle>All Posts</PageTitle>
+
+<h3>All posts:</h3>
+<div class="d-flex flex-row mb-3">
+    <div class="me-1" style="width:200px">
+        <input class="form-control me-2" type="search" placeholder="Enter post..." aria-label="Search"
+               @bind="@Search" @bind:event="oninput" @bind:after="PerformSearch">
+    </div>
+    <div class="d-flex justify-content-end">
+        <span class="align-middle me-1">@_posts.CurrentPage / @_posts.PageCount</span>
+        @if ((int)_posts.CurrentPage > 1)
+        {
+            <button class="btn btn-outline-light" @onclick="OnPrevPage">
+                <span class="oi oi-arrow-left"></span>
+            </button>
+        }
+        @if ((int)_posts.CurrentPage < (int)_posts.PageCount)
+        {
+            <button class="btn btn-outline-light" @onclick="OnNextPage">
+                <span class="oi oi-arrow-right"></span>
+            </button>
+        }
+    </div>
+</div>
+
+@if (_posts.Posts != null && _posts.Posts.Any())
+{
+    <div id="myMasonry" class="row" data-masonry='{"percentPosition": true }'>
+        @foreach (var post in _posts.Posts)
+        {
+            <div class="col-sm-4 col-md-3 mb-3 grid-item">
+
+                <NavLink href="@($"post/{post.Id}")">
+                    <PostCard PostId="@(post.Id)" />
+                </NavLink>
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+}
+

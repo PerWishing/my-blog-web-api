@@ -1,18 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using MyBlog.Persistance.Repositories.ImageRepository;
 using MyBlog.Persistance.Repositories.PostRepository;
-using MyBlog.Web.ViewModels.Accounts;
-using MyBlog.Web.ViewModels.Image;
 using MyBlog.Web.ViewModels.Post;
 
 namespace MyBlog.Web.Controllers.Post
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/[controller]/[action]")]
     public class PostController : ControllerBase
     {
         private readonly IPostManager postManager;
@@ -25,11 +20,16 @@ namespace MyBlog.Web.Controllers.Post
             this.imageManager = imageManager;
         }
 
-
+        [Route("api/post/{id}")]
         [HttpGet]
-        public async Task<ActionResult<PostViewModel>> Index(int id)
+        public async Task<ActionResult<PostViewModel>> GetPost(int id)
         {
             var response = await postManager.GetByIdAsync(id);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
 
             var post = new PostViewModel
             {
@@ -38,22 +38,19 @@ namespace MyBlog.Web.Controllers.Post
                 Text = response.Text,
                 PublishDate = response.PublishDate,
                 AuthorsName = response.AuthorsName,
-                ImagesNames = response.ImagesNames
             };
 
+            post.Images64s = await imageManager.GetImages64ByPostIdAsync(id);
+
             post.SavesCount = await postManager.SavesCountAsync(id);
-
-            //if (User.Identity == null || !User.Identity.IsAuthenticated)
-            //{
-            //    return PartialView("_IndexPost", post);
-            //}
-
-            //post.IsSaved = await postManager.IsSavedAsync(id, User.Identity.Name!);
 
             return Ok(post);
         }
 
 
+        [Route("api/all-posts")]
+        [Route("api/all-posts/{page?}")]
+        [Route("api/all-posts/{search?}/{page?}")]
         [HttpGet]
         public async Task<ActionResult<PostsPageViewModel>> AllPosts(int page = 1, string search = "")
         {
@@ -66,7 +63,7 @@ namespace MyBlog.Web.Controllers.Post
                 return NoContent();
             }
 
-            var postVm = new PostsPageViewModel
+            var postsPageVm = new PostsPageViewModel
             {
                 CurrentPage = page,
                 PageCount = response.PageCount,
@@ -75,53 +72,38 @@ namespace MyBlog.Web.Controllers.Post
 
             foreach (var p in response.Posts)
             {
-                postVm.Posts.Add(new PostViewModel
+                var postVm = new PostViewModel
                 {
                     Id = p.Id,
                     Title = p.Title,
                     Text = p.Text,
                     PublishDate = p.PublishDate,
                     AuthorsName = p.AuthorsName,
-                    ImagesNames = p.ImagesNames
-                });
+                };
+
+                postVm.Images64s = await imageManager.GetImages64ByPostIdAsync(p.Id, true);
+
+                postsPageVm.Posts.Add(postVm);
             }
 
-            postVm.Posts = postVm.Posts.OrderByDescending(x => x.PublishDate).ToList();
+            postsPageVm.Posts = postsPageVm.Posts.OrderByDescending(x => x.PublishDate).ToList();
 
-            return Ok(postVm);
+            return Ok(postsPageVm);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<PostViewModel>> PostCard(int id)
-        {
-            var response = await postManager.GetByIdAsync(id);
-
-            var post = new PostViewModel
-            {
-                Id = id,
-                Title = response.Title,
-                Text = response.Text,
-                PublishDate = response.PublishDate,
-                AuthorsName = response.AuthorsName,
-                ImagesNames = response.ImagesNames
-            };
-
-            return Ok(post);
-        }
-
+        [Route("api/posts/{username}")]
+        [Route("api/posts/{username}/{page?}")]
         [HttpGet]
         public async Task<ActionResult<PostsPageViewModel>> UserPosts(string username, int page = 1)
         {
             var response = await postManager.GetAllByAuthorAsync(username, page);
 
-            //ViewBag.IsSavedPosts = 0;
-
             if (response.Posts == null || response.Posts.Count() == 0)
             {
                 return NoContent();
             }
 
-            var postVm = new PostsPageViewModel
+            var postsPageVm = new PostsPageViewModel
             {
                 CurrentPage = page,
                 PageCount = response.PageCount,
@@ -130,34 +112,38 @@ namespace MyBlog.Web.Controllers.Post
 
             foreach (var p in response.Posts)
             {
-                postVm.Posts.Add(new PostViewModel
+                var postVm = new PostViewModel
                 {
                     Id = p.Id,
                     Title = p.Title,
                     Text = p.Text,
                     PublishDate = p.PublishDate,
                     AuthorsName = p.AuthorsName,
-                    ImagesNames = p.ImagesNames
-                });
+                };
+
+                postVm.Images64s = await imageManager.GetImages64ByPostIdAsync(p.Id, true);
+
+                postsPageVm.Posts.Add(postVm);
             }
 
-            postVm.Posts = postVm.Posts.OrderByDescending(x => x.PublishDate).ToList();
+            postsPageVm.Posts = postsPageVm.Posts.OrderByDescending(x => x.PublishDate).ToList();
 
-            return Ok(postVm);
+            return Ok(postsPageVm);
         }
 
+        [Route("api/saved-posts/{username}")]
+        [Route("api/saved-posts/{username}/{page?}")]
         [HttpGet]
         public async Task<ActionResult<PostsPageViewModel>> UserSavedPosts(string username, int page = 1)
         {
             var response = await postManager.GetAllSavedAsync(username, page);
 
-            //ViewBag.IsSavedPosts = 1;
             if (response.Posts == null || response.Posts.Count() == 0)
             {
                 return NoContent();
             }
 
-            var postVm = new PostsPageViewModel
+            var postsPageVm = new PostsPageViewModel
             {
                 CurrentPage = page,
                 PageCount = response.PageCount,
@@ -166,23 +152,37 @@ namespace MyBlog.Web.Controllers.Post
 
             foreach (var p in response.Posts)
             {
-                postVm.Posts.Add(new PostViewModel
+                var postVm = new PostViewModel
                 {
                     Id = p.Id,
                     Title = p.Title,
                     Text = p.Text,
                     PublishDate = p.PublishDate,
                     AuthorsName = p.AuthorsName,
-                    ImagesNames = p.ImagesNames
-                });
+                };
+
+                postVm.Images64s = await imageManager.GetImages64ByPostIdAsync(p.Id, true);
+
+                postsPageVm.Posts.Add(postVm);
             }
 
-            postVm.Posts = postVm.Posts.OrderByDescending(x => x.PublishDate).ToList();
+            postsPageVm.Posts = postsPageVm.Posts.OrderByDescending(x => x.PublishDate).ToList();
 
-            return Ok(postVm);
+            return Ok(postsPageVm);
         }
 
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/post/is-saved/{id}")]
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<bool>> IsSaved(int id)
+        {
+            var isSaved = await postManager.IsSavedAsync(id, User.Identity!.Name!);
+
+            return Ok(isSaved);
+        }
+
+        [Route("api/save-post/{id}")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> SavePost(int id)
         {
@@ -194,7 +194,8 @@ namespace MyBlog.Web.Controllers.Post
                 return StatusCode(StatusCodes.Status500InternalServerError/*, result.Error*/);
         }
 
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/delete-saved/{id}")]
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteFormSavePost(int id)
         {
@@ -206,16 +207,15 @@ namespace MyBlog.Web.Controllers.Post
                 return StatusCode(StatusCodes.Status500InternalServerError/*, result.Error*/);
         }
 
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/create-post")]
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(PostViewModel postViewModel)
+        public async Task<ActionResult<int>> Create([FromForm] CreatePostRequest request, IEnumerable<IFormFile>? images)
         {
             if (User.Identity == null)
             {
                 return Unauthorized();
             }
-
-            postViewModel.AuthorsName = User.Identity.Name!;
 
             ModelState.Remove("AuthorsName");
             if (!ModelState.IsValid)
@@ -223,20 +223,15 @@ namespace MyBlog.Web.Controllers.Post
                 return BadRequest();
             }
 
-            var request = new CreatePostRequest
-            {
-                Title = postViewModel.Title,
-                Text = postViewModel.Text,
-                AuthorsName = postViewModel.AuthorsName
-            };
+            request.AuthorsName = User.Identity.Name!;
 
-            var result = Task.Run(async () => await postManager.CreateAsync(request)).Result;
+            var result = await postManager.CreateAsync(request);
 
 
-            if (postViewModel.Images != null)
+            if (images != null && images.Any() && result > 0)
             {
                 var imageList = new List<UploadImageRequest>();
-                foreach (var image in postViewModel.Images)
+                foreach (var image in images)
                 {
                     var imageRequest = new UploadImageRequest
                     {
@@ -250,116 +245,64 @@ namespace MyBlog.Web.Controllers.Post
             }
 
             if (result > 0)
-                return Ok();
+                return Ok(result);
             else
                 return BadRequest();
         }
 
-        [Authorize(Policy = "UserPolicy")]
-        [HttpGet]
-        public async Task<ActionResult<ImagesNamesViewModel>> GetPostImagesNames(int postid)
-        {
-            var imagesNames = await imageManager.GetImagesNamesByPostIdAsync(postid);
-
-            var imagesNamesViewModel = new ImagesNamesViewModel
-            {
-                PostId = postid,
-                ImagesNames = imagesNames
-            };
-
-            return Ok(imagesNamesViewModel);
-        }
-
-        [Authorize(Policy = "UserPolicy")]
-        [HttpDelete]
-        public async Task<IActionResult> DeletePostImage(string imagename)
-        {
-            var result = await imageManager.DeletePostImageAsync(imagename);
-
-            if (result)
-                return Ok();
-            else
-                return StatusCode(StatusCodes.Status500InternalServerError/*, result.Error*/);
-        }
-
-        [Authorize(Policy = "UserPolicy")]
-        [HttpPost]
-        public async Task<IActionResult> UploadPostImage(int postid, IFormFile image)
-        {
-
-            var imageRequest = new UploadImageRequest
-            {
-                ImageFile = image,
-                PostId = postid
-            };
-
-            var result = await imageManager.UploadPostImageAsync(imageRequest);
-
-            if (result)
-                return Ok();
-            else
-                return StatusCode(StatusCodes.Status500InternalServerError/*, result.Error*/);
-        }
-
-        [Authorize(Policy = "UserPolicy")]
-        [HttpGet]
-        public async Task<ActionResult<EditPostViewModel>> Update(int id)
-        {
-            var response = await postManager.GetByIdAsync(id);
-
-            var post = new EditPostViewModel
-            {
-                Id = id,
-                Title = response.Title,
-                Text = response.Text,
-                PublishDate = response.PublishDate,
-                AuthorsName = response.AuthorsName,
-                ImagesNames = response.ImagesNames
-            };
-
-            return Ok(post);
-        }
-
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/edit-post/")]
+        [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Update(EditPostViewModel postViewModel)
+        public async Task<IActionResult> Update([FromForm] UpdatePostRequest request, [FromForm] string username,
+            IEnumerable<IFormFile>? images)
         {
             if (User.Identity == null)
             {
-                return Unauthorized(postViewModel);
+                return Unauthorized(request);
             }
-            postViewModel.AuthorsName = User.Identity.Name!;
 
-            ModelState.Remove("AuthorsName");
+            if (User.Identity.Name != username)
+            {
+                return Forbid();
+            }
+
             if (!ModelState.IsValid)
             {
-                return BadRequest(postViewModel);
+                return BadRequest(request);
             }
 
-            var request = new UpdatePostRequest
-            {
-                Id = postViewModel.Id,
-                Title = postViewModel.Title,
-                Text = postViewModel.Text,
-            };
-
             var result = await postManager.UpdateAsync(request);
+
+            await imageManager.DeletePostImagesAsync(request.Id);
+
+            if (images != null && images.Any() && result)
+            {
+                var imageList = new List<UploadImageRequest>();
+                foreach (var image in images)
+                {
+                    var imageRequest = new UploadImageRequest
+                    {
+                        ImageFile = image,
+                        PostId = request.Id
+                    };
+
+                    imageList.Add(imageRequest);
+                }
+                var loadingImages = await imageManager.UploadPostImagesAsync(imageList);
+            }
+
             if (result)
                 return Ok();
             else
                 return StatusCode(StatusCodes.Status500InternalServerError/*, result.Error*/);
         }
 
-        [Authorize(Policy = "UserPolicy")]
+        [Route("api/delete-post/{id}")]
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await postManager.GetByIdAsync(id);
-
-            if (response.ImagesNames != null)
-            {
-                var deletingImages = Task.Run(async () => await imageManager.DeletePostImagesAsync(id)).Result;
-            }
+            await imageManager.DeletePostImagesAsync(id);
 
             var result = await postManager.DeleteAsync(id);
 

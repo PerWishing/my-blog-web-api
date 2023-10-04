@@ -21,6 +21,8 @@ namespace MyBlog.Persistance.Repositories.UserRepository
         Task<bool> UpdateAsync(UpdateUserRequest request);
         Task<bool> BlockByNameAsync(string username);
         Task<bool> UnblockByNameAsync(string username);
+        Task<bool> GiveAdminRoleAsync(string username);
+        Task<bool> DeleteAdminRoleAsync(string username);
         Task<int> CheckPasswordSignInAsync(string username, string password);
         Task<bool> SignOutAsync();
         Task<IList<string>> GetRolesAsync(string username);
