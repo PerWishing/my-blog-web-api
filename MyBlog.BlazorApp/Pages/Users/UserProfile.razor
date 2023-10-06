@@ -4,11 +4,11 @@
     <div class="col-9">
         <div class="p-3 mb-2 rounded my-grad-blue">
             <h3>@Username</h3>
-            @if (_userDto.isAdmin)
+            @if (_userVm.isAdmin)
             {
                 <h5 class="text-danger">Admin</h5>
             }
-            <img src="@(_userDto.AvatarSrc)" class="rounded" /> <br />
+            <img src="@(_userVm.AvatarSrc)" class="rounded" /> <br />
 
             @if (IsAuth)
             {
@@ -23,7 +23,7 @@
                         <button class="btn btn-outline-success me-2 my-2" @onclick="@OnToggleBlock">Unblock</button>
                     }
 
-                    @if (!_userDto.isAdmin)
+                    @if (!_userVm.isAdmin)
                     {
                         <button class="btn btn-outline-danger my-2" @onclick="@OnToggleGiveAdmin">Give admin</button>
                     }
@@ -42,13 +42,13 @@
                     @if (!IsEditToggled)
                     {
                         <p>
-                            Info about user: @_userDto.AboutMyself
+                            Info about user: @_userVm.AboutMyself
                             <button class="btn btn-info mx-2" @onclick="@OnToggleEdit">Edit</button>
                         </p>
                     }
                     else
                     {
-                        <InputText @bind-Value="_userDto.AboutMyself" />
+                        <InputText @bind-Value="_userVm.AboutMyself" />
                         <button class="btn btn-success" @onclick="@OnToggleEdit">Ok</button>
                         <br />
                     }

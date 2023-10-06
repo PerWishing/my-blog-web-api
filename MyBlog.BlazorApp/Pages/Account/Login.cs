@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MyBlog.BlazorApp.Models;
+using MyBlog.BlazorApp.Models.User;
 using MyBlog.BlazorApp.Services.User;
 
 namespace MyBlog.BlazorApp.Pages.Account
@@ -13,7 +13,7 @@ namespace MyBlog.BlazorApp.Pages.Account
         [Inject]
         private NavigationManager NavigationManager { get; set; } = null!;
 
-        LoginDto login = new LoginDto();
+        LoginVm login = new LoginVm();
         List<string> ErrorMessages = new List<string>();
 
         async Task HandleLogin()

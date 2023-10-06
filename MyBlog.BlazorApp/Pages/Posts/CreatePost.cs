@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
 using MyBlog.BlazorApp.Models.Post;
-using MyBlog.BlazorApp.Pages.Account;
 using MyBlog.BlazorApp.Services.Post;
-using MyBlog.BlazorApp.Services.User;
-using System.Reflection.Metadata;
 
 namespace MyBlog.BlazorApp.Pages.Posts
 {
@@ -20,7 +16,7 @@ namespace MyBlog.BlazorApp.Pages.Posts
         byte[]? blob = null;
         Dictionary<string, byte[]> images = new Dictionary<string, byte[]>();
 
-        public CreatePostDto _createPost = new CreatePostDto();
+        public CreatePostVm _createPost = new CreatePostVm();
 
         protected override async Task OnParametersSetAsync()
         {

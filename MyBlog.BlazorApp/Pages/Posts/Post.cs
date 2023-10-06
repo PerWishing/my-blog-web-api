@@ -21,7 +21,7 @@ namespace MyBlog.BlazorApp.Pages.Posts
         public bool ShowDelPop { get; set; }
         public string Username { get; set; } = "";
 
-        public PostDto _post = new PostDto();
+        public PostVm _post = new PostVm();
 
         protected override async Task OnParametersSetAsync()
         {

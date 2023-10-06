@@ -13,7 +13,7 @@ namespace MyBlog.BlazorApp.Pages.Posts
         [Parameter]
         public int PostId { get; set; }
 
-        public PostDto _post = new PostDto();
+        public PostVm _post = new PostVm();
 
         protected override async Task OnParametersSetAsync()
         {

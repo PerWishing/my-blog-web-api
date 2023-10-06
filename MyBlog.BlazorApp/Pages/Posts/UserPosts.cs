@@ -18,7 +18,7 @@ namespace MyBlog.BlazorApp.Pages.Posts
         [Parameter]
         public int Page { get; set; }
 
-        public PostsPageDto _posts = new PostsPageDto();
+        public PostsPageVm _posts = new PostsPageVm();
 
         [Inject]
         private IJSRuntime JS { get; set; } = null!;
@@ -39,7 +39,7 @@ namespace MyBlog.BlazorApp.Pages.Posts
             await ResetParametersAsync();
 
             if (Page == 0) { Page = 1; }
-            var apiPosts = new PostsPageDto();
+            var apiPosts = new PostsPageVm();
             if (!IsSaved)
             {
                 apiPosts = await postService.GetUserPostsAsync(Username!, Page);
@@ -68,7 +68,7 @@ namespace MyBlog.BlazorApp.Pages.Posts
 
         async Task ResetParametersAsync()
         {
-            _posts = new PostsPageDto();
+            _posts = new PostsPageVm();
         }
 
         public async Task RefreshComponentAsync()

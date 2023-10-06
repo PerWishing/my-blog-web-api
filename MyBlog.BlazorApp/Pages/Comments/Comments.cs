@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components;
-using MyBlog.BlazorApp.Models.Post;
-using MyBlog.BlazorApp.Services.Post;
+﻿using Microsoft.AspNetCore.Components;
 using MyBlog.BlazorApp.Services.Comment;
-using MyBlog.BlazorApp.Models.Comments;
-using BlazorBootstrap;
-using MyBlog.BlazorApp.Pages.Posts;
+using MyBlog.BlazorApp.Models.Comment;
 
 namespace MyBlog.BlazorApp.Pages.Comments
 {
@@ -23,8 +18,8 @@ namespace MyBlog.BlazorApp.Pages.Comments
         [CascadingParameter(Name = "Username")]
         public string Username { get; set; }
 
-        public IList<CommentDto> _comments = new List<CommentDto>();
-        public CreateCommentDto _createComment = new CreateCommentDto();
+        public IList<CommentVm> _comments = new List<CommentVm>();
+        public CreateCommentVm _createComment = new CreateCommentVm();
 
         protected override async Task OnParametersSetAsync()
         {
@@ -48,8 +43,8 @@ namespace MyBlog.BlazorApp.Pages.Comments
         }
         async Task ResetParametersAsync()
         {
-            _createComment = new CreateCommentDto();
-            _comments = new List<CommentDto>();
+            _createComment = new CreateCommentVm();
+            _comments = new List<CommentVm>();
             await Console.Out.WriteLineAsync("Params reseted");
         }
 

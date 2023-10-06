@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using MyBlog.Persistance.Identity;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;

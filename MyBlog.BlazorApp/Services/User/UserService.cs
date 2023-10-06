@@ -1,15 +1,6 @@
-﻿using MyBlog.BlazorApp.Models;
-using MyBlog.BlazorApp.Pages.Account;
-using System.Net.Http.Json;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using System.Net;
-using System.IO;
-using Microsoft.Win32;
-using System.Collections;
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Http;
-using System.Net.Http;
 using MyBlog.BlazorApp.Models.User;
 
 namespace MyBlog.BlazorApp.Services.User
@@ -47,22 +38,22 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<UserDto?> GetUserByNameAsync(string username)
+        public async Task<UserVm?> GetUserByNameAsync(string username)
         {
             try
             {
                 var apiResponse = await httpClient.GetStreamAsync($"api/user/{username}");
 
-                var userDto = await JsonSerializer.DeserializeAsync<UserDto>(apiResponse, new JsonSerializerOptions
+                var userVm = await JsonSerializer.DeserializeAsync<UserVm>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
 
                 var avatarBase64Str = await httpClient.GetStringAsync($"api/avatars/{username}");
                 avatarBase64Str = avatarBase64Str.Replace("\"", "");
-                userDto!.AvatarSrc = "data:image/png;base64," + avatarBase64Str;
+                userVm!.AvatarSrc = "data:image/png;base64," + avatarBase64Str;
 
-                return userDto;
+                return userVm;
             }
             catch (Exception ex)
             {
@@ -71,7 +62,7 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<UsersPageDto?> GetUsersAsync(int page = 1, string? search = null)
+        public async Task<UsersPageVm?> GetUsersAsync(int page = 1, string? search = null)
         {
             try
             {
@@ -85,7 +76,7 @@ namespace MyBlog.BlazorApp.Services.User
                     apiResponse = await httpClient.GetStreamAsync($"api/users/{search}/{page}");
                 }
 
-                var usersPage = await JsonSerializer.DeserializeAsync<UsersPageDto>(apiResponse, new JsonSerializerOptions
+                var usersPage = await JsonSerializer.DeserializeAsync<UsersPageVm>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
@@ -99,17 +90,17 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<UserDto?> GetUserAvatarAsync(string username)
+        public async Task<UserVm?> GetUserAvatarAsync(string username)
         {
             try
             {
-                var userDto = new UserDto { UserName = username };
+                var userVm = new UserVm { UserName = username };
 
                 var avatarBase64Str = await httpClient.GetStringAsync($"api/avatars/{username}");
                 avatarBase64Str = avatarBase64Str.Replace("\"", "");
-                userDto!.AvatarSrc = "data:image/png;base64," + avatarBase64Str;
+                userVm!.AvatarSrc = "data:image/png;base64," + avatarBase64Str;
 
-                return userDto;
+                return userVm;
             }
             catch (Exception ex)
             {
@@ -118,17 +109,17 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<string?> EditUserAsync(UserDto userDto)
+        public async Task<string?> EditUserAsync(UserVm userVm)
         {
             try
             {
-                var editUserDto = new EditUserDto
+                var editUserVm = new EditUserVm
                 {
-                    UserName = userDto.UserName,
-                    AboutMyself = userDto.AboutMyself
+                    UserName = userVm.UserName,
+                    AboutMyself = userVm.AboutMyself
                 };
 
-                var itemJson = new StringContent(JsonSerializer.Serialize(editUserDto), Encoding.UTF8, "application/json");
+                var itemJson = new StringContent(JsonSerializer.Serialize(editUserVm), Encoding.UTF8, "application/json");
                 var apiResponse = await httpClient.PutAsync("api/user/edit", itemJson);
 
                 if (apiResponse.IsSuccessStatusCode)
@@ -148,19 +139,19 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<IsReaderOrFollowedDto?> IsReaderOrFollowedAsync(string username)
+        public async Task<IsReaderOrFollowedVm?> IsReaderOrFollowedAsync(string username)
         {
             try
             {
                 var apiResponse = await httpClient.GetStreamAsync($"api/user/reader-or-followed/{username}");
 
-                var isReaderOrFollowedDto = await JsonSerializer.DeserializeAsync<IsReaderOrFollowedDto>(apiResponse,
+                var isReaderOrFollowedVm = await JsonSerializer.DeserializeAsync<IsReaderOrFollowedVm>(apiResponse,
                     new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
                     });
 
-                return isReaderOrFollowedDto;
+                return isReaderOrFollowedVm;
             }
             catch (Exception ex)
             {
@@ -169,7 +160,7 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<UsersPageDto?> GetReadersAsync(string username, int page = 1, string? search = null)
+        public async Task<UsersPageVm?> GetReadersAsync(string username, int page = 1, string? search = null)
         {
             try
             {
@@ -183,7 +174,7 @@ namespace MyBlog.BlazorApp.Services.User
                 {
                     apiResponse = await httpClient.GetStreamAsync($"api/readers/{username}/{search}/{page}");
                 }
-                var usersPage = await JsonSerializer.DeserializeAsync<UsersPageDto>(apiResponse, new JsonSerializerOptions
+                var usersPage = await JsonSerializer.DeserializeAsync<UsersPageVm>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
@@ -197,7 +188,7 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<UsersPageDto?> GetFollowedUsersAsync(string username, int page = 1, string? search = null)
+        public async Task<UsersPageVm?> GetFollowedUsersAsync(string username, int page = 1, string? search = null)
         {
             try
             {
@@ -212,7 +203,7 @@ namespace MyBlog.BlazorApp.Services.User
                     apiResponse = await httpClient.GetStreamAsync($"api/followed/{username}/{search}/{page}");
                 }
 
-                var usersPage = await JsonSerializer.DeserializeAsync<UsersPageDto>(apiResponse, new JsonSerializerOptions
+                var usersPage = await JsonSerializer.DeserializeAsync<UsersPageVm>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
@@ -362,7 +353,7 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<string?> SignInAsync(LoginDto login)
+        public async Task<string?> SignInAsync(LoginVm login)
         {
             try
             {
@@ -373,13 +364,13 @@ namespace MyBlog.BlazorApp.Services.User
                 {
                     var responseBody = await apiResponse.Content.ReadAsStreamAsync();
 
-                    var jwtTokenDto = await JsonSerializer.DeserializeAsync<JwtTokenDto>(responseBody, new JsonSerializerOptions
+                    var jwtTokenVm = await JsonSerializer.DeserializeAsync<JwtTokenVm>(responseBody, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
                     });
 
-                    await localStorage.SetItemAsync("AccessToken", jwtTokenDto!.AccessToken);
-                    await localStorage.SetItemAsync("RefreshToken", jwtTokenDto.RefreshToken);
+                    await localStorage.SetItemAsync("AccessToken", jwtTokenVm!.AccessToken);
+                    await localStorage.SetItemAsync("RefreshToken", jwtTokenVm.RefreshToken);
 
                     return null;
                 }
@@ -413,7 +404,7 @@ namespace MyBlog.BlazorApp.Services.User
             await localStorage.RemoveItemAsync("RefreshToken");
             return true;
         }
-        public async Task<string?> RegisterAsync(RegisterDto register)
+        public async Task<string?> RegisterAsync(RegisterVm register)
         {
             try
             {
@@ -422,7 +413,7 @@ namespace MyBlog.BlazorApp.Services.User
 
                 if (apiResponse.IsSuccessStatusCode)
                 {
-                    await SignInAsync(new LoginDto
+                    await SignInAsync(new LoginVm
                     {
                         UserName = register.UserName,
                         Password = register.Password
@@ -442,11 +433,11 @@ namespace MyBlog.BlazorApp.Services.User
             }
         }
 
-        public async Task<JwtTokenDto?> RefreshTokenAsync(string accessToken, string refreshToken)
+        public async Task<JwtTokenVm?> RefreshTokenAsync(string accessToken, string refreshToken)
         {
             try
             {
-                var tokenRequest = new JwtTokenDto
+                var tokenRequest = new JwtTokenVm
                 {
                     AccessToken = accessToken,
                     RefreshToken = refreshToken
@@ -459,12 +450,12 @@ namespace MyBlog.BlazorApp.Services.User
                 {
                     var responseBody = await apiResponse.Content.ReadAsStreamAsync();
 
-                    var jwtTokenDto = await JsonSerializer.DeserializeAsync<JwtTokenDto>(responseBody, new JsonSerializerOptions
+                    var jwtTokenVm = await JsonSerializer.DeserializeAsync<JwtTokenVm>(responseBody, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
                     });
 
-                    return jwtTokenDto;
+                    return jwtTokenVm;
                 }
                 return null;
             }

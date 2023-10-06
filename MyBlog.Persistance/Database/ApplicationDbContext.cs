@@ -10,7 +10,7 @@ namespace MyBlog.Persistance.Database
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             :base(options)
         {
-            //Database.EnsureCreated();
+
         }
 
         public DbSet<UserProfile> UserProfiles { get; set; }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Persistance.Repositories.ImageRepository;
 using MyBlog.Persistance.Repositories.PostRepository;
-using MyBlog.Web.ViewModels.Post;
+using MyBlog.Web.Dto.Post;
 
 namespace MyBlog.Web.Controllers.Post
 {
@@ -22,7 +22,7 @@ namespace MyBlog.Web.Controllers.Post
 
         [Route("api/post/{id}")]
         [HttpGet]
-        public async Task<ActionResult<PostViewModel>> GetPost(int id)
+        public async Task<ActionResult<PostDto>> GetPost(int id)
         {
             var response = await postManager.GetByIdAsync(id);
 
@@ -31,7 +31,7 @@ namespace MyBlog.Web.Controllers.Post
                 return NotFound();
             }
 
-            var post = new PostViewModel
+            var post = new PostDto
             {
                 Id = id,
                 Title = response.Title,
@@ -52,7 +52,7 @@ namespace MyBlog.Web.Controllers.Post
         [Route("api/all-posts/{page?}")]
         [Route("api/all-posts/{search?}/{page?}")]
         [HttpGet]
-        public async Task<ActionResult<PostsPageViewModel>> AllPosts(int page = 1, string search = "")
+        public async Task<ActionResult<PostsPageDto>> AllPosts(int page = 1, string search = "")
         {
             var response = string.IsNullOrEmpty(search)
                 ? await postManager.GetAllAsync(page)
@@ -63,16 +63,16 @@ namespace MyBlog.Web.Controllers.Post
                 return NoContent();
             }
 
-            var postsPageVm = new PostsPageViewModel
+            var postsPageVm = new PostsPageDto
             {
                 CurrentPage = page,
                 PageCount = response.PageCount,
-                Posts = new List<PostViewModel>()
+                Posts = new List<PostDto>()
             };
 
             foreach (var p in response.Posts)
             {
-                var postVm = new PostViewModel
+                var postVm = new PostDto
                 {
                     Id = p.Id,
                     Title = p.Title,
@@ -94,7 +94,7 @@ namespace MyBlog.Web.Controllers.Post
         [Route("api/posts/{username}")]
         [Route("api/posts/{username}/{page?}")]
         [HttpGet]
-        public async Task<ActionResult<PostsPageViewModel>> UserPosts(string username, int page = 1)
+        public async Task<ActionResult<PostsPageDto>> UserPosts(string username, int page = 1)
         {
             var response = await postManager.GetAllByAuthorAsync(username, page);
 
@@ -103,16 +103,16 @@ namespace MyBlog.Web.Controllers.Post
                 return NoContent();
             }
 
-            var postsPageVm = new PostsPageViewModel
+            var postsPageVm = new PostsPageDto
             {
                 CurrentPage = page,
                 PageCount = response.PageCount,
-                Posts = new List<PostViewModel>()
+                Posts = new List<PostDto>()
             };
 
             foreach (var p in response.Posts)
             {
-                var postVm = new PostViewModel
+                var postVm = new PostDto
                 {
                     Id = p.Id,
                     Title = p.Title,
@@ -134,7 +134,7 @@ namespace MyBlog.Web.Controllers.Post
         [Route("api/saved-posts/{username}")]
         [Route("api/saved-posts/{username}/{page?}")]
         [HttpGet]
-        public async Task<ActionResult<PostsPageViewModel>> UserSavedPosts(string username, int page = 1)
+        public async Task<ActionResult<PostsPageDto>> UserSavedPosts(string username, int page = 1)
         {
             var response = await postManager.GetAllSavedAsync(username, page);
 
@@ -143,16 +143,16 @@ namespace MyBlog.Web.Controllers.Post
                 return NoContent();
             }
 
-            var postsPageVm = new PostsPageViewModel
+            var postsPageVm = new PostsPageDto
             {
                 CurrentPage = page,
                 PageCount = response.PageCount,
-                Posts = new List<PostViewModel>()
+                Posts = new List<PostDto>()
             };
 
             foreach (var p in response.Posts)
             {
-                var postVm = new PostViewModel
+                var postVm = new PostDto
                 {
                     Id = p.Id,
                     Title = p.Title,

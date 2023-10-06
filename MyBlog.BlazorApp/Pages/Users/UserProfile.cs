@@ -34,9 +34,9 @@ namespace MyBlog.BlazorApp.Pages.Users
         [Parameter]
         public bool GetChild { get; set; } = true;
 
-        public UserDto _userDto = new UserDto();
+        public UserVm _userVm = new UserVm();
 
-        public IsReaderOrFollowedDto? IsReaderOrFollowed = new IsReaderOrFollowedDto();
+        public IsReaderOrFollowedVm? IsReaderOrFollowed = new IsReaderOrFollowedVm();
 
         protected ReadersOrFollowed? childReaders;
 
@@ -73,10 +73,10 @@ namespace MyBlog.BlazorApp.Pages.Users
 
             if (apiUser != null)
             {
-                _userDto = apiUser;
+                _userVm = apiUser;
             }
 
-            IsBlocked = _userDto.isBlocked;
+            IsBlocked = _userVm.isBlocked;
 
             if (IsAuth && !IsCurrentUser)
             {
@@ -97,7 +97,7 @@ namespace MyBlog.BlazorApp.Pages.Users
         {
             if (IsEditToggled)
             {
-                await userService.EditUserAsync(_userDto);
+                await userService.EditUserAsync(_userVm);
 
                 IsEditToggled = false;
             }
@@ -131,13 +131,13 @@ namespace MyBlog.BlazorApp.Pages.Users
         {
             if (IsBlocked)
             {
-                await userService.UnblockUserAsync(_userDto.UserName);
+                await userService.UnblockUserAsync(_userVm.UserName);
 
                 await RefreshComponentAsync();
             }
             else
             {
-                await userService.BlockUserAsync(_userDto.UserName);
+                await userService.BlockUserAsync(_userVm.UserName);
 
                 await RefreshComponentAsync();
             }
@@ -145,15 +145,15 @@ namespace MyBlog.BlazorApp.Pages.Users
 
         async Task OnToggleGiveAdmin()
         {
-            if (_userDto.isAdmin)
+            if (_userVm.isAdmin)
             {
-                await userService.DeleteAdminAsync(_userDto.UserName);
+                await userService.DeleteAdminAsync(_userVm.UserName);
 
                 await RefreshComponentAsync();
             }
             else
             {
-                await userService.GiveAdminAsync(_userDto.UserName);
+                await userService.GiveAdminAsync(_userVm.UserName);
 
                 await RefreshComponentAsync();
             }

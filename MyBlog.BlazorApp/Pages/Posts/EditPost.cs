@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Components;
 using MyBlog.BlazorApp.Models.Post;
 using MyBlog.BlazorApp.Services.Post;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MyBlog.BlazorApp.Pages.Posts
 {
@@ -25,14 +24,14 @@ namespace MyBlog.BlazorApp.Pages.Posts
         byte[]? blob = null;
         Dictionary<string, byte[]> images = new Dictionary<string, byte[]>();
 
-        public PostDto _post = new PostDto();
+        public PostVm _post = new PostVm();
 
-        public EditPostDto _editPost = new EditPostDto();
+        public EditPostVm _editPost = new EditPostVm();
 
         protected override async Task OnParametersSetAsync()
         {
-            _post = new PostDto();
-            _editPost = new EditPostDto();
+            _post = new PostVm();
+            _editPost = new EditPostVm();
             var apiPost = await postService.GetPostAsync(Id);
             var result = await AuthStateProvider.GetAuthenticationStateAsync();
             Username = result.User.Identity!.Name!;

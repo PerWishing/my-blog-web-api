@@ -1,18 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using MyBlog.Web.ViewModels.Accounts;
+﻿using Microsoft.AspNetCore.Mvc;
+using MyBlog.Web.Dto.Accounts;
 using System.Net;
-using System.Net.Mime;
-using MyBlog.Web.Models.Enums;
+using MyBlog.Web.Enums;
 using MyBlog.Persistance.Repositories.UserRepository;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using MyBlog.Persistance.Identity;
 using MyBlog.Web.Extentions;
-using MyBlog.Web.ViewModels.JwtToken;
+using MyBlog.Web.Dto.JwtToken;
 using Microsoft.AspNetCore.Authorization;
 using System.Text.RegularExpressions;
 using System.Globalization;
@@ -35,29 +28,29 @@ namespace MyBlog.Web.Controllers.Accounts
 
         [Route("Login")]
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
+        public async Task<IActionResult> Login(LoginDto loginDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            if (loginViewModel.UserName == null || loginViewModel.Password == null)
+            if (loginDto.UserName == null || loginDto.Password == null)
             {
                 return BadRequest();
             }
 
-            var result = (LoginStatus)await userManager.CheckPasswordSignInAsync(loginViewModel.UserName, loginViewModel.Password);
+            var result = (LoginStatus)await userManager.CheckPasswordSignInAsync(loginDto.UserName, loginDto.Password);
 
             if (result == LoginStatus.UserNotFound)
             {
                 ModelState.AddModelError("", "User not found.");
-                return NotFound(loginViewModel);
+                return NotFound(loginDto);
             }
             if (result == LoginStatus.WrongPassword)
             {
                 ModelState.AddModelError("", "Wrong password.");
-                return Unauthorized(loginViewModel);
+                return Unauthorized(loginDto);
             }
             if (result == LoginStatus.IsBlocked)
             {
@@ -65,9 +58,9 @@ namespace MyBlog.Web.Controllers.Accounts
                 return Forbid();
             }
 
-            var appUser = await userManager.GetIdentityUserByNameAsync(loginViewModel.UserName);
+            var appUser = await userManager.GetIdentityUserByNameAsync(loginDto.UserName);
 
-            var roles = await userManager.GetRolesAsync(loginViewModel.UserName);
+            var roles = await userManager.GetRolesAsync(loginDto.UserName);
 
             var claims = appUser.CreateClaims(roles);
 
@@ -80,7 +73,7 @@ namespace MyBlog.Web.Controllers.Accounts
 
             var RefreshTokenRequest = new SetRefreshTokenRequest
             {
-                Username = loginViewModel.UserName,
+                Username = loginDto.UserName,
                 RefreshToken = RefreshToken,
                 RefreshTokenExpiryTime = RefreshTokenExpiryTime
             };
@@ -92,24 +85,24 @@ namespace MyBlog.Web.Controllers.Accounts
 
         [Route("Register")]
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            if (registerViewModel.UserName == null ||
-                registerViewModel.Password == null ||
-                registerViewModel.Email == null)
+            if (registerDto.UserName == null ||
+                registerDto.Password == null ||
+                registerDto.Email == null)
             {
-                return BadRequest(registerViewModel);
+                return BadRequest(registerDto);
             }
 
             var createResult = await userManager.CreateAsync(
-                registerViewModel.UserName,
-                registerViewModel.Password,
-                registerViewModel.Email);
+                registerDto.UserName,
+                registerDto.Password,
+                registerDto.Email);
 
             if (!createResult)
             {

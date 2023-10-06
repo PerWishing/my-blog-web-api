@@ -1,19 +1,19 @@
 ﻿<div class="card my-grad-blue" style="max-width: 500px; min-width: 450px;">
     <div class="row g-0">
         <div class="col-4">
-            <img src="@(_userDto.AvatarSrc)" class="me-2 rounded"
+            <img src="@(_userVm.AvatarSrc)" class="me-2 rounded"
                  alt="Avatar" width="150" />
         </div>
         <div class="col-8">
             <div class="card-body">
-                <h5 class="card-title">@_userDto.UserName</h5>
-                @if (_userDto.isBlocked)
+                <h5 class="card-title">@_userVm.UserName</h5>
+                @if (_userVm.isBlocked)
                 {
                     <p class="card-text text-danger">BLOCKED</p>
                 }
                 else
                 {
-                    <p class="card-text">@_userDto.AboutMyself</p>
+                    <p class="card-text">@_userVm.AboutMyself</p>
                 }
             </div>
         </div>

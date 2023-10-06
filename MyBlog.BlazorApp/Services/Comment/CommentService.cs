@@ -1,6 +1,4 @@
-﻿using MyBlog.BlazorApp.Models.Comments;
-using MyBlog.BlazorApp.Models.Post;
-using MyBlog.BlazorApp.Models.User;
+﻿using MyBlog.BlazorApp.Models.Comment;
 using System.Text;
 using System.Text.Json;
 
@@ -15,13 +13,13 @@ namespace MyBlog.BlazorApp.Services.Comment
             this.httpClient = httpClient;
         }
 
-        public async Task<IList<CommentDto>?> GetCommentsAsync(int postId)
+        public async Task<IList<CommentVm>?> GetCommentsAsync(int postId)
         {
             try
             {
                 var apiResponse = await httpClient.GetStreamAsync($"api/comments/{postId}");
 
-                var comments = await JsonSerializer.DeserializeAsync<IList<CommentDto>>(apiResponse, new JsonSerializerOptions
+                var comments = await JsonSerializer.DeserializeAsync<IList<CommentVm>>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
@@ -35,7 +33,7 @@ namespace MyBlog.BlazorApp.Services.Comment
             }
         }
 
-        public async Task<string?> CreateCommentAsync(CreateCommentDto post)
+        public async Task<string?> CreateCommentAsync(CreateCommentVm post)
         {
             try
             {

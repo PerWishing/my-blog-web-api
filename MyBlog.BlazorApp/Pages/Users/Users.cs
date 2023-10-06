@@ -15,7 +15,7 @@ namespace MyBlog.BlazorApp.Pages.Users
         [Parameter]
         public string Search { get; set; }
 
-        public UsersPageDto _usersPage = new UsersPageDto();
+        public UsersPageVm _usersPage = new UsersPageVm();
 
         protected override async Task OnParametersSetAsync()
         {

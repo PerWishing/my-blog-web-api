@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Persistance.Repositories.CommentRepository;
-using MyBlog.Web.ViewModels.Comment;
-using MyBlog.Web.ViewModels.Post;
+using MyBlog.Web.Dto.Comment;
 
 namespace MyBlog.Web.Controllers.Comment
 {
@@ -46,15 +45,15 @@ namespace MyBlog.Web.Controllers.Comment
 
         [Route("api/comments/{postId}")]
         [HttpGet]
-        public async Task<ActionResult<IList<CommentViewModel>>> PostComments(int postId)
+        public async Task<ActionResult<IList<CommentDto>>> PostComments(int postId)
         {
             var response = await commentManager.GetAllByPostAsync(postId);
 
-            var comments = new List<CommentViewModel>();
+            var comments = new List<CommentDto>();
 
             foreach (var c in response)
             {
-                var comment = new CommentViewModel
+                var comment = new CommentDto
                 {
                     Id = c.Id,
                     Text = c.Text,

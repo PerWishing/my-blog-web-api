@@ -81,10 +81,10 @@ namespace MyBlog.BlazorApp
             accessToken = accessToken.Replace("\"", "");
             refreshToken = refreshToken.Replace("\"", "");
 
-            var newJwtTokenDto = await userService.RefreshTokenAsync(accessToken, refreshToken);
-            if(newJwtTokenDto == null) { return false; }
-            await localStorage.SetItemAsStringAsync("AccessToken", newJwtTokenDto.AccessToken);
-            await localStorage.SetItemAsStringAsync("RefreshToken", newJwtTokenDto.RefreshToken);
+            var newJwtTokenVm = await userService.RefreshTokenAsync(accessToken, refreshToken);
+            if(newJwtTokenVm == null) { return false; }
+            await localStorage.SetItemAsStringAsync("AccessToken", newJwtTokenVm.AccessToken);
+            await localStorage.SetItemAsStringAsync("RefreshToken", newJwtTokenVm.RefreshToken);
             return true;
         }
 

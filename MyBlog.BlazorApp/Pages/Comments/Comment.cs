@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MyBlog.BlazorApp.Models.Comments;
+using MyBlog.BlazorApp.Models.Comment;
 using MyBlog.BlazorApp.Services.Comment;
-using MyBlog.BlazorApp.Services.Post;
-using System.Xml.Linq;
 
 namespace MyBlog.BlazorApp.Pages.Comments
 {
@@ -19,12 +17,12 @@ namespace MyBlog.BlazorApp.Pages.Comments
         public string Username { get; set; }
 
         [Parameter]
-        public CommentDto CommentModel { get; set; } = null!;
-        public CommentDto _comment = new CommentDto(); 
+        public CommentVm CommentModel { get; set; } = null!;
+        public CommentVm _comment = new CommentVm(); 
 
         protected override async Task OnParametersSetAsync()
         {
-            _comment = new CommentDto();
+            _comment = new CommentVm();
             _comment = CommentModel;
             _comment.IsLiked = await commentService.IsLikedAsync(_comment.Id);
             await Console.Out.WriteLineAsync($"Check {_comment.Id}");

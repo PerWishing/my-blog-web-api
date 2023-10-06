@@ -1,13 +1,6 @@
-﻿using MyBlog.BlazorApp.Models;
-using MyBlog.BlazorApp.Models.Post;
-using MyBlog.BlazorApp.Models.User;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Reflection.Metadata;
+﻿using MyBlog.BlazorApp.Models.Post;
 using System.Text;
 using System.Text.Json;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace MyBlog.BlazorApp.Services.Post
 {
@@ -19,24 +12,24 @@ namespace MyBlog.BlazorApp.Services.Post
         {
             this.httpClient = httpClient;
         }
-        public async Task<PostDto?> GetPostAsync(int id)
+        public async Task<PostVm?> GetPostAsync(int id)
         {
             try
             {
                 var apiResponse = await httpClient.GetStreamAsync($"api/post/{id}");
 
-                var postDto = await JsonSerializer.DeserializeAsync<PostDto>(apiResponse, new JsonSerializerOptions
+                var postVm = await JsonSerializer.DeserializeAsync<PostVm>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
                 var imgsSrcs = new List<string>();
-                foreach (var img in postDto.Images64s)
+                foreach (var img in postVm.Images64s)
                 {
                     var imgStr = img.Replace("\"", "");
                     imgsSrcs.Add("data:image/png;base64," + imgStr);
                 }
-                postDto.Images64s = imgsSrcs;
-                return postDto;
+                postVm.Images64s = imgsSrcs;
+                return postVm;
             }
             catch (Exception ex)
             {
@@ -45,7 +38,7 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
-        public async Task<PostsPageDto?> GetAllPostsAsync(string? search, int page = 1)
+        public async Task<PostsPageVm?> GetAllPostsAsync(string? search, int page = 1)
         {
             try
             {
@@ -59,7 +52,7 @@ namespace MyBlog.BlazorApp.Services.Post
                     apiResponse = await httpClient.GetStreamAsync($"api/all-posts/{search}/{page}");
                 }
 
-                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageDto>(apiResponse, new JsonSerializerOptions
+                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
@@ -73,13 +66,13 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
-        public async Task<PostsPageDto?> GetUserPostsAsync(string username, int page = 1)
+        public async Task<PostsPageVm?> GetUserPostsAsync(string username, int page = 1)
         {
             try
             {
                 var apiResponse = await httpClient.GetStreamAsync($"api/posts/{username}/{page}");
 
-                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageDto>(apiResponse, new JsonSerializerOptions
+                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
@@ -93,13 +86,13 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
-        public async Task<PostsPageDto?> GetUserSavedPostsAsync(string username, int page = 1)
+        public async Task<PostsPageVm?> GetUserSavedPostsAsync(string username, int page = 1)
         {
             try
             {
                 var apiResponse = await httpClient.GetStreamAsync($"api/saved-posts/{username}/{page}");
 
-                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageDto>(apiResponse, new JsonSerializerOptions
+                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
@@ -174,7 +167,7 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
-        public async Task<int?> CreatePostAsync(CreatePostDto post, IEnumerable<byte[]>? images)
+        public async Task<int?> CreatePostAsync(CreatePostVm post, IEnumerable<byte[]>? images)
         {
             try
             {
@@ -212,7 +205,7 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
-        public async Task<string?> EditPostAsync(EditPostDto post, IEnumerable<byte[]>? images)
+        public async Task<string?> EditPostAsync(EditPostVm post, IEnumerable<byte[]>? images)
         {
             try
             {

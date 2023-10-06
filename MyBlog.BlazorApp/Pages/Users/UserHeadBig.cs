@@ -12,11 +12,11 @@ namespace MyBlog.BlazorApp.Pages.Users
         [Parameter]
         public string? Username { get; set; }
 
-        public UserDto _userDto = new UserDto();
+        public UserVm _userVm = new UserVm();
 
         protected override async Task OnParametersSetAsync()
         {
-            _userDto = await userService.GetUserByNameAsync(Username!);
+            _userVm = await userService.GetUserByNameAsync(Username!);
         }
     }
 }

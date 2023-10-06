@@ -10,7 +10,7 @@ namespace MyBlog.BlazorApp.Pages.Users
         private IUserService userService { get; set; } = null!;
         [CascadingParameter(Name = "Username")]
         public string? Username { get; set; }
-        public UsersPageDto _usersPage = new UsersPageDto();
+        public UsersPageVm _usersPage = new UsersPageVm();
         [CascadingParameter(Name = "IsReaders")]
         public bool IsReaders { get; set; }
         [CascadingParameter(Name = "IsFollowedUsers")]
@@ -25,7 +25,7 @@ namespace MyBlog.BlazorApp.Pages.Users
             await ResetParametersAsync();
             if (Page == 0) { Page = 1; }
 
-            UsersPageDto? apiUsersPage = new UsersPageDto();
+            UsersPageVm? apiUsersPage = new UsersPageVm();
             if (IsReaders)
             {
                 apiUsersPage = await userService.GetReadersAsync(Username!, Page, Search);
@@ -50,7 +50,7 @@ namespace MyBlog.BlazorApp.Pages.Users
         }
         async Task ResetParametersAsync()
         {
-            _usersPage = new UsersPageDto();
+            _usersPage = new UsersPageVm();
         }
 
         public async Task RefreshComponentAsync()

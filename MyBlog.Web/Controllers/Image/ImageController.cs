@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Persistance.Repositories.ImageRepository;
-using MyBlog.Web.ViewModels.Image;
-using SixLabors.ImageSharp.Formats;
-using System.Reflection.Metadata;
 
 namespace MyBlog.Web.Controllers.Image
 {

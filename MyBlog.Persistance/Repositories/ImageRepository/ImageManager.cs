@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyBlog.Persistance.Database;
-using MyBlog.Persistance.Identity;
 using MyBlog.Domain.Entities;
-using System.Xml.Linq;
-using System.Linq;
-using System.IO;
 
 namespace MyBlog.Persistance.Repositories.ImageRepository
 {
