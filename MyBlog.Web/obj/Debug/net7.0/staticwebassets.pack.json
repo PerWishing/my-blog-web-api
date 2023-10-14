@@ -45,50 +45,6 @@
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\account.js",
-      "PackagePath": "staticwebassets\\js\\account.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\admin.js",
-      "PackagePath": "staticwebassets\\js\\admin.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\avatar.js",
-      "PackagePath": "staticwebassets\\js\\avatar.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\commentLayout.js",
-      "PackagePath": "staticwebassets\\js\\commentLayout.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\createPost.js",
-      "PackagePath": "staticwebassets\\js\\createPost.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\editPost.js",
-      "PackagePath": "staticwebassets\\js\\editPost.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\mainSearch.js",
-      "PackagePath": "staticwebassets\\js\\mainSearch.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\postLayout.js",
-      "PackagePath": "staticwebassets\\js\\postLayout.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\postsPagination.js",
-      "PackagePath": "staticwebassets\\js\\postsPagination.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\userLayout.js",
-      "PackagePath": "staticwebassets\\js\\userLayout.js"
-    },
-    {
-      "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\js\\usersSearch.js",
-      "PackagePath": "staticwebassets\\js\\usersSearch.js"
-    },
-    {
       "Id": "C:\\Users\\User\\source\\repos\\MyBlog\\MyBlog.Web\\wwwroot\\lib\\bootstrap\\LICENSE",
       "PackagePath": "staticwebassets\\lib\\bootstrap"
     },
