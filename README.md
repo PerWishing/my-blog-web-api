@@ -1,2 +1,14 @@
 # .NET 7 AspNet Core WebAPI MyBlog
-Сервис, позволяющий пользователям вести микроблоги. В будущем планируется создать чат для пользователей в виде отдельного приложения.
+Веб-приложение: сервис микроблогов «MyBlog»
+
+•	WebApi, Blazor, Bootstrap
+
+•	Jwt Authentication 
+
+•	Identity
+
+•	БД Sqlite
+
+•	ORM Entity Framework
+
+•	Imagesharp для аватарок и картинок
