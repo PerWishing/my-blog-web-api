@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using MyBlog.Domain.Entities.Summarizations;
 using MyBlog.Domain.Entities.Summarizations.Parameters;
+using MyBlog.Domain.Exceptions;
 using MyBlog.Persistance.Database;
 using MyBlog.Persistance.ExternalFeatures.SummarizationModelApis;
+using MyBlog.Persistance.Repositories.SummarizationRepository.Dtos;
+using MyBlog.Persistance.Repositories.UserRepository;
 
 namespace MyBlog.Persistance.Repositories.SummarizationRepository;
 
@@ -19,8 +22,16 @@ public class SummarizationManager
         this.httpClient = httpClient;
     }
 
-    public async Task<string> DoSummarization(string inputText)
+    public async Task<SummarizationSimpleResult> DoSimpleSummarization(
+        string inputText,
+        string userName)
     {
+        var user = await context.UserProfiles.SingleOrDefaultAsync(u => u.UserName == userName);
+        if (user == null)
+        {
+            throw new BadRequestException($"Пользователь {userName} не найден");
+        }
+        
         var summarizationExisting = await context.Summarizations
             .AsNoTracking()
             .Where(s => s.InputText == inputText)
@@ -28,7 +39,13 @@ public class SummarizationManager
 
         if (summarizationExisting != null)
         {
-            return summarizationExisting.OutputSummarizedText ?? "";
+            return new SummarizationSimpleResult
+            {
+                InputText = summarizationExisting.InputText ?? "",
+                TopicText = summarizationExisting.TopicText ?? "",
+                OutputSummarizedText = summarizationExisting.OutputSummarizedText ?? "",
+                CreatedAt = summarizationExisting.CreatedAt,
+            };
         }
         
         var result = await httpClient.GetSummarizationFromApi(inputText);
@@ -38,11 +55,19 @@ public class SummarizationManager
             InputText = inputText,
             TopicText = result.Topic,
             OutputSummarizedText = result.Summarized,
-            CreatedBy = 0,
+            CreatedBy = user,
         });
         
         context.Summarizations.Add(newSum);
         
-        return "";
+        await context.SaveChangesAsync();
+        
+        return new SummarizationSimpleResult
+        {
+            InputText = newSum.InputText ?? "",
+            TopicText = newSum.TopicText ?? "",
+            OutputSummarizedText = newSum.OutputSummarizedText ?? "",
+            CreatedAt = newSum.CreatedAt,
+        };;
     }
 }

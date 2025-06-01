@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
-using MyBlog.Persistance.Repositories.SummarizationRepository.Dtos;
+using MyBlog.Persistance.ExternalFeatures.SummarizationModelApis.Dtos;
 
 namespace MyBlog.Persistance.ExternalFeatures.SummarizationModelApis;
 
@@ -24,13 +24,18 @@ public class SummarizationModelHttpClient
         var endpoint = "api/topandsum/";
         
         var httpClient = clientFactory.CreateClient();
-
+        httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+        
         var requestDto = new SumApiRequestDto
         {
-            Text = inputText
+            text = inputText
         };
         
         var json = JsonContent.Create(requestDto);
+
+        var byteArray = await json.ReadAsByteArrayAsync();
+        
+        json.Headers.ContentLength = byteArray.Length;
         
         var response = await httpClient.PostAsync(apiUrl + endpoint, json);
 

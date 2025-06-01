@@ -32,4 +32,8 @@
     <Folder Include="Database\Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Database\Migrations\20250601142613_Added link bw sum and user.Designer.cs" />
+  </ItemGroup>
+
 </Project>

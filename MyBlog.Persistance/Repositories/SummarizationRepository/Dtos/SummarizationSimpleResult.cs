@@ -1,9 +1,9 @@
-namespace MyBlog.Domain.Entities.Summarizations.Parameters;
+namespace MyBlog.Persistance.Repositories.SummarizationRepository.Dtos;
 
-public class CreateSimpleSummarizationParams
+public class SummarizationSimpleResult
 {
     public required string InputText { get; set; }
     public required string TopicText { get; set; }
     public required string OutputSummarizedText { get; set; }
-    public required UserProfile CreatedBy { get; set; }
+    public required DateTime CreatedAt { get; set; }
 }

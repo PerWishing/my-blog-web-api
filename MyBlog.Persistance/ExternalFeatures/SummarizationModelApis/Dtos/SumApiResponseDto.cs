@@ -1,4 +1,4 @@
-namespace MyBlog.Persistance.Repositories.SummarizationRepository.Dtos;
+namespace MyBlog.Persistance.ExternalFeatures.SummarizationModelApis.Dtos;
 
 public class SumApiResponseDto
 {

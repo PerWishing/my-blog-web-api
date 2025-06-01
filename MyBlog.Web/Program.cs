@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using MyBlog.Persistance.ExternalFeatures.SummarizationModelApis;
+using MyBlog.Persistance.Repositories.SummarizationRepository;
+using MyBlog.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,7 @@ builder.Services.AddScoped<IPostManager, PostManager>(); //My PostManager
 builder.Services.AddScoped<ICommentManager, CommentManager>(); //My CommentManager
 builder.Services.AddScoped<IImageManager, ImageManager>(); //My ImageManager
 builder.Services.AddScoped<SummarizationModelHttpClient>(); //My Service for NLP model api  
+builder.Services.AddScoped<SummarizationManager>(); //My Service for NLP model api  
 
 //Cookie options for Identity
 builder.Services.ConfigureApplicationCookie(options =>
@@ -131,6 +134,8 @@ using (var scope = scopeFactory.CreateScope())
         dbInitializer.SeedData();
     }
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseStaticFiles();
 
