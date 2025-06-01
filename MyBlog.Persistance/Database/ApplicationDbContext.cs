@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.Domain.Entities;
+using MyBlog.Domain.Entities.Summarizations;
 using MyBlog.Persistance.Identity;
 
 namespace MyBlog.Persistance.Database
@@ -24,6 +25,9 @@ namespace MyBlog.Persistance.Database
         public DbSet<Readers> Readers { get; set; }
 
         public DbSet<UserAvatar> Avatars { get; set; }
+        
+        
+        public DbSet<Summarization> Summarizations { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

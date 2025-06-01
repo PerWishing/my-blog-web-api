@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using MyBlog.Persistance.ExternalFeatures.SummarizationModelApis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,13 +30,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlite(connect
         config.User.RequireUniqueEmail = false;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddHttpClient();
+
 builder.Services.AddScoped<IDbInitializer, DbInitializer>(); //My Seed service
 
 builder.Services.AddScoped<IUserManager, UserManager>(); //My UserManager
 builder.Services.AddScoped<IPostManager, PostManager>(); //My PostManager
 builder.Services.AddScoped<ICommentManager, CommentManager>(); //My CommentManager
 builder.Services.AddScoped<IImageManager, ImageManager>(); //My ImageManager
-
+builder.Services.AddScoped<SummarizationModelHttpClient>(); //My Service for NLP model api  
 
 //Cookie options for Identity
 builder.Services.ConfigureApplicationCookie(options =>
