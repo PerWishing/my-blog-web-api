@@ -30,4 +30,24 @@ public class SummarizationsController : ControllerBase
         
         return Ok(result);
     }
+    
+    [HttpPost("sum-file")]
+    public IActionResult DoFileSummarization(IFormFile file)
+    {
+        if (Path.GetExtension(file.FileName) != ".xlsx")
+        {
+            return BadRequest("Поддерживаются только xlsx файлы");
+        }
+        
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            return Unauthorized();
+        }
+        
+        summarizationManager.CreateSummarizationFromFile(
+            file,
+            User.Identity!.Name!);
+        
+        return Ok();
+    }
 }
