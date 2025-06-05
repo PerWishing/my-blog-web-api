@@ -1,4 +1,6 @@
-﻿namespace MyBlog.Domain.Entities
+﻿using MyBlog.Domain.Entities.Summarizations;
+
+namespace MyBlog.Domain.Entities
 {
     public class Post
     {
@@ -8,5 +10,7 @@
         public DateTime PublishDate { get; set; } 
         public UserProfile Author { get; set; } = null!;
         public IEnumerable<PostImage>? Images { get; set; }
+
+        public Summarization? Summarization { get; set; }
     }
 }

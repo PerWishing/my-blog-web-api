@@ -30,6 +30,7 @@ public class SummarizationManager
     }
 
     public async Task<SummarizationSimpleResult> DoSimpleSummarization(
+        int postId,
         string inputText,
         string userName)
     {
@@ -39,6 +40,8 @@ public class SummarizationManager
             throw new BadRequestException($"Пользователь {userName} не найден");
         }
 
+        var post = context.Posts.Single(p => p.Id == postId);
+        
         var summarizationExisting = await context.Summarizations
             .AsNoTracking()
             .Where(s => s.InputText == inputText)
@@ -63,6 +66,8 @@ public class SummarizationManager
             TopicText = result.Topic,
             OutputSummarizedText = result.Summarized,
             CreatedBy = user,
+            PostId = postId,
+            Post = post,
         });
 
         context.Summarizations.Add(newSum);
@@ -80,6 +85,7 @@ public class SummarizationManager
     }
 
     public void CreateSummarizationFromFile(
+        int postId,
         IFormFile file,
         string userName)
     {
@@ -88,61 +94,53 @@ public class SummarizationManager
         var filename = $"{userName}_sum_output_{DateTime.Now:yymmssfff}.xlsx";
         var xlsxOutputPath = Path.Combine(_sumFolderPath, filename);
 
-        context.Database.BeginTransaction();
-        try
+        var user = context.UserProfiles.Single(u => u.UserName == userName);
+
+        var post = context.Posts.Single(p => p.Id == postId);
+        
+        var newSummarization = new Summarization(new CreateFileSummarizationParams
         {
-            var user = context.UserProfiles.Single(u => u.UserName == userName);
-            
-            var newSummarization = new Summarization(new CreateFileSummarizationParams
-            {
-                InputFilePath = xlsxInputPath,
-                OutputSummarizedFilePath = xlsxOutputPath,
-                CreatedBy = user
-            });
-            
-            context.Summarizations.Add(newSummarization);
-            context.SaveChanges();
-            
-            using (var inputFileStream = new FileStream(xlsxInputPath, FileMode.Create, FileAccess.Write))
-            {
-                file.CopyTo(inputFileStream);
-            }
+            InputFilePath = xlsxInputPath,
+            OutputSummarizedFilePath = xlsxOutputPath,
+            CreatedBy = user,
+            PostId = postId,
+            Post = post
+        });
 
-            var inputFileRows =
-                xlsxInputPath.ExcelToEnumerable<TextDto>()
-                    .ToList();
+        context.Summarizations.Add(newSummarization);
+        context.SaveChanges();
 
-            using var workbook = new XSSFWorkbook();
-
-            var sheet = workbook.CreateSheet("Summarization");
-
-            int rowIndex = 0;
-
-            var row = sheet.CreateRow(rowIndex++);
-            int cellIndex = 0;
-            row.CreateCell(cellIndex++).SetCellValue("Text");
-            row.CreateCell(cellIndex).SetCellValue("Summarization");
-
-            foreach (var inputText in inputFileRows)
-            {
-                var result = httpClient.GetSummarizationFromApi(inputText.Text).GetAwaiter().GetResult();
-                
-                row = sheet.CreateRow(rowIndex++);
-                cellIndex = 0;
-                row.CreateCell(cellIndex++).SetCellValue(inputText.Text);
-                row.CreateCell(cellIndex).SetCellValue(result.Summarized);
-            }
-
-
-            using var fileStream = new FileStream(xlsxOutputPath, FileMode.Create, FileAccess.Write);
-            workbook.Write(fileStream);
-            
-            context.Database.CommitTransaction();
-        }
-        catch (Exception e)
+        using (var inputFileStream = new FileStream(xlsxInputPath, FileMode.Create, FileAccess.Write))
         {
-            context.Database.RollbackTransaction();
-            throw;
+            file.CopyTo(inputFileStream);
         }
+
+        var inputFileRows =
+            xlsxInputPath.ExcelToEnumerable<TextDto>()
+                .ToList();
+
+        using var workbook = new XSSFWorkbook();
+
+        var sheet = workbook.CreateSheet("Summarization");
+
+        int rowIndex = 0;
+
+        var row = sheet.CreateRow(rowIndex++);
+        int cellIndex = 0;
+        row.CreateCell(cellIndex++).SetCellValue("Text");
+        row.CreateCell(cellIndex).SetCellValue("Summarization");
+
+        foreach (var inputText in inputFileRows)
+        {
+            var result = httpClient.GetSummarizationFromApi(inputText.Text).GetAwaiter().GetResult();
+
+            row = sheet.CreateRow(rowIndex++);
+            cellIndex = 0;
+            row.CreateCell(cellIndex++).SetCellValue(inputText.Text);
+            row.CreateCell(cellIndex).SetCellValue(result.Summarized);
+        }
+
+        using var fileStream = new FileStream(xlsxOutputPath, FileMode.Create, FileAccess.Write);
+        workbook.Write(fileStream);
     }
 }

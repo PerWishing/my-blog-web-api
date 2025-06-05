@@ -167,6 +167,50 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
+        public async Task<int?> CreateSummarizationPostAsync(CreatePostVm post, IEnumerable<byte[]>? images)
+        {
+            try
+            {
+                if (post.Text == null)
+                {
+                    post.Text = "Суммаризация находится в файле.";
+                }
+                
+                var multipartContent = new MultipartFormDataContent();
+                multipartContent.Add(new StringContent(post.Title), String.Format("\"{0}\"", "Title"));
+                multipartContent.Add(new StringContent(post.Text), String.Format("\"{0}\"", "Text"));
+                multipartContent.Add(new StringContent(""), String.Format("\"{0}\"", "AuthorsName"));
+
+                var bytesEnumerable = images?.ToList();
+                if (bytesEnumerable != null && bytesEnumerable.Any())
+                {
+                    foreach (var img in bytesEnumerable)
+                    {
+                        multipartContent.Add(new ByteArrayContent(img), "images", "inputfile.xlsx");
+                    }
+                }
+                var apiResponse = await httpClient.PostAsync("api/sum/create", multipartContent);
+
+                if (apiResponse.IsSuccessStatusCode)
+                {
+                    var responseBody = await apiResponse.Content.ReadAsStreamAsync();
+
+                    var postId = await JsonSerializer.DeserializeAsync<int>(responseBody, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    });
+
+                    return postId;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
         public async Task<int?> CreatePostAsync(CreatePostVm post, IEnumerable<byte[]>? images)
         {
             try

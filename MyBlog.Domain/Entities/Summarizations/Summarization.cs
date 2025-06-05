@@ -18,6 +18,9 @@ public class Summarization
         
         CreatedAt = DateTime.Now;
 
+        PostId = parameters.PostId;
+        Post = parameters.Post;
+        
         SummarizationType = SummarizationType.Simple;
     }
     
@@ -30,6 +33,9 @@ public class Summarization
         
         CreatedAt = DateTime.Now;
 
+        PostId = parameters.PostId;
+        Post = parameters.Post;
+        
         SummarizationType = SummarizationType.File;
     }
     
@@ -46,5 +52,8 @@ public class Summarization
     public UserProfile Author { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
+    public int PostId { get; private set; }
+    public Post Post { get; private set; }
+    
     public SummarizationType SummarizationType { get; set; }
 }

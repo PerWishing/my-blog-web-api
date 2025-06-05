@@ -1,33 +1,36 @@
 ﻿@page "/create-post"
 
-<h3>CreatePost</h3>
+<h3>Создать суммаризацию</h3>
 
 <EditForm Model="_createPost" OnSubmit="HandleCreatePost">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <label>Title</label><br />
-    <InputText @bind-Value="_createPost.Title" /><br />
-    <ValidationMessage For="@(() => _createPost.Title)" />
-    <label>Text</label><br />
-    <InputText @bind-Value="_createPost.Text" /><br />
-    <ValidationMessage For="@(() => _createPost.Text)" />
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="col-6 ">
+        <label>Название</label><br/>
+        <InputText class="form-control" @bind-Value="_createPost.Title"/>
+        <br/>
+        <ValidationMessage For="@(() => _createPost.Title)"/>
+        <label>Текст для суммаризации</label><br/>
+        <InputTextArea class="form-control" disabled="@IsDisabled" @bind-Value="_createPost.Text"/>
+        <br/>
+        <ValidationMessage For="@(() => _createPost.Text)"/>
+    </div>
 
-    <br />
-    <InputFile OnChange="OnInputFileChange"></InputFile> <br />
+    <InputFile class="btn btn-info my-2" accept=".xlsx" OnChange="OnInputFileChange"></InputFile>
 
     @if (images.Any())
     {
-        foreach(var image in images)
+        foreach (var image in images)
         {
-            <img src="@($"{image.Key}")" width="180"/>
-            <button class="btn btn-danger" @onclick="@(e => HandleDeleteImg(image.Key))">Delete</button>
-
-            <br />
+            <div class="px-3">
+                <span class="oi oi-document" aria-hidden="true">@image.Key</span>
+                <button class="btn btn-danger" @onclick="@(e => HandleDeleteImg(image.Key))">Удалить</button>
+            </div>
         }
     }
 
     <div>
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">Создать</button>
     </div>
 </EditForm>
 

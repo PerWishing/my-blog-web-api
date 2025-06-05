@@ -7,14 +7,13 @@ namespace MyBlog.BlazorApp.Pages.Posts
 {
     public partial class CreatePost
     {
-        [Inject]
-        private IPostService postService { get; set; } = null!;
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = null!;
+        [Inject] private IPostService postService { get; set; } = null!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
         IBrowserFile file;
         byte[]? blob = null;
         Dictionary<string, byte[]> images = new Dictionary<string, byte[]>();
+        public bool IsDisabled = false;
 
         public CreatePostVm _createPost = new CreatePostVm();
 
@@ -26,24 +25,27 @@ namespace MyBlog.BlazorApp.Pages.Posts
 
         async Task HandleCreatePost()
         {
-            var id = await postService.CreatePostAsync(_createPost, images.Values);
+            var id = await postService.CreateSummarizationPostAsync(_createPost, images.Values);
             if (id != null)
             {
                 NavigationManager.NavigateTo($"/post/{id}");
             }
         }
+
         async Task OnInputFileChange(InputFileChangeEventArgs args)
         {
             file = args.File;
             var buffers = new byte[file.Size];
             await file.OpenReadStream().ReadAsync(buffers);
-            string imageType = file.ContentType;
-            var imgUrl = $"data:{imageType};base64,{Convert.ToBase64String(buffers)}";
-            images.Add(imgUrl, buffers);
+            var fileName = file.Name;
+            images.Add(fileName, buffers);
+            IsDisabled = true ;
         }
+
         void HandleDeleteImg(string imgKey)
         {
             images.Remove(imgKey);
+            IsDisabled = false;
         }
     }
 }
