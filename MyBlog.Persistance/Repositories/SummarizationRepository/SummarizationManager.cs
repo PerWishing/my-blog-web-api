@@ -125,10 +125,12 @@ public class SummarizationManager
 
             foreach (var inputText in inputFileRows)
             {
+                var result = httpClient.GetSummarizationFromApi(inputText.Text).GetAwaiter().GetResult();
+                
                 row = sheet.CreateRow(rowIndex++);
                 cellIndex = 0;
                 row.CreateCell(cellIndex++).SetCellValue(inputText.Text);
-                row.CreateCell(cellIndex).SetCellValue("sum");
+                row.CreateCell(cellIndex).SetCellValue(result.Summarized);
             }
 
 
