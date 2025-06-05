@@ -13,6 +13,8 @@ MyBlog.BlazorApp/[Oo]bj/
 MyBlog.BlazorApp/[Ll]og/
 MyBlog.BlazorApp/bin/
 MyBlog.BlazorApp/obj/
+MyBlog.Web/wwwroot/summarizationFiles/
+MyBlog.Web/wwwroot/postsImages/
 
 .idea/
 

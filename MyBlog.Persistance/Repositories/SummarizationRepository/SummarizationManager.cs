@@ -83,40 +83,64 @@ public class SummarizationManager
         IFormFile file,
         string userName)
     {
-        var xlsxInputPath = Path.Combine(_sumFolderPath, file.FileName);
-        using (var inputFileStream = new FileStream(xlsxInputPath, FileMode.Create, FileAccess.Write))
-        {
-            file.CopyTo(inputFileStream);
-        }
-        
-        var inputFileRows =
-            xlsxInputPath.ExcelToEnumerable<TextDto>()
-                .ToList();
-
-        using var workbook = new XSSFWorkbook();
-
-        var sheet = workbook.CreateSheet("Summarization");
-
-        int rowIndex = 0;
-
-        var row = sheet.CreateRow(rowIndex++);
-        int cellIndex = 0;
-        row.CreateCell(cellIndex++).SetCellValue("Text");
-        row.CreateCell(cellIndex).SetCellValue("Summarization");
-
-        foreach (var inputText in inputFileRows)
-        {
-            row = sheet.CreateRow(rowIndex++);
-            cellIndex = 0;
-            row.CreateCell(cellIndex++).SetCellValue(inputText.Text);
-            row.CreateCell(cellIndex).SetCellValue("sum");
-        }
-
+        var xlsxInputPath =
+            Path.Combine(_sumFolderPath, $"{userName}_sum_input_{DateTime.Now:yymmssfff}_{file.FileName}");
         var filename = $"{userName}_sum_output_{DateTime.Now:yymmssfff}.xlsx";
-
         var xlsxOutputPath = Path.Combine(_sumFolderPath, filename);
 
-        using var fileStream = new FileStream(xlsxOutputPath, FileMode.Create, FileAccess.Write);
-        workbook.Write(fileStream);
+        context.Database.BeginTransaction();
+        try
+        {
+            var user = context.UserProfiles.Single(u => u.UserName == userName);
+            
+            var newSummarization = new Summarization(new CreateFileSummarizationParams
+            {
+                InputFilePath = xlsxInputPath,
+                OutputSummarizedFilePath = xlsxOutputPath,
+                CreatedBy = user
+            });
+            
+            context.Summarizations.Add(newSummarization);
+            context.SaveChanges();
+            
+            using (var inputFileStream = new FileStream(xlsxInputPath, FileMode.Create, FileAccess.Write))
+            {
+                file.CopyTo(inputFileStream);
+            }
+
+            var inputFileRows =
+                xlsxInputPath.ExcelToEnumerable<TextDto>()
+                    .ToList();
+
+            using var workbook = new XSSFWorkbook();
+
+            var sheet = workbook.CreateSheet("Summarization");
+
+            int rowIndex = 0;
+
+            var row = sheet.CreateRow(rowIndex++);
+            int cellIndex = 0;
+            row.CreateCell(cellIndex++).SetCellValue("Text");
+            row.CreateCell(cellIndex).SetCellValue("Summarization");
+
+            foreach (var inputText in inputFileRows)
+            {
+                row = sheet.CreateRow(rowIndex++);
+                cellIndex = 0;
+                row.CreateCell(cellIndex++).SetCellValue(inputText.Text);
+                row.CreateCell(cellIndex).SetCellValue("sum");
+            }
+
+
+            using var fileStream = new FileStream(xlsxOutputPath, FileMode.Create, FileAccess.Write);
+            workbook.Write(fileStream);
+            
+            context.Database.CommitTransaction();
+        }
+        catch (Exception e)
+        {
+            context.Database.RollbackTransaction();
+            throw;
+        }
     }
 }

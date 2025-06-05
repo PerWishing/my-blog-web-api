@@ -21,13 +21,25 @@ public class Summarization
         SummarizationType = SummarizationType.Simple;
     }
     
+    public Summarization(CreateFileSummarizationParams parameters)
+    {
+        InputFilePath = parameters.InputFilePath;
+        OutputSummarizedFilePath = parameters.OutputSummarizedFilePath;
+        
+        Author = parameters.CreatedBy;
+        
+        CreatedAt = DateTime.Now;
+
+        SummarizationType = SummarizationType.File;
+    }
+    
     public int Id { get; private set; }
 
     public string? InputText { get; private set; }
     public string? OutputSummarizedText { get; private set; }
     
-    public int? InputFileId { get; private set; }
-    public int? OutputSummarizedFileId { get; private set; }
+    public string? InputFilePath { get; private set; }
+    public string? OutputSummarizedFilePath { get; private set; }
 
     public string? TopicText { get; private set; }
     
