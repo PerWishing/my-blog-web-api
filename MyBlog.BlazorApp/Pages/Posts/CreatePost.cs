@@ -14,6 +14,8 @@ namespace MyBlog.BlazorApp.Pages.Posts
         byte[]? blob = null;
         Dictionary<string, byte[]> images = new Dictionary<string, byte[]>();
         public bool IsDisabled = false;
+        public bool IsProgressBarDisabled = true;
+        public int ProgressBarPercent = 0;
 
         public CreatePostVm _createPost = new CreatePostVm();
 
@@ -23,8 +25,37 @@ namespace MyBlog.BlazorApp.Pages.Posts
             file = null;
         }
 
+        async void IncreasePercent(int ticks)
+        {
+            var random = new Random();
+            var percent = 100 / ticks;
+            await Task.Delay(100);
+            ProgressBarPercent += random.Next(7, 12);
+            
+            StateHasChanged();
+            
+            for (int i = 0; i < ticks; i++)
+            {
+                var sec = random.Next(3, 6);
+                await Task.Delay(sec * 1000);
+
+                if (ProgressBarPercent + percent > 100)
+                {
+                    ProgressBarPercent = 100;
+                }
+                else
+                {
+                    ProgressBarPercent += percent;
+                }
+
+                StateHasChanged();
+            }
+        }
+
         async Task HandleCreatePost()
         {
+            IsProgressBarDisabled = false;
+            IncreasePercent(3);
             var id = await postService.CreateSummarizationPostAsync(_createPost, images.Values);
             if (id != null)
             {
@@ -39,7 +70,7 @@ namespace MyBlog.BlazorApp.Pages.Posts
             await file.OpenReadStream().ReadAsync(buffers);
             var fileName = file.Name;
             images.Add(fileName, buffers);
-            IsDisabled = true ;
+            IsDisabled = true;
         }
 
         void HandleDeleteImg(string imgKey)

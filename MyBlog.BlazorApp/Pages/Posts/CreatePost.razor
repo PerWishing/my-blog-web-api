@@ -29,9 +29,24 @@
         }
     }
 
+    @if (!IsProgressBarDisabled)
+    {
+        <div class="col-6">
+            <p>Создание суммаризации...</p>
+            <div class="progress">
+                <div
+                    class="progress-bar" role="progressbar" style="@($"width: {ProgressBarPercent}%")"
+                    aria-valuenow="@ProgressBarPercent" aria-valuemin="0" aria-valuemax="100">@(ProgressBarPercent)%
+                </div>
+            </div>
+        </div>
+    }
+
     <div>
-        <button type="submit" class="btn btn-primary">Создать</button>
+        <button type="submit" class="btn btn-primary my-4">Создать</button>
     </div>
+
+
 </EditForm>
 
 @code {

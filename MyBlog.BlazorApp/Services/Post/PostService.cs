@@ -220,7 +220,7 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
-        public async Task<int?> CreatePostAsync(CreatePostVm post, IEnumerable<byte[]>? images)
+       public async Task<int?> CreatePostAsync(CreatePostVm post, IEnumerable<byte[]>? images)
         {
             try
             {
