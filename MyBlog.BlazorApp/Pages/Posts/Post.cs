@@ -79,6 +79,18 @@ namespace MyBlog.BlazorApp.Pages.Posts
             }
         }
         
+        async Task DownloadOutputSummarization()
+        {
+            var fileStream = await postService.DownloadOutputSummarizationAsync(Id);
+
+            if (fileStream != null)
+            {
+                using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+                await Js.InvokeVoidAsync("downloadFileFromStream", $"Суммаризация {_post.InputFileName}", streamRef);
+            }
+        }
+        
         async Task EditPostAsync()
         {
             NavigationManager.NavigateTo($"/edit-post/{Id}");

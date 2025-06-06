@@ -325,5 +325,15 @@ namespace MyBlog.BlazorApp.Services.Post
 
             return apiResponse.IsSuccessStatusCode ? responseBody : null;
         }
+        
+        public async Task<Stream?> DownloadOutputSummarizationAsync(int id)
+        {
+            var itemJson = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
+            var apiResponse = await httpClient.PostAsync($"api/sum/download-output-by-post", itemJson);
+
+            var responseBody = await apiResponse.Content.ReadAsStreamAsync();
+
+            return apiResponse.IsSuccessStatusCode ? responseBody : null;
+        }
     }
 }

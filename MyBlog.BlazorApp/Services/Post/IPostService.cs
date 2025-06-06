@@ -16,5 +16,6 @@ namespace MyBlog.BlazorApp.Services.Post
         Task<string?> DeletePostAsync(int id);
         Task<int?> CreateSummarizationPostAsync(CreatePostVm post, IEnumerable<byte[]>? images);
         Task<Stream?> DownloadInputSummarizationAsync(int id);
+        Task<Stream?> DownloadOutputSummarizationAsync(int id);
     }
 }

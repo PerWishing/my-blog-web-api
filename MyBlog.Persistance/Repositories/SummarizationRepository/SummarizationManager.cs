@@ -168,4 +168,29 @@ public class SummarizationManager
 
         return file;
     }
+    
+    public FileDto DownloadSummarizationOutput(int postId)
+    {
+        var post = context.Posts
+            .Include(p => p.Summarization)
+            .Single(p => p.Id == postId);
+
+        if (post.Summarization == null)
+        {
+            throw new BadRequestException("У указанного поста нет суммаризации");
+        }
+
+        if (post.Summarization.InputFilePath == null)
+        {
+            throw new BadRequestException("У указанного поста нет файла суммаризации");
+        }
+
+        var file = new FileDto
+        {
+            Bytes = File.ReadAllBytes(post.Summarization.OutputSummarizedFilePath!),
+            FileName = "Суммаризация" + post.Summarization.InputFilePath!.Split("_").Last(),
+        };
+
+        return file;
+    }
 }

@@ -94,4 +94,15 @@ public class SummarizationsController : ControllerBase
             "application/vnd.openxmlformats-officedocument.wordprocessingml.sheet",
             file.FileName);
     }
+    [Route("download-output-by-post")]
+    [HttpPost]
+    public IActionResult DownloadOutputFile([FromBody]int postId)
+    {
+        var file = summarizationManager.DownloadSummarizationInput(postId);
+
+        return File(
+            file.Bytes,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.sheet",
+            file.FileName);
+    }
 }
