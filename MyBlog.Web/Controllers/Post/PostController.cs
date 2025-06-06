@@ -38,6 +38,9 @@ namespace MyBlog.Web.Controllers.Post
                 Text = response.Text,
                 PublishDate = response.PublishDate,
                 AuthorsName = response.AuthorsName,
+                SummarizedText = response.SummarizedText,
+                InputFileName = response.InputFileName,
+                OutputFileName = response.OutputFileName,
             };
 
             post.Images64s = await imageManager.GetImages64ByPostIdAsync(id);

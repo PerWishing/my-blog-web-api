@@ -223,24 +223,31 @@ namespace MyBlog.Persistance.Repositories.PostRepository
 
         public async Task<GetPostResponse?> GetByIdAsync(int id)
         {
-            var queryResult = await context.Posts.Include(x => x.Author)
+            var post = await context.Posts
+                .Include(x => x.Author)
+                .Include(p => p.Summarization)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (queryResult == null)
+            if (post == null)
             {
                 return null;
             }
 
-            var post = new GetPostResponse
+            var response = new GetPostResponse
             {
                 Id = id,
-                Title = queryResult!.Title,
-                Text = queryResult.Text,
-                PublishDate = queryResult.PublishDate,
-                AuthorsName = queryResult.Author.UserName!
+                Title = post!.Title,
+                Text = post.Text,
+                PublishDate = post.PublishDate,
+                AuthorsName = post.Author.UserName!,
+                SummarizedText = post.Summarization?.OutputSummarizedText,
+                InputFileName = post.Summarization?.InputFilePath?.Split("_").Last(),
+                OutputFileName = post.Summarization != null 
+                    ? $"Результат суммаризации {post.Summarization.CreatedAt.ToShortDateString()}"
+                    : null
             };
 
-            return post;
+            return response;
         }
 
         public async Task<int> SavesCountAsync(int id)

@@ -68,7 +68,7 @@ public class SummarizationsController : ControllerBase
             {
                 await summarizationManager.DoSimpleSummarization(postId, request.Text!, User.Identity.Name!);
             }
-            
+
             await context.Database.CommitTransactionAsync();
         }
         catch (Exception)
@@ -81,5 +81,17 @@ public class SummarizationsController : ControllerBase
             return Ok(postId);
         else
             return BadRequest();
+    }
+
+    [Route("download-input-by-post")]
+    [HttpPost]
+    public IActionResult DownloadInputFile([FromBody]int postId)
+    {
+        var file = summarizationManager.DownloadSummarizationInput(postId);
+
+        return File(
+            file.Bytes,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.sheet",
+            file.FileName);
     }
 }

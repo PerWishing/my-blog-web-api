@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MyBlog.BlazorApp.Models.Post;
 using MyBlog.BlazorApp.Services.Post;
 
@@ -6,6 +7,8 @@ namespace MyBlog.BlazorApp.Pages.Posts
 {
     public partial class Post
     {
+        [Inject]
+        private IJSRuntime Js { get; set; } = null!;
         [Inject]
         private IPostService postService { get; set; } = null!;
         [Inject]
@@ -64,6 +67,18 @@ namespace MyBlog.BlazorApp.Pages.Posts
             NavigationManager.NavigateTo("/user");
         }
 
+        async Task DownloadInputSummarization()
+        {
+            var fileStream = await postService.DownloadInputSummarizationAsync(Id);
+
+            if (fileStream != null)
+            {
+                using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+                await Js.InvokeVoidAsync("downloadFileFromStream", _post.InputFileName, streamRef);
+            }
+        }
+        
         async Task EditPostAsync()
         {
             NavigationManager.NavigateTo($"/edit-post/{Id}");

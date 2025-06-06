@@ -2,7 +2,7 @@
 
 <div class="col-2 p-1 mb-2 rounded my-grad-blue">
     <NavLink href="@($"user/{_post.AuthorsName}")">
-        <MyBlog.BlazorApp.Pages.Users.UserHead Username="@(_post.AuthorsName)" />
+        <MyBlog.BlazorApp.Pages.Users.UserHead Username="@(_post.AuthorsName)"/>
     </NavLink>
 </div>
 @if (IsAuth && !IsAuthor && IsSaved)
@@ -17,16 +17,16 @@
 @if (IsAuth && IsAuthor)
 {
     <button class="btn btn-outline-primary me-2" @onclick="EditPostAsync">Edit</button>
-    <button class="btn btn-outline-danger" @onclick="@(() => ShowDelPop=true)">Delete</button>
+    <button class="btn btn-outline-danger" @onclick="@(() => ShowDelPop = true)">Delete</button>
 }
-<h4 class="post-header p-2 my-2 rounded">@_post.Title</h4>
+<h4 class="post-header p-2 my-2 col-8 rounded">@_post.Title</h4>
 
 
 @if (_post.Images64s?.Count() == 1)
 {
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="@(_post.Images64s.First())" class="mx-auto d-block rounded" />
+            <img src="@(_post.Images64s.First())" class="mx-auto d-block rounded"/>
         </div>
     </div>
 }
@@ -40,11 +40,13 @@
             {
                 if (i == 0)
                 {
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" class="active" aria-current="true" aria-label="Slide @(i+1)"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i"
+                            class="active" aria-current="true" aria-label="Slide @(i + 1)"></button>
                 }
                 else
                 {
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" aria-label="Slide @(i+1)"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i"
+                            aria-label="Slide @(i + 1)"></button>
                 }
             }
         </div>
@@ -57,36 +59,59 @@
                 if (k == 0)
                 {
                     <div class="carousel-item active">
-                        <img src="@(img)" class="mx-auto d-block rounded" />
+                        <img src="@(img)" class="mx-auto d-block rounded"/>
                     </div>
                 }
                 else
                 {
                     <div class="carousel-item">
-                        <img src="@(img)" class="mx-auto d-block rounded" />
+                        <img src="@(img)" class="mx-auto d-block rounded"/>
                     </div>
                 }
+
                 k++;
             }
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
     </div>
 }
 
-<p class="post-text p-2 my-2 rounded">@_post.Text</p>
+<div class="col-8">
+    <p class="post-text p-2 my-2 rounded">@_post.Text</p>
+
+    @if (_post.SummarizedText != null)
+    {
+        <p class="post-text p-2 my-2 rounded">@_post.SummarizedText</p>
+    }
+    @if (_post.InputFileName != null)
+    {
+        <button class="p-2 me-2 mb-1 bg-primary col-4 text-white rounded border-0"
+                @onclick="DownloadInputSummarization"><span class="oi oi-document"
+                                                            aria-hidden="true">@_post.InputFileName</span></button>
+    }
+    @if (_post.OutputFileName != null)
+    {
+        <button class="p-2 mb-1 bg-success col-4 text-white rounded border-0"
+                @onclick="DownloadInputSummarization"><span class="oi oi-document"
+                                                            aria-hidden="true">@_post.OutputFileName</span></button>
+    }
+</div>
+
 
 @if (IsRendered)
 {
     <CascadingValue Value="@(IsAuth)" Name="IsAuth">
         <CascadingValue Value="@(Username)" Name="Username">
-            <MyBlog.BlazorApp.Pages.Comments.Comments PostId="@Id" />
+            <MyBlog.BlazorApp.Pages.Comments.Comments PostId="@Id"/>
         </CascadingValue>
     </CascadingValue>
 }
@@ -101,18 +126,18 @@
                     <h3 class="modal-title">Delete post?</h3>
                     <!-- Button to close the popup -->
                     <button class="close btn btn-outline-danger"
-                        @onclick="@(() => ShowDelPop=false)">
+                            @onclick="@(() => ShowDelPop = false)">
                         X
                     </button>
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete this post?</p>
                     <button class="btn btn-outline-primary"
-                        @onclick="DeletePostAsync">
+                            @onclick="DeletePostAsync">
                         Yes
                     </button>
                     <button class="btn btn-outline-danger"
-                        @onclick="@(() => ShowDelPop=false)">
+                            @onclick="@(() => ShowDelPop = false)">
                         No
                     </button>
                 </div>
@@ -120,6 +145,20 @@
         </div>
     </div>
 }
+
+<script>
+    window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+        const arrayBuffer = await contentStreamReference.arrayBuffer();
+        const blob = new Blob([arrayBuffer]);
+        const url = URL.createObjectURL(blob);
+        const anchorElement = document.createElement('a');
+        anchorElement.href = url;
+        anchorElement.download = fileName ?? '';
+        anchorElement.click();
+        anchorElement.remove();
+        URL.revokeObjectURL(url);
+    }
+</script>
 
 @code {
 

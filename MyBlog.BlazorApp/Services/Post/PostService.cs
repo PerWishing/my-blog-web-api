@@ -12,6 +12,7 @@ namespace MyBlog.BlazorApp.Services.Post
         {
             this.httpClient = httpClient;
         }
+
         public async Task<PostVm?> GetPostAsync(int id)
         {
             try
@@ -28,6 +29,7 @@ namespace MyBlog.BlazorApp.Services.Post
                     var imgStr = img.Replace("\"", "");
                     imgsSrcs.Add("data:image/png;base64," + imgStr);
                 }
+
                 postVm.Images64s = imgsSrcs;
                 return postVm;
             }
@@ -52,10 +54,11 @@ namespace MyBlog.BlazorApp.Services.Post
                     apiResponse = await httpClient.GetStreamAsync($"api/all-posts/{search}/{page}");
                 }
 
-                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                });
+                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    });
 
                 return postsPage;
             }
@@ -72,10 +75,11 @@ namespace MyBlog.BlazorApp.Services.Post
             {
                 var apiResponse = await httpClient.GetStreamAsync($"api/posts/{username}/{page}");
 
-                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                });
+                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    });
 
                 return postsPage;
             }
@@ -92,10 +96,11 @@ namespace MyBlog.BlazorApp.Services.Post
             {
                 var apiResponse = await httpClient.GetStreamAsync($"api/saved-posts/{username}/{page}");
 
-                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                });
+                var postsPage = await JsonSerializer.DeserializeAsync<PostsPageVm>(apiResponse,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    });
 
                 return postsPage;
             }
@@ -138,6 +143,7 @@ namespace MyBlog.BlazorApp.Services.Post
                 {
                     return null;
                 }
+
                 return "Can't save post.";
             }
             catch (Exception ex)
@@ -158,6 +164,7 @@ namespace MyBlog.BlazorApp.Services.Post
                 {
                     return null;
                 }
+
                 return "Can't save post.";
             }
             catch (Exception ex)
@@ -175,7 +182,7 @@ namespace MyBlog.BlazorApp.Services.Post
                 {
                     post.Text = "Суммаризация находится в файле.";
                 }
-                
+
                 var multipartContent = new MultipartFormDataContent();
                 multipartContent.Add(new StringContent(post.Title), String.Format("\"{0}\"", "Title"));
                 multipartContent.Add(new StringContent(post.Text), String.Format("\"{0}\"", "Text"));
@@ -189,6 +196,7 @@ namespace MyBlog.BlazorApp.Services.Post
                         multipartContent.Add(new ByteArrayContent(img), "images", "inputfile.xlsx");
                     }
                 }
+
                 var apiResponse = await httpClient.PostAsync("api/sum/create", multipartContent);
 
                 if (apiResponse.IsSuccessStatusCode)
@@ -202,6 +210,7 @@ namespace MyBlog.BlazorApp.Services.Post
 
                     return postId;
                 }
+
                 return null;
             }
             catch (Exception ex)
@@ -227,6 +236,7 @@ namespace MyBlog.BlazorApp.Services.Post
                         multipartContent.Add(new ByteArrayContent(img), "images", "img.png");
                     }
                 }
+
                 var apiResponse = await httpClient.PostAsync("api/create-post", multipartContent);
 
                 if (apiResponse.IsSuccessStatusCode)
@@ -240,6 +250,7 @@ namespace MyBlog.BlazorApp.Services.Post
 
                     return postId;
                 }
+
                 return null;
             }
             catch (Exception ex)
@@ -266,12 +277,14 @@ namespace MyBlog.BlazorApp.Services.Post
                         multipartContent.Add(new ByteArrayContent(img), "images", "img.png");
                     }
                 }
+
                 var apiResponse = await httpClient.PutAsync("api/edit-post", multipartContent);
 
                 if (apiResponse.IsSuccessStatusCode)
                 {
                     return null;
                 }
+
                 return null;
             }
             catch (Exception ex)
@@ -292,6 +305,7 @@ namespace MyBlog.BlazorApp.Services.Post
                 {
                     return null;
                 }
+
                 return "Can't delete post.";
             }
             catch (Exception ex)
@@ -299,6 +313,17 @@ namespace MyBlog.BlazorApp.Services.Post
                 Console.WriteLine($"Error: {ex.Message}");
                 return null;
             }
+        }
+
+
+        public async Task<Stream?> DownloadInputSummarizationAsync(int id)
+        {
+            var itemJson = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
+            var apiResponse = await httpClient.PostAsync($"api/sum/download-input-by-post", itemJson);
+
+            var responseBody = await apiResponse.Content.ReadAsStreamAsync();
+
+            return apiResponse.IsSuccessStatusCode ? responseBody : null;
         }
     }
 }

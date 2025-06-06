@@ -143,4 +143,29 @@ public class SummarizationManager
         using var fileStream = new FileStream(xlsxOutputPath, FileMode.Create, FileAccess.Write);
         workbook.Write(fileStream);
     }
+
+    public FileDto DownloadSummarizationInput(int postId)
+    {
+        var post = context.Posts
+            .Include(p => p.Summarization)
+            .Single(p => p.Id == postId);
+
+        if (post.Summarization == null)
+        {
+            throw new BadRequestException("У указанного поста нет суммаризации");
+        }
+
+        if (post.Summarization.InputFilePath == null)
+        {
+            throw new BadRequestException("У указанного поста нет файла суммаризации");
+        }
+
+        var file = new FileDto
+        {
+            Bytes = File.ReadAllBytes(post.Summarization.InputFilePath!),
+            FileName = post.Summarization.InputFilePath!.Split("_").Last(),
+        };
+
+        return file;
+    }
 }
