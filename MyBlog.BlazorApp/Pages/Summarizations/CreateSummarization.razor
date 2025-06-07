@@ -21,6 +21,18 @@ else
             <InputTextArea class="form-control" @bind-Value="_createSum.InputText"/>
             <br/>
         </div>
+        @if (ProgressBars[0] > 0)
+        {
+            <div class="col-6">
+                <p>Создание суммаризации...</p>
+                <div class="progress">
+                    <div
+                        class="progress-bar" role="progressbar" style="@($"width: {ProgressBars[0]}%")"
+                        aria-valuenow="@ProgressBars[0]" aria-valuemin="0" aria-valuemax="100">@(ProgressBars[0])%
+                    </div>
+                </div>
+            </div>
+        }
     }
     else
     {
@@ -28,34 +40,40 @@ else
 
         @if (images.Any())
         {
+            var index = 0;
             foreach (var image in images)
             {
                 <div class="px-3">
                     <span class="oi oi-document" aria-hidden="true">@image.Key</span>
                     <button class="btn btn-danger" @onclick="@(e => HandleDeleteImg(image.Key))">Удалить</button>
                 </div>
+                
+                <div class="col-6">
+                    @if (ProgressBars[index] > 0)
+                    {
+                        <p>Создание суммаризации...</p>
+                    }
+                    <div class="progress">
+                        <div
+                            class="progress-bar" role="progressbar" style="@($"width: {ProgressBars[index]}%")"
+                            aria-valuenow="@ProgressBars[index]" aria-valuemin="0"
+                            aria-valuemax="100">@(ProgressBars[index])%
+                        </div>
+                    </div>
+                </div>
+
+
+                index++;
             }
         }
+    }
 
-    }
-    
-    @if (!IsProgressBarDisabled)
-    {
-        <div class="col-6">
-            <p>Создание суммаризации...</p>
-            <div class="progress">
-                <div
-                    class="progress-bar" role="progressbar" style="@($"width: {ProgressBarPercent}%")"
-                    aria-valuenow="@ProgressBarPercent" aria-valuemin="0" aria-valuemax="100">@(ProgressBarPercent)%
-                </div>
-            </div>
-        </div>
-    }
-    
+
+
     <div>
         <button type="submit" class="btn btn-primary my-2">Создать</button>
     </div>
-    
+
 </EditForm>
 
 @code {

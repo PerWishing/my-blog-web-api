@@ -17,24 +17,26 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
 
         IBrowserFile file;
         byte[]? blob = null;
-        Dictionary<string, byte[]> images = new();
-        public bool IsProgressBarDisabled = true;
-        public int ProgressBarPercent = 0;
+        Dictionary<string, FileVm> images = new();
 
+        List<int> ProgressBars = new() {0,0,0,0,0,0,0,0,0};
+        
         public CreateSumVm _createSum = new();
 
         protected override async Task OnParametersSetAsync()
         {
-            images = new Dictionary<string, byte[]>();
+            images = new Dictionary<string, FileVm>();
             file = null;
         }
 
-        async Task IncreasePercent(int ticks)
+        async Task IncreasePercent(
+            int ticks,
+            int progBarIndex = 0)
         {
             var random = new Random();
             var percent = 100 / ticks;
             await Task.Delay(100);
-            ProgressBarPercent += random.Next(7, 12);
+            ProgressBars[progBarIndex] += random.Next(7, 12);
 
             StateHasChanged();
 
@@ -43,13 +45,13 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
                 var sec = random.Next(3, 6);
                 await Task.Delay(sec * 1000);
 
-                if (ProgressBarPercent + percent > 100)
+                if (ProgressBars[progBarIndex] + percent > 100)
                 {
-                    ProgressBarPercent = 100;
+                    ProgressBars[progBarIndex] = 100;
                 }
                 else
                 {
-                    ProgressBarPercent += percent;
+                    ProgressBars[progBarIndex] += percent;
                 }
 
                 StateHasChanged();
@@ -59,15 +61,31 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
 
         async Task HandleCreatePost()
         {
-            IsProgressBarDisabled = false;
-            var progressTask = IncreasePercent(IsFileSum ? 3 : 1);
-            _createSum.PostId = PostId;
-            var id = await postService.CreateSummarizationAsync(_createSum, images);
-            await progressTask;
-            if (id != null)
+            if (!IsFileSum)
             {
-                NavigationManager.NavigateTo($"/post/{id}");
+                await DoSummarization();
             }
+            else
+            {
+                var index = 0;
+                foreach (var f in images)
+                {
+                    await DoSummarization(index, f.Value);
+                    index++;
+                }
+            }
+            
+            NavigationManager.NavigateTo($"/post/{PostId}");
+        }
+
+        async Task DoSummarization(
+            int progBarIndex = 0,
+            FileVm? file = null)
+        {
+            var progressTask = IncreasePercent(IsFileSum ? 3 : 1, progBarIndex);
+            _createSum.PostId = PostId;
+            await postService.CreateSummarizationAsync(_createSum, file);
+            await progressTask;
         }
 
         async Task OnInputFileChange(InputFileChangeEventArgs args)
@@ -76,7 +94,12 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
             var buffers = new byte[file.Size];
             await file.OpenReadStream().ReadAsync(buffers);
             var fileName = file.Name;
-            images.Add(fileName, buffers);
+            images.Add(fileName, new FileVm
+            {
+                File = buffers,
+                FileProgressBar = 0,
+                FileName = fileName
+            });
         }
 
         void HandleDeleteImg(string imgKey)

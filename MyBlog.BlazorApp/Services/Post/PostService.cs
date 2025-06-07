@@ -185,7 +185,7 @@ namespace MyBlog.BlazorApp.Services.Post
                 {
                     PropertyNameCaseInsensitive = true,
                 });
-                
+
                 return sumVm;
             }
             catch (Exception ex)
@@ -194,8 +194,8 @@ namespace MyBlog.BlazorApp.Services.Post
                 return null;
             }
         }
-        
-        public async Task<int?> CreateSummarizationAsync(CreateSumVm sum, Dictionary<string, byte[]>? filesDict)
+
+        public async Task<int?> CreateSummarizationAsync(CreateSumVm sum, FileVm? files)
         {
             try
             {
@@ -208,12 +208,9 @@ namespace MyBlog.BlazorApp.Services.Post
                 multipartContent.Add(new StringContent(sum.PostId.ToString()), String.Format("{0}", "PostId"));
                 multipartContent.Add(new StringContent(""), String.Format("\"{0}\"", "AuthorsName"));
 
-                if (filesDict != null && filesDict.Any())
+                if (files != null)
                 {
-                    foreach (var f in filesDict)
-                    {
-                        multipartContent.Add(new ByteArrayContent(f.Value), "files", $"{f.Key}");
-                    }
+                    multipartContent.Add(new ByteArrayContent(files.File), "files", $"{files.FileName}");
                 }
 
                 var apiResponse = await httpClient.PostAsync("api/sum/create-sum", multipartContent);
@@ -248,7 +245,7 @@ namespace MyBlog.BlazorApp.Services.Post
                 multipartContent.Add(new StringContent(post.Text), String.Format("\"{0}\"", "Text"));
                 multipartContent.Add(new StringContent(""), String.Format("\"{0}\"", "AuthorsName"));
 
-                var apiResponse = await httpClient.PostAsync("api/create-project", multipartContent);
+                var apiResponse = await httpClient.PostAsync("api/sum/create-project", multipartContent);
 
                 if (apiResponse.IsSuccessStatusCode)
                 {
