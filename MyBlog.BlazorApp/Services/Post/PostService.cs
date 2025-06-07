@@ -195,7 +195,7 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
         
-        public async Task<int?> CreateSummarizationAsync(CreateSumVm sum, IEnumerable<byte[]>? file)
+        public async Task<int?> CreateSummarizationAsync(CreateSumVm sum, Dictionary<string, byte[]>? filesDict)
         {
             try
             {
@@ -208,12 +208,11 @@ namespace MyBlog.BlazorApp.Services.Post
                 multipartContent.Add(new StringContent(sum.PostId.ToString()), String.Format("{0}", "PostId"));
                 multipartContent.Add(new StringContent(""), String.Format("\"{0}\"", "AuthorsName"));
 
-                var bytesEnumerable = file?.ToList();
-                if (bytesEnumerable != null && bytesEnumerable.Any())
+                if (filesDict != null && filesDict.Any())
                 {
-                    foreach (var f in bytesEnumerable)
+                    foreach (var f in filesDict)
                     {
-                        multipartContent.Add(new ByteArrayContent(f), "files", "inputfile.xlsx");
+                        multipartContent.Add(new ByteArrayContent(f.Value), "files", $"{f.Key}");
                     }
                 }
 

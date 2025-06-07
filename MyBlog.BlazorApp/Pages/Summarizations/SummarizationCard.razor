@@ -6,6 +6,9 @@
                 @if (_sum.IsFile)
                 {
                     <h6 class="card-title fw-bold">Суммаризация файла</h6>
+                    <span class="oi oi-document"
+                          aria-hidden="true">@(_sum.InputFileName)</span>
+                    <br/>
                 }
                 else
                 {

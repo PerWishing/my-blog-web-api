@@ -26,6 +26,7 @@ public class Summarization
     
     public Summarization(CreateFileSummarizationParams parameters)
     {
+        InputFileName = parameters.InputFileName;
         InputFilePath = parameters.InputFilePath;
         OutputSummarizedFilePath = parameters.OutputSummarizedFilePath;
         
@@ -44,6 +45,7 @@ public class Summarization
     public string? InputText { get; private set; }
     public string? OutputSummarizedText { get; private set; }
     
+    public string? InputFileName { get; private set; }
     public string? InputFilePath { get; private set; }
     public string? OutputSummarizedFilePath { get; private set; }
 

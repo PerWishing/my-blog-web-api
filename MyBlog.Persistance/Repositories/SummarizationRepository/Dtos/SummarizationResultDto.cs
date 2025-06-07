@@ -9,4 +9,7 @@ public class SummarizationResultDto
     public string CreatedBy { get; set; }
     public string? InputText { get; set; }
     public string? OutputText { get; set; }
+    
+    public string? InputFileName { get; set; }
+    public string? OutputFileName { get; set; }
 }

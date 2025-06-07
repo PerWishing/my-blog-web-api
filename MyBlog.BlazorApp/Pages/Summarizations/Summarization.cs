@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MyBlog.BlazorApp.Models.Post;
+using MyBlog.BlazorApp.Models.Summarizations;
 using MyBlog.BlazorApp.Services.Post;
 
 namespace MyBlog.BlazorApp.Pages.Summarizations
@@ -18,53 +19,32 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
         [Parameter]
         public int Id { get; set; }
         public bool IsAuth { get; set; }
-        public bool IsAuthor { get; set; }
-        public bool IsSaved { get; set; }
         public bool IsRendered { get; set; }
         public bool ShowDelPop { get; set; }
         public string Username { get; set; } = "";
 
-        public PostVm _post = new PostVm();
+        public SumVm _sum = new SumVm();
 
         protected override async Task OnParametersSetAsync()
         {
             await ResetParametersAsync();
 
-            var apiPost = await postService.GetPostAsync(Id);
+            var sum = await postService.GetSumAsync(Id);
 
             var authResult = await AuthStateProvider.GetAuthenticationStateAsync();
             IsAuth = authResult.User.Identity!.IsAuthenticated;
 
             if (IsAuth)
             {
-                IsSaved = await postService.IsSavedPostAsync(Id);
-                IsAuthor = authResult.User.Identity!.Name == apiPost!.AuthorsName;
                 Username = authResult.User.Identity!.Name!;
             }
 
-            if (apiPost != null)
+            if (sum != null)
             {
-                _post = apiPost;
+                _sum = sum;
             }
+            
             IsRendered = true;
-        }
-
-        async Task SavePostAsync()
-        {
-            await postService.SavePostAsync(Id);
-            IsSaved = true;
-        }
-
-        async Task UnsavePostAsync()
-        {
-            await postService.DeleteSavedPostAsync(Id);
-            IsSaved = false;
-        }
-
-        async Task DeletePostAsync()
-        {
-            await postService.DeletePostAsync(Id);
-            NavigationManager.NavigateTo("/user");
         }
 
         async Task DownloadInputSummarization()
@@ -75,7 +55,7 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
             {
                 using var streamRef = new DotNetStreamReference(stream: fileStream);
 
-                await Js.InvokeVoidAsync("downloadFileFromStream", _post.InputFileName, streamRef);
+                await Js.InvokeVoidAsync("downloadFileFromStream", _sum.InputFileName, streamRef);
             }
         }
         
@@ -87,7 +67,7 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
             {
                 using var streamRef = new DotNetStreamReference(stream: fileStream);
 
-                await Js.InvokeVoidAsync("downloadFileFromStream", $"Суммаризация {_post.InputFileName}", streamRef);
+                await Js.InvokeVoidAsync("downloadFileFromStream", $"Суммаризация {_sum.InputFileName}", streamRef);
             }
         }
         
@@ -99,8 +79,6 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
         async Task ResetParametersAsync()
         {
             IsAuth = false;
-            IsAuthor = false;
-            IsSaved = false;
             ShowDelPop = false;
             IsRendered = false;
             Username = "";

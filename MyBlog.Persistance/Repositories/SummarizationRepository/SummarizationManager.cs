@@ -43,7 +43,9 @@ public class SummarizationManager
             CreatedAt = sum.CreatedAt.ToShortDateString(),
             CreatedBy = sum.Author.UserName,
             InputText = sum.InputText,
-            OutputText = sum.OutputSummarizedText
+            OutputText = sum.OutputSummarizedText,
+            InputFileName = sum.InputFileName,
+            OutputFileName = $"Суммаризация {sum.InputFileName}"
         };
     }
     
@@ -111,7 +113,7 @@ public class SummarizationManager
         string userName)
     {
         var xlsxInputPath =
-            Path.Combine(_sumFolderPath, $"{userName}_sum_input_{DateTime.Now:yymmssfff}_{file.FileName}");
+            Path.Combine(_sumFolderPath, $"{userName}_sum_input_{DateTime.Now:yymmssfff}");
         var filename = $"{userName}_sum_output_{DateTime.Now:yymmssfff}.xlsx";
         var xlsxOutputPath = Path.Combine(_sumFolderPath, filename);
 
@@ -121,11 +123,12 @@ public class SummarizationManager
         
         var newSummarization = new Summarization(new CreateFileSummarizationParams
         {
+            InputFileName = file.FileName,
             InputFilePath = xlsxInputPath,
             OutputSummarizedFilePath = xlsxOutputPath,
             CreatedBy = user,
             PostId = postId,
-            Post = post
+            Post = post,
         });
 
         context.Summarizations.Add(newSummarization);

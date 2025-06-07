@@ -62,7 +62,7 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
             IsProgressBarDisabled = false;
             IncreasePercent(3);
             _createSum.PostId = PostId;
-            var id = await postService.CreateSummarizationAsync(_createSum, images.Values);
+            var id = await postService.CreateSummarizationAsync(_createSum, images);
             if (id != null)
             {
                 NavigationManager.NavigateTo($"/post/{id}");

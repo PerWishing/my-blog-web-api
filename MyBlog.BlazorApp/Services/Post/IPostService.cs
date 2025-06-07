@@ -20,6 +20,6 @@ namespace MyBlog.BlazorApp.Services.Post
 
         Task<SumVm?> GetSumAsync(int sumId);
         Task<int?> CreateProjectAsync(CreatePostVm post);
-        Task<int?> CreateSummarizationAsync(CreateSumVm sum, IEnumerable<byte[]>? file);
+        Task<int?> CreateSummarizationAsync(CreateSumVm sum, Dictionary<string, byte[]>? filesDict);
     }
 }
