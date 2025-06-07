@@ -11,11 +11,10 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
         [Inject] private IPostService postService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
-        [Parameter]
-        public int PostId { get; set; }
+        [Parameter] public int PostId { get; set; }
 
         public bool IsFileSum { get; set; }
-        
+
         IBrowserFile file;
         byte[]? blob = null;
         Dictionary<string, byte[]> images = new();
@@ -30,15 +29,15 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
             file = null;
         }
 
-        async void IncreasePercent(int ticks)
+        async Task IncreasePercent(int ticks)
         {
             var random = new Random();
             var percent = 100 / ticks;
             await Task.Delay(100);
             ProgressBarPercent += random.Next(7, 12);
-            
+
             StateHasChanged();
-            
+
             for (int i = 0; i < ticks; i++)
             {
                 var sec = random.Next(3, 6);
@@ -54,15 +53,17 @@ namespace MyBlog.BlazorApp.Pages.Summarizations
                 }
 
                 StateHasChanged();
+                await Task.Delay(sec * 200);
             }
         }
 
         async Task HandleCreatePost()
         {
             IsProgressBarDisabled = false;
-            IncreasePercent(3);
+            var progressTask = IncreasePercent(IsFileSum ? 3 : 1);
             _createSum.PostId = PostId;
             var id = await postService.CreateSummarizationAsync(_createSum, images);
+            await progressTask;
             if (id != null)
             {
                 NavigationManager.NavigateTo($"/post/{id}");

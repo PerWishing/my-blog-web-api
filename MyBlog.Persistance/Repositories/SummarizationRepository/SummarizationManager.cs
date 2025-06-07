@@ -78,16 +78,13 @@ public class SummarizationManager
             };
         }
         
-        //TODO! UNCOM AFT TEST
-        // var result = await httpClient.GetSummarizationFromApi(inputText);
+        var result = await httpClient.GetSummarizationFromApi(inputText);
 
         var newSum = new Summarization(new CreateSimpleSummarizationParams
         {
             InputText = inputText,
-            // TopicText = result.Topic,
-            TopicText = "",
-            // OutputSummarizedText = result.Summarized,
-            OutputSummarizedText = "",
+            TopicText = result.Topic,
+            OutputSummarizedText = result.Summarized,
             CreatedBy = user,
             PostId = postId,
             Post = post,
