@@ -11,6 +11,6 @@ namespace MyBlog.Domain.Entities
         public UserProfile Author { get; set; } = null!;
         public IEnumerable<PostImage>? Images { get; set; }
 
-        public Summarization? Summarization { get; set; }
+        public ICollection<Summarization>? Summarizations { get; set; }
     }
 }

@@ -106,9 +106,9 @@ public class SummarizationsController : ControllerBase
 
     [Route("download-input-by-post")]
     [HttpPost]
-    public IActionResult DownloadInputFile([FromBody] int postId)
+    public IActionResult DownloadInputFile([FromBody] int sumId)
     {
-        var file = summarizationManager.DownloadSummarizationInput(postId);
+        var file = summarizationManager.DownloadSummarizationInput(sumId);
 
         return File(
             file.Bytes,
@@ -118,9 +118,9 @@ public class SummarizationsController : ControllerBase
 
     [Route("download-output-by-post")]
     [HttpPost]
-    public IActionResult DownloadOutputFile([FromBody] int postId)
+    public IActionResult DownloadOutputFile([FromBody] int sumId)
     {
-        var file = summarizationManager.DownloadSummarizationOutput(postId);
+        var file = summarizationManager.DownloadSummarizationOutput(sumId);
 
         return File(
             file.Bytes,

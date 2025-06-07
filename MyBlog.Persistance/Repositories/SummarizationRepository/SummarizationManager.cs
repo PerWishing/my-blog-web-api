@@ -150,51 +150,40 @@ public class SummarizationManager
         workbook.Write(fileStream);
     }
 
-    public FileDto DownloadSummarizationInput(int postId)
+    public FileDto DownloadSummarizationInput(
+        int sumId)
     {
-        var post = context.Posts
-            .Include(p => p.Summarization)
-            .Single(p => p.Id == postId);
+        var summarization = context.Summarizations
+            .Single(p => p.Id == sumId);
 
-        if (post.Summarization == null)
+        if (summarization.InputFilePath == null)
         {
-            throw new BadRequestException("У указанного поста нет суммаризации");
-        }
-
-        if (post.Summarization.InputFilePath == null)
-        {
-            throw new BadRequestException("У указанного поста нет файла суммаризации");
+            throw new BadRequestException("Нет файла суммаризации");
         }
 
         var file = new FileDto
         {
-            Bytes = File.ReadAllBytes(post.Summarization.InputFilePath!),
-            FileName = post.Summarization.InputFilePath!.Split("_").Last(),
+            Bytes = File.ReadAllBytes(summarization.InputFilePath!),
+            FileName = summarization.InputFilePath!.Split("_").Last(),
         };
 
         return file;
     }
     
-    public FileDto DownloadSummarizationOutput(int postId)
+    public FileDto DownloadSummarizationOutput(int sumId)
     {
-        var post = context.Posts
-            .Include(p => p.Summarization)
-            .Single(p => p.Id == postId);
-
-        if (post.Summarization == null)
+        var summarization = context.Summarizations
+            .Single(p => p.Id == sumId);
+        
+        if (summarization.InputFilePath == null)
         {
-            throw new BadRequestException("У указанного поста нет суммаризации");
-        }
-
-        if (post.Summarization.InputFilePath == null)
-        {
-            throw new BadRequestException("У указанного поста нет файла суммаризации");
+            throw new BadRequestException("Нет файла суммаризации");
         }
 
         var file = new FileDto
         {
-            Bytes = File.ReadAllBytes(post.Summarization.OutputSummarizedFilePath!),
-            FileName = "Суммаризация" + post.Summarization.InputFilePath!.Split("_").Last(),
+            Bytes = File.ReadAllBytes(summarization.OutputSummarizedFilePath!),
+            FileName = "Суммаризация " + summarization.InputFilePath!.Split("_").Last(),
         };
 
         return file;

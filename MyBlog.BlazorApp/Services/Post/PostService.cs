@@ -308,9 +308,9 @@ namespace MyBlog.BlazorApp.Services.Post
         }
 
 
-        public async Task<Stream?> DownloadInputSummarizationAsync(int id)
+        public async Task<Stream?> DownloadInputSummarizationAsync(int sumId)
         {
-            var itemJson = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
+            var itemJson = new StringContent(JsonSerializer.Serialize(sumId), Encoding.UTF8, "application/json");
             var apiResponse = await httpClient.PostAsync($"api/sum/download-input-by-post", itemJson);
 
             var responseBody = await apiResponse.Content.ReadAsStreamAsync();
@@ -318,9 +318,9 @@ namespace MyBlog.BlazorApp.Services.Post
             return apiResponse.IsSuccessStatusCode ? responseBody : null;
         }
 
-        public async Task<Stream?> DownloadOutputSummarizationAsync(int id)
+        public async Task<Stream?> DownloadOutputSummarizationAsync(int sumId)
         {
-            var itemJson = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
+            var itemJson = new StringContent(JsonSerializer.Serialize(sumId), Encoding.UTF8, "application/json");
             var apiResponse = await httpClient.PostAsync($"api/sum/download-output-by-post", itemJson);
 
             var responseBody = await apiResponse.Content.ReadAsStreamAsync();

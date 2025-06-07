@@ -225,7 +225,6 @@ namespace MyBlog.Persistance.Repositories.PostRepository
         {
             var post = await context.Posts
                 .Include(x => x.Author)
-                .Include(p => p.Summarization)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (post == null)
@@ -239,12 +238,7 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                 Title = post!.Title,
                 Text = post.Text,
                 PublishDate = post.PublishDate,
-                AuthorsName = post.Author.UserName!,
-                SummarizedText = post.Summarization?.OutputSummarizedText,
-                InputFileName = post.Summarization?.InputFilePath?.Split("_").Last(),
-                OutputFileName = post.Summarization != null 
-                    ? $"Результат суммаризации {post.Summarization.CreatedAt.ToShortDateString()}"
-                    : null
+                AuthorsName = post.Author.UserName!
             };
 
             return response;
