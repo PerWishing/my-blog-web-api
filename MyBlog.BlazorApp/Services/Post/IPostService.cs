@@ -17,6 +17,8 @@ namespace MyBlog.BlazorApp.Services.Post
         Task<Stream?> DownloadInputSummarizationAsync(int id);
         Task<Stream?> DownloadOutputSummarizationAsync(int id);
 
+
+        Task<SumVm?> GetSumAsync(int sumId);
         Task<int?> CreateProjectAsync(CreatePostVm post);
         Task<int?> CreateSummarizationAsync(CreateSumVm sum, IEnumerable<byte[]>? file);
     }

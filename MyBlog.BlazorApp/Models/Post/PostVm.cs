@@ -19,5 +19,6 @@ namespace MyBlog.BlazorApp.Models.Post
         public string? SummarizedText { get; set; }
         public string? InputFileName { get; set; }
         public string? OutputFileName { get; set; }
+        public IEnumerable<int>? SumIds { get; set; }
     }
 }

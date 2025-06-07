@@ -29,6 +29,24 @@ public class SummarizationManager
         this.httpClient = httpClient;
     }
 
+    public async Task<SummarizationResultDto> GetSummarizationAsync(int sumId)
+    {
+        var sum = await context.Summarizations
+            .Include(s => s.Author)
+            .SingleAsync(x => x.Id == sumId);
+
+        return new SummarizationResultDto
+        {
+            SumId = sum.Id,
+            PostId = sum.PostId,
+            IsFile = sum.InputFilePath != null,
+            CreatedAt = sum.CreatedAt.ToShortDateString(),
+            CreatedBy = sum.Author.UserName,
+            InputText = sum.InputText,
+            OutputText = sum.OutputSummarizedText
+        };
+    }
+    
     public async Task<SummarizationSimpleResult> DoSimpleSummarization(
         int postId,
         string inputText,

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.BlazorApp.Models.Post;
 using MyBlog.Persistance.Database;
 using MyBlog.Persistance.Repositories.ImageRepository;
 using MyBlog.Persistance.Repositories.PostRepository;
@@ -26,6 +27,14 @@ public class SummarizationsController : ControllerBase
         this.context = context;
     }
 
+    [Route("{sumId:int}")]
+    [HttpGet]
+    public async Task<IActionResult> GetSummarization(int sumId)
+    {
+        var result = await summarizationManager.GetSummarizationAsync(sumId);
+        return Ok(result);
+    }
+    
     [Route("create-project")]
     [HttpPost]
     public async Task<ActionResult<int>> CreateProject([FromForm] CreatePostRequest request)
@@ -53,7 +62,7 @@ public class SummarizationsController : ControllerBase
 
     [Route("create-sum")]
     [HttpPost]
-    public async Task<IActionResult> CreateSum([FromForm] CreateSumRequest request, IEnumerable<IFormFile>? files)
+    public async Task<ActionResult<int>> CreateSum([FromForm] CreateSumRequest request, IEnumerable<IFormFile>? files)
     {
         if (User.Identity == null || !User.Identity.IsAuthenticated)
         {
@@ -100,7 +109,7 @@ public class SummarizationsController : ControllerBase
             throw;
         }
         
-        return Ok();
+        return Ok(postId);
     }
 
 

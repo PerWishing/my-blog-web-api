@@ -14,8 +14,6 @@ namespace MyBlog.Persistance.Repositories.PostRepository
         public DateTime PublishDate { get; set; }
         public string AuthorsName { get; set; } = null!;
         
-        public string? SummarizedText { get; set; }
-        public string? InputFileName { get; set; }
-        public string? OutputFileName { get; set; }
+        public IEnumerable<int>? SumIds { get; set; }
     }
 }

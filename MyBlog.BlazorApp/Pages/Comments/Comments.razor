@@ -1,33 +1,35 @@
-﻿<h4>Comments</h4>
-@if (IsAuth)
-{
-    <div class="row">
-        <div class="col-6 ">
-            <EditForm Model="_createComment" OnSubmit="HandleCreateComment">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <label>Text</label><br />
-                <InputTextArea class="form-control" @bind-Value="_createComment.Text" /><br />
-                <ValidationMessage For="@(() => _createComment.Text)" />
-                <div>
-                    <button type="submit" class="btn btn-primary">Create</button>
-                </div>
-            </EditForm>
-        </div>
-    </div>
-}
-<div class="row">
-
-    @foreach (var comment in _comments)
+﻿<div class="py-3">
+    <h4>Заметки</h4>
+    @if (IsAuth)
     {
-        <CascadingValue Name="ParentComments" Value="@(this)">
-            <CascadingValue Name="IsAuth" Value="@(IsAuth)">
-                <CascadingValue Name="Username" Value="@(Username)">
-                    <Comment CommentModel="@(comment)" />
+        <div class="row">
+            <div class="col-6 ">
+                <EditForm Model="_createComment" OnSubmit="HandleCreateComment">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
+                    <InputTextArea class="form-control" @bind-Value="_createComment.Text"/>
+                    <br/>
+                    <ValidationMessage For="@(() => _createComment.Text)"/>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+    <div class="row">
+
+        @foreach (var comment in _comments)
+        {
+            <CascadingValue Name="ParentComments" Value="@(this)">
+                <CascadingValue Name="IsAuth" Value="@(IsAuth)">
+                    <CascadingValue Name="Username" Value="@(Username)">
+                        <Comment CommentModel="@(comment)"/>
+                    </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
-        </CascadingValue>
-    }
+        }
+    </div>
 </div>
 
 @code {

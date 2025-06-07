@@ -175,6 +175,26 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
+        public async Task<SumVm?> GetSumAsync(int sumId)
+        {
+            try
+            {
+                var apiResponse = await httpClient.GetStreamAsync($"api/sum/{sumId}");
+
+                var sumVm = await JsonSerializer.DeserializeAsync<SumVm>(apiResponse, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
+                
+                return sumVm;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+        
         public async Task<int?> CreateSummarizationAsync(CreateSumVm sum, IEnumerable<byte[]>? file)
         {
             try

@@ -2,7 +2,7 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #ece1f4;
+    background-color: #eae6ed;
 }
 
 h1:focus {
@@ -147,6 +147,6 @@ a, .btn-link {
     color:aliceblue;
 }
 .post-text {
-    background: #e6cee7;
+    background: #eeeef3;
     color: #342e34;
 }

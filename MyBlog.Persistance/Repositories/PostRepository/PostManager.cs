@@ -224,6 +224,7 @@ namespace MyBlog.Persistance.Repositories.PostRepository
         public async Task<GetPostResponse?> GetByIdAsync(int id)
         {
             var post = await context.Posts
+                .Include(p => p.Summarizations)
                 .Include(x => x.Author)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -238,7 +239,8 @@ namespace MyBlog.Persistance.Repositories.PostRepository
                 Title = post!.Title,
                 Text = post.Text,
                 PublishDate = post.PublishDate,
-                AuthorsName = post.Author.UserName!
+                AuthorsName = post.Author.UserName!,
+                SumIds = post.Summarizations?.Select(s =>s.Id)
             };
 
             return response;

@@ -1,40 +1,65 @@
 ﻿@page "/post/{Id:int}"
+@using MyBlog.BlazorApp.Pages.Summarizations
 
-<div class="col-2 p-1 mb-2 rounded my-grad-blue">
-    <NavLink href="@($"user/{_post.AuthorsName}")">
-        <MyBlog.BlazorApp.Pages.Users.UserHead Username="@(_post.AuthorsName)"/>
-    </NavLink>
+<div class="row">
+    <div class="col-2 px-2 mb-2 rounded">
+        <NavLink href="@($"user/{_post.AuthorsName}")" class="btn-link-dark">
+            <MyBlog.BlazorApp.Pages.Users.UserHead Username="@(_post.AuthorsName)"/>
+        </NavLink>
+    </div>
 </div>
-@if (IsAuth && !IsAuthor && IsSaved)
-{
-    <span class="text-success me-2">Saved post</span>
-    <button class="btn btn-outline-danger" @onclick="UnsavePostAsync">Delete from saved</button>
-}
-@if (IsAuth && !IsAuthor && !IsSaved)
-{
-    <button class="btn btn-outline-primary" @onclick="SavePostAsync">Save post</button>
-}
-@if (IsAuth && IsAuthor)
-{
-    <button class="btn btn-outline-primary me-2" @onclick="EditPostAsync">Edit</button>
-    <button class="btn btn-outline-danger" @onclick="@(() => ShowDelPop = true)">Delete</button>
-}
-<h4 class="post-header p-2 my-2 col-8 rounded">@_post.Title</h4>
+<div class="row">
+    <div class="col-8">
 
-<div class="col-8">
-    <p class="post-text p-2 my-2 rounded">@_post.Text</p>
+        <h4 class="post-header p-2 my-2 rounded">@_post.Title</h4>
 
-    <button class="btn btn-outline-primary" @onclick="AddSumAsync">Добавить суммаризацию</button>
+        <div class="px-3">
+            <p class="post-text px-2 py-2 my-2 rounded">@_post.Text</p>
+        </div>
+        <div class="col-6 px-3">
+
+            @if (_post.SumIds != null && _post.SumIds.Any())
+            {
+                @foreach (var sumId in _post.SumIds)
+                {
+                    <div class="mb-3">
+
+                        <NavLink href="@($"sum/{sumId}")" class="btn-link-dark">
+                            <SummarizationCard SumId="@(sumId)"/>
+                        </NavLink>
+                    </div>
+                }
+            }
+        </div>
+        <button class="btn btn-outline-primary" @onclick="AddSumAsync">Добавить суммаризацию</button>
+
+        @if (IsRendered)
+        {
+            <CascadingValue Value="@(IsAuth)" Name="IsAuth">
+                <CascadingValue Value="@(Username)" Name="Username">
+                    <MyBlog.BlazorApp.Pages.Comments.Comments PostId="@Id"/>
+                </CascadingValue>
+            </CascadingValue>
+        }
+    </div>
+    <div class="col-2 py-2">
+        @if (IsAuth && !IsAuthor && IsSaved)
+        {
+            <span class="text-success me-2">Saved post</span>
+            <button class="btn btn-outline-danger" @onclick="UnsavePostAsync">Delete from saved</button>
+        }
+        @if (IsAuth && !IsAuthor && !IsSaved)
+        {
+            <button class="btn btn-outline-primary" @onclick="SavePostAsync">Save post</button>
+        }
+        @if (IsAuth && IsAuthor)
+        {
+            <button class="btn btn-outline-primary me-2" @onclick="EditPostAsync">Редактировать проект</button>
+            <br/>
+            <button class="btn btn-outline-danger my-3" @onclick="@(() => ShowDelPop = true)">Удалить проект</button>
+        }
+    </div>
 </div>
-
-@if (IsRendered)
-{
-    <CascadingValue Value="@(IsAuth)" Name="IsAuth">
-        <CascadingValue Value="@(Username)" Name="Username">
-            <MyBlog.BlazorApp.Pages.Comments.Comments PostId="@Id"/>
-        </CascadingValue>
-    </CascadingValue>
-}
 
 @if (ShowDelPop)
 {

@@ -15,8 +15,7 @@ namespace MyBlog.Web.Dto.Post
         public int SavesCount { get; set; }
         public IEnumerable<string>? Images64s { get; set; }
         
-        public string? SummarizedText { get; set; }
-        public string? InputFileName { get; set; }
-        public string? OutputFileName { get; set; }
+        
+        public IEnumerable<int>? SumIds { get; set; }
     }
 }
