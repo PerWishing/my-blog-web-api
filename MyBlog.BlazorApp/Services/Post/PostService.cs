@@ -1,6 +1,7 @@
 ﻿using MyBlog.BlazorApp.Models.Post;
 using System.Text;
 using System.Text.Json;
+using MyBlog.BlazorApp.Models.Summarizations;
 
 namespace MyBlog.BlazorApp.Services.Post
 {
@@ -174,30 +175,29 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
-        public async Task<int?> CreateSummarizationPostAsync(CreatePostVm post, IEnumerable<byte[]>? images)
+        public async Task<int?> CreateSummarizationAsync(CreateSumVm sum, IEnumerable<byte[]>? file)
         {
             try
             {
-                if (post.Text == null)
+                var multipartContent = new MultipartFormDataContent();
+                if (sum.InputText != null)
                 {
-                    post.Text = "Суммаризация находится в файле.";
+                    multipartContent.Add(new StringContent(sum.InputText), String.Format("\"{0}\"", "InputText"));
                 }
 
-                var multipartContent = new MultipartFormDataContent();
-                multipartContent.Add(new StringContent(post.Title), String.Format("\"{0}\"", "Title"));
-                multipartContent.Add(new StringContent(post.Text), String.Format("\"{0}\"", "Text"));
+                multipartContent.Add(new StringContent(sum.PostId.ToString()), String.Format("{0}", "PostId"));
                 multipartContent.Add(new StringContent(""), String.Format("\"{0}\"", "AuthorsName"));
 
-                var bytesEnumerable = images?.ToList();
+                var bytesEnumerable = file?.ToList();
                 if (bytesEnumerable != null && bytesEnumerable.Any())
                 {
-                    foreach (var img in bytesEnumerable)
+                    foreach (var f in bytesEnumerable)
                     {
-                        multipartContent.Add(new ByteArrayContent(img), "images", "inputfile.xlsx");
+                        multipartContent.Add(new ByteArrayContent(f), "files", "inputfile.xlsx");
                     }
                 }
 
-                var apiResponse = await httpClient.PostAsync("api/sum/create", multipartContent);
+                var apiResponse = await httpClient.PostAsync("api/sum/create-sum", multipartContent);
 
                 if (apiResponse.IsSuccessStatusCode)
                 {
@@ -220,7 +220,7 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
-       public async Task<int?> CreatePostAsync(CreatePostVm post, IEnumerable<byte[]>? images)
+        public async Task<int?> CreateProjectAsync(CreatePostVm post)
         {
             try
             {
@@ -229,15 +229,7 @@ namespace MyBlog.BlazorApp.Services.Post
                 multipartContent.Add(new StringContent(post.Text), String.Format("\"{0}\"", "Text"));
                 multipartContent.Add(new StringContent(""), String.Format("\"{0}\"", "AuthorsName"));
 
-                if (images != null && images.Any())
-                {
-                    foreach (var img in images)
-                    {
-                        multipartContent.Add(new ByteArrayContent(img), "images", "img.png");
-                    }
-                }
-
-                var apiResponse = await httpClient.PostAsync("api/create-post", multipartContent);
+                var apiResponse = await httpClient.PostAsync("api/create-project", multipartContent);
 
                 if (apiResponse.IsSuccessStatusCode)
                 {
@@ -325,7 +317,7 @@ namespace MyBlog.BlazorApp.Services.Post
 
             return apiResponse.IsSuccessStatusCode ? responseBody : null;
         }
-        
+
         public async Task<Stream?> DownloadOutputSummarizationAsync(int id)
         {
             var itemJson = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");

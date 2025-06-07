@@ -1,4 +1,5 @@
 ﻿using MyBlog.BlazorApp.Models.Post;
+using MyBlog.BlazorApp.Models.Summarizations;
 
 namespace MyBlog.BlazorApp.Services.Post
 {
@@ -11,11 +12,12 @@ namespace MyBlog.BlazorApp.Services.Post
         Task<bool> IsSavedPostAsync(int id);
         Task<string?> SavePostAsync(int id);
         Task<string?> DeleteSavedPostAsync(int id);
-        Task<int?> CreatePostAsync(CreatePostVm post, IEnumerable<byte[]>? images);
         Task<string?> EditPostAsync(EditPostVm post, IEnumerable<byte[]>? images);
         Task<string?> DeletePostAsync(int id);
-        Task<int?> CreateSummarizationPostAsync(CreatePostVm post, IEnumerable<byte[]>? images);
         Task<Stream?> DownloadInputSummarizationAsync(int id);
         Task<Stream?> DownloadOutputSummarizationAsync(int id);
+
+        Task<int?> CreateProjectAsync(CreatePostVm post);
+        Task<int?> CreateSummarizationAsync(CreateSumVm sum, IEnumerable<byte[]>? file);
     }
 }

@@ -26,9 +26,34 @@ public class SummarizationsController : ControllerBase
         this.context = context;
     }
 
-    [Route("create")]
+    [Route("create-project")]
     [HttpPost]
-    public async Task<ActionResult<int>> Create([FromForm] CreatePostRequest request, IEnumerable<IFormFile>? images)
+    public async Task<ActionResult<int>> CreateProject([FromForm] CreatePostRequest request)
+    {
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            return Unauthorized();
+        }
+
+        ModelState.Remove("AuthorsName");
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        request.AuthorsName = User.Identity.Name!;
+
+        var postId = await postManager.CreateAsync(request);
+
+        if (postId > 0)
+            return Ok(postId);
+        else
+            return BadRequest();
+    }
+
+    [Route("create-sum")]
+    [HttpPost]
+    public async Task<IActionResult> CreateSum([FromForm] CreateSumRequest request, IEnumerable<IFormFile>? files)
     {
         if (User.Identity == null || !User.Identity.IsAuthenticated)
         {
@@ -44,13 +69,11 @@ public class SummarizationsController : ControllerBase
         request.AuthorsName = User.Identity.Name!;
 
         await context.Database.BeginTransactionAsync();
-        var postId = 0;
+        var postId = request.PostId;
         try
         {
-            postId = await postManager.CreateAsync(request);
-
-            var formFiles = images?.ToList();
-            if (formFiles != null && formFiles.Any() && postId > 0)
+            var formFiles = files?.ToList();
+            if (formFiles != null && formFiles.Any())
             {
                 var file = formFiles.First();
 
@@ -66,7 +89,7 @@ public class SummarizationsController : ControllerBase
             }
             else
             {
-                await summarizationManager.DoSimpleSummarization(postId, request.Text!, User.Identity.Name!);
+                await summarizationManager.DoSimpleSummarization(postId, request.InputText!, User.Identity.Name!);
             }
 
             await context.Database.CommitTransactionAsync();
@@ -76,16 +99,14 @@ public class SummarizationsController : ControllerBase
             await context.Database.RollbackTransactionAsync();
             throw;
         }
-
-        if (postId > 0)
-            return Ok(postId);
-        else
-            return BadRequest();
+        
+        return Ok();
     }
+
 
     [Route("download-input-by-post")]
     [HttpPost]
-    public IActionResult DownloadInputFile([FromBody]int postId)
+    public IActionResult DownloadInputFile([FromBody] int postId)
     {
         var file = summarizationManager.DownloadSummarizationInput(postId);
 
@@ -94,11 +115,12 @@ public class SummarizationsController : ControllerBase
             "application/vnd.openxmlformats-officedocument.wordprocessingml.sheet",
             file.FileName);
     }
+
     [Route("download-output-by-post")]
     [HttpPost]
-    public IActionResult DownloadOutputFile([FromBody]int postId)
+    public IActionResult DownloadOutputFile([FromBody] int postId)
     {
-        var file = summarizationManager.DownloadSummarizationInput(postId);
+        var file = summarizationManager.DownloadSummarizationOutput(postId);
 
         return File(
             file.Bytes,

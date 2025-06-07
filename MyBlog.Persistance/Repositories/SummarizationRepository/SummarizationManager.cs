@@ -57,14 +57,17 @@ public class SummarizationManager
                 CreatedAt = summarizationExisting.CreatedAt,
             };
         }
-
-        var result = await httpClient.GetSummarizationFromApi(inputText);
+        
+        //TODO! UNCOM AFT TEST
+        // var result = await httpClient.GetSummarizationFromApi(inputText);
 
         var newSum = new Summarization(new CreateSimpleSummarizationParams
         {
             InputText = inputText,
-            TopicText = result.Topic,
-            OutputSummarizedText = result.Summarized,
+            // TopicText = result.Topic,
+            TopicText = "",
+            // OutputSummarizedText = result.Summarized,
+            OutputSummarizedText = "",
             CreatedBy = user,
             PostId = postId,
             Post = post,
@@ -132,12 +135,15 @@ public class SummarizationManager
 
         foreach (var inputText in inputFileRows)
         {
-            var result = httpClient.GetSummarizationFromApi(inputText.Text).GetAwaiter().GetResult();
+            //TODO! UNCOM AFTER TEST
+            // var result = httpClient.GetSummarizationFromApi(inputText.Text).GetAwaiter().GetResult();
 
             row = sheet.CreateRow(rowIndex++);
             cellIndex = 0;
             row.CreateCell(cellIndex++).SetCellValue(inputText.Text);
-            row.CreateCell(cellIndex).SetCellValue(result.Summarized);
+            //TODO! UNCOM AFTER TEST
+            // row.CreateCell(cellIndex).SetCellValue(result.Summarized);
+            row.CreateCell(cellIndex).SetCellValue("sum");
         }
 
         using var fileStream = new FileStream(xlsxOutputPath, FileMode.Create, FileAccess.Write);

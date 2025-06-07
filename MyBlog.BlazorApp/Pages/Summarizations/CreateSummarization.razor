@@ -1,0 +1,61 @@
+@page "/create-sum/{PostId:int}"
+
+<h3>Создание суммаризаций</h3>
+
+@if (IsFileSum)
+{
+    <button class="btn btn-info my-2" @onclick="@(e => ToggleSumType())">Суммаризация текста</button>
+}
+else
+{
+    <button class="btn btn-success my-2" @onclick="@(e => ToggleSumType())">Суммаризация файлов</button>
+}
+
+<EditForm Model="_createSum" OnSubmit="HandleCreatePost">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    @if (!IsFileSum)
+    {
+        <div class="col-6 ">
+            <label class="my-2">Текст для суммаризации</label><br/>
+            <InputTextArea class="form-control" @bind-Value="_createSum.InputText"/>
+            <br/>
+        </div>
+    }
+    else
+    {
+        <InputFile class="btn btn-info my-2" accept=".xlsx" OnChange="OnInputFileChange"></InputFile>
+
+        @if (images.Any())
+        {
+            foreach (var image in images)
+            {
+                <div class="px-3">
+                    <span class="oi oi-document" aria-hidden="true">@image.Key</span>
+                    <button class="btn btn-danger" @onclick="@(e => HandleDeleteImg(image.Key))">Удалить</button>
+                </div>
+            }
+        }
+
+        @if (!IsProgressBarDisabled)
+        {
+            <div class="col-6">
+                <p>Создание суммаризации...</p>
+                <div class="progress">
+                    <div
+                        class="progress-bar" role="progressbar" style="@($"width: {ProgressBarPercent}%")"
+                        aria-valuenow="@ProgressBarPercent" aria-valuemin="0" aria-valuemax="100">@(ProgressBarPercent)%
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    <div>
+        <button type="submit" class="btn btn-primary my-2">Создать</button>
+    </div>
+    
+</EditForm>
+
+@code {
+
+}

@@ -3,10 +3,12 @@ using Microsoft.JSInterop;
 using MyBlog.BlazorApp.Models.Post;
 using MyBlog.BlazorApp.Services.Post;
 
-namespace MyBlog.BlazorApp.Pages.Posts
+namespace MyBlog.BlazorApp.Pages.Summarizations
 {
-    public partial class Post
+    public partial class Summarization
     {
+        [Inject]
+        private IJSRuntime Js { get; set; } = null!;
         [Inject]
         private IPostService postService { get; set; } = null!;
         [Inject]
@@ -47,11 +49,6 @@ namespace MyBlog.BlazorApp.Pages.Posts
             IsRendered = true;
         }
 
-        async Task AddSumAsync()
-        {
-            NavigationManager.NavigateTo($"/create-sum/{Id}");
-        }
-        
         async Task SavePostAsync()
         {
             await postService.SavePostAsync(Id);
@@ -68,6 +65,30 @@ namespace MyBlog.BlazorApp.Pages.Posts
         {
             await postService.DeletePostAsync(Id);
             NavigationManager.NavigateTo("/user");
+        }
+
+        async Task DownloadInputSummarization()
+        {
+            var fileStream = await postService.DownloadInputSummarizationAsync(Id);
+
+            if (fileStream != null)
+            {
+                using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+                await Js.InvokeVoidAsync("downloadFileFromStream", _post.InputFileName, streamRef);
+            }
+        }
+        
+        async Task DownloadOutputSummarization()
+        {
+            var fileStream = await postService.DownloadOutputSummarizationAsync(Id);
+
+            if (fileStream != null)
+            {
+                using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+                await Js.InvokeVoidAsync("downloadFileFromStream", $"Суммаризация {_post.InputFileName}", streamRef);
+            }
         }
         
         async Task EditPostAsync()
