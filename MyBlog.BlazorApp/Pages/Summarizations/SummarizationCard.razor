@@ -5,9 +5,18 @@
             <div class="p-2" style="color:black">
                 @if (_sum.IsFile)
                 {
+                    var imgName = Path.GetExtension(_sum.InputFileName) == ".xlsx" ? "xlsx.png" : "docx.png";
+                    
                     <h6 class="card-title fw-bold">Суммаризация файла</h6>
-                    <span class="oi oi-document"
-                          aria-hidden="true">@(_sum.InputFileName)</span>
+                    <div class="row">
+                        <div class="col-3 px-4">
+
+                            <img class="rounded me-2" alt="Avatar" width="40" src="img/@(imgName)">
+                        </div>
+                        <div class="col-9">
+                            <span aria-hidden="true">@(_sum.InputFileName)</span>
+                        </div>
+                    </div>
                     <br/>
                 }
                 else
