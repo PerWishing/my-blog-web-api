@@ -175,6 +175,26 @@ namespace MyBlog.BlazorApp.Services.Post
             }
         }
 
+        public async Task<ProjectSubsVm?> GetProjectSubsAsync(int postId)
+        {
+            try
+            {
+                var apiResponse = await httpClient.GetStreamAsync($"api/sum/proj-subs/{postId}");
+
+                var projectSubs = await JsonSerializer.DeserializeAsync<ProjectSubsVm>(apiResponse, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
+
+                return projectSubs;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
         public async Task<SumVm?> GetSumAsync(int sumId)
         {
             try

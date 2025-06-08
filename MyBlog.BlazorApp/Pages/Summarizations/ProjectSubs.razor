@@ -1,0 +1,26 @@
+﻿@using MyBlog.BlazorApp.Pages.Users
+<div class="p-3 mb-2 rounded my-grad-blue">
+
+    <h4>Участники проекта</h4>
+
+    <input class="form-control me-2" type="search" placeholder="Введите пользователя..." aria-label="Search"
+           @bind="@Search" @bind:event="oninput" @bind:after="PerformSearch">
+
+    @if (Usernames.Any())
+    {
+        @foreach (var username in Usernames)
+        {
+            <NavLink href="@($"user/{username}")">
+                <UserHead Username="@username"/>
+            </NavLink>
+        }
+
+        <div class="d-flex justify-content-end">
+            <span class="align-middle me-1">1 / 1</span>
+        </div>
+    }
+</div>
+
+@code {
+
+}

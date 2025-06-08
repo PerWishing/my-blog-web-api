@@ -23,7 +23,8 @@ namespace MyBlog.BlazorApp.Pages.Posts
         public string Username { get; set; } = "";
 
         public PostVm _post = new PostVm();
-
+        
+        
         protected override async Task OnParametersSetAsync()
         {
             await ResetParametersAsync();

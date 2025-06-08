@@ -35,6 +35,23 @@ public class SummarizationsController : ControllerBase
         return Ok(result);
     }
     
+    [Route("proj-subs/{postId:int}")]
+    [HttpGet]
+    public async Task<IActionResult> GetProjectSubs(int postId)
+    {
+        var result = await summarizationManager.GetProjectSubs(postId);
+        return Ok(result);
+    }
+    
+    [Route("add-proj-subs")]
+    [HttpPost]
+    public async Task<IActionResult> AddProjectSubs(
+    int postId, string username)
+    {
+        await summarizationManager.AddProjectSubs(postId, username);
+        return Ok();
+    }
+    
     [Route("create-project")]
     [HttpPost]
     public async Task<ActionResult<int>> CreateProject([FromForm] CreatePostRequest request)

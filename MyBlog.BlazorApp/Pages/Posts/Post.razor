@@ -59,6 +59,9 @@
             <button class="btn btn-outline-danger my-3" @onclick="@(() => ShowDelPop = true)">Удалить проект</button>
         }
     </div>
+    <div class="col-2 py-2">
+        <ProjectSubs PostId="@Id"/>
+    </div>
 </div>
 
 @if (ShowDelPop)

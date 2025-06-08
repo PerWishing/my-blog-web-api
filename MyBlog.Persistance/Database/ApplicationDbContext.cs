@@ -28,6 +28,7 @@ namespace MyBlog.Persistance.Database
         
         
         public DbSet<Summarization> Summarizations { get; set; }
+        public DbSet<UserSub> UserSubs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

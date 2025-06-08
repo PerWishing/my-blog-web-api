@@ -1,11 +1,11 @@
 ﻿<div class="p-3 mb-2 rounded my-grad-blue">
     @if (IsReaders)
     {
-        <h4>Readers</h4>
+        <h4>Подписчики</h4>
     }
     @if (IsFollowedUsers)
     {
-        <h4>Followed</h4>
+        <h4>Вы подписаны</h4>
     }
     <input class="form-control me-2" type="search" placeholder="Enter user..." aria-label="Search"
            @bind="@Search" @bind:event="oninput" @bind:after="PerformSearch">

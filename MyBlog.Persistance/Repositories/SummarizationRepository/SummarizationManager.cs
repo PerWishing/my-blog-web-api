@@ -3,6 +3,7 @@ using System.Reflection;
 using ExcelToEnumerable;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using MyBlog.Domain.Entities;
 using MyBlog.Domain.Entities.Summarizations;
 using MyBlog.Domain.Entities.Summarizations.Parameters;
 using MyBlog.Domain.Exceptions;
@@ -29,6 +30,27 @@ public class SummarizationManager
         this.context = context;
         this.httpClient = httpClient;
     }
+
+    public async Task<ProjectSubsDto> GetProjectSubs(int postId)
+    {
+        var posts = await context.UserSubs
+            .Where(s => s.PostId == postId)
+            .ToListAsync();
+
+        return new ProjectSubsDto
+        {
+            Usernames = posts.Select(s => s.Username).ToList()
+        };
+    }
+
+    public async Task AddProjectSubs(
+        int postId,
+        string username)
+    {
+        context.UserSubs.Add(new UserSub(username, postId));
+        await context.SaveChangesAsync();
+    }
+
 
     public async Task<SummarizationResultDto> GetSummarizationAsync(int sumId)
     {
