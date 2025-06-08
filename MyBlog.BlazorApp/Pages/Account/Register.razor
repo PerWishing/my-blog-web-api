@@ -1,23 +1,23 @@
 ﻿@page "/register"
 
-<PageTitle>Register</PageTitle>
+<PageTitle>Регистрация</PageTitle>
 
 <AuthorizeView Context="Auth">
     <Authorized>
-        <span>You're authorized successfully!</span>
+        <span>Успешная регистрация!</span>
     </Authorized>
     <NotAuthorized>
-        <h3>Register</h3>
+        <h3>Регистрация</h3>
         <EditForm id="registerForm" Model="register" OnSubmit="HandleRegister">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class='registerfield'>
-                <label>UserName</label><br />
+                <label>Имя пользователя</label><br />
                 <InputText @bind-Value="register.UserName" class="js-userRegex" /><br />
                 <ValidationMessage For="@(() => register.UserName)" />
             </div>
             <div class='registerfield'>
-                <label>Password</label><br />
+                <label>Пароль</label><br />
                 <InputText @bind-Value="register.Password" type='password' /><br />
                 <ValidationMessage For="@(() => register.Password)" />
             </div>
@@ -27,11 +27,11 @@
                 <ValidationMessage For="@(() => register.Email)" />
             </div>
             <div>
-                <a href="login">Sign In</a>
+                <a href="login">Вход</a>
             </div>
 
             <div class='registeractions'>
-                <input id="registerBtn" type="submit" class="btn btn-primary" value="Register" />
+                <input id="registerBtn" type="submit" class="btn btn-primary" value="Зарегистрироваться" />
             </div>
         </EditForm>
         @if (ErrorMessages.Any())

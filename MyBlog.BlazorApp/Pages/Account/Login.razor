@@ -2,35 +2,35 @@
 @using MyBlog.BlazorApp.Models;
 
 
-<PageTitle>Sign In</PageTitle>
+<PageTitle>Авторизация</PageTitle>
 
 <AuthorizeView Context="Auth">
     <Authorized>
-        <span>You're authorized successfully!</span>
+        <span>Успешная авторизация!</span>
     </Authorized>
     <NotAuthorized>
-        <h3>Sign In</h3>
+        <h3>Авторизация</h3>
         <EditForm id="loginForm" Model="login" OnSubmit="HandleLogin">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class='loginfield'>
-                <label>UserName</label><br />
+                <label>Имя пользователя</label><br />
                 <InputText @bind-Value="login.UserName" class="js-userRegex" /><br />
                 <ValidationMessage For="@(() => login.UserName)" />
             </div>
             <div class='loginfield'>
-                <label>Password</label><br />
+                <label>Пароль</label><br />
                 <InputText @bind-Value="login.Password" type='password' /><br />
                 <ValidationMessage For="@(() => login.Password)" />
             </div>
             <div id="valMes"></div>
 
             <div>
-                <a href="register">Register</a>
+                <a href="register">Регистрация</a>
             </div>
 
             <div class='loginactions'>
-                <button id="loginBtn" type="submit" class="btn btn-primary">Sign In</button>
+                <button id="loginBtn" type="submit" class="btn btn-primary">Вход</button>
             </div>
         </EditForm>
         @if (ErrorMessages.Any())

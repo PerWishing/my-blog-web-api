@@ -6,13 +6,13 @@
 <AuthorizeView>
     <Authorized>
             <NavLink class="nav-link" @onclick="Logout">
-            <span class="oi oi-account-logout me-2"></span>Sign Out
+            <span class="oi oi-account-logout me-2"></span>Выход
             </NavLink>
         @*<button  class="btn btn-danger">Sign Out</button>*@
     </Authorized>
     <NotAuthorized>
             <NavLink class="nav-link" @onclick="Login">
-            <span class="oi oi-account-login me-2"></span>Sign In
+            <span class="oi oi-account-login me-2"></span>Вход
             </NavLink>
         @*<button @onclick="Login" class="btn btn-primary">Sign In</button>*@
     </NotAuthorized>
