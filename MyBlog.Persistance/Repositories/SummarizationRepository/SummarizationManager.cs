@@ -10,6 +10,7 @@ using MyBlog.Persistance.Database;
 using MyBlog.Persistance.ExternalFeatures.SummarizationModelApis;
 using MyBlog.Persistance.Repositories.SummarizationRepository.Dtos;
 using NPOI.XSSF.UserModel;
+using NPOI.XWPF.UserModel;
 
 namespace MyBlog.Persistance.Repositories.SummarizationRepository;
 
@@ -48,7 +49,7 @@ public class SummarizationManager
             OutputFileName = $"Суммаризация {sum.InputFileName}"
         };
     }
-    
+
     public async Task<SummarizationSimpleResult> DoSimpleSummarization(
         int postId,
         string inputText,
@@ -61,7 +62,7 @@ public class SummarizationManager
         }
 
         var post = context.Posts.Single(p => p.Id == postId);
-        
+
         var summarizationExisting = await context.Summarizations
             .AsNoTracking()
             .Where(s => s.InputText == inputText)
@@ -77,7 +78,7 @@ public class SummarizationManager
                 CreatedAt = summarizationExisting.CreatedAt,
             };
         }
-        
+
         var result = await httpClient.GetSummarizationFromApi(inputText);
 
         var newSum = new Summarization(new CreateSimpleSummarizationParams
@@ -109,20 +110,22 @@ public class SummarizationManager
         IFormFile file,
         string userName)
     {
-        var xlsxInputPath =
-            Path.Combine(_sumFolderPath, $"{userName}_sum_input_{DateTime.Now:yymmssfff}");
-        var filename = $"{userName}_sum_output_{DateTime.Now:yymmssfff}.xlsx";
-        var xlsxOutputPath = Path.Combine(_sumFolderPath, filename);
+        var fileExtension = Path.GetExtension(file.FileName);
+
+        var fileInputPath =
+            Path.Combine(_sumFolderPath, $"{userName}_sum_input_{DateTime.Now:yymmssfff}{fileExtension}");
+        var filename = $"{userName}_sum_output_{DateTime.Now:yymmssfff}{fileExtension}";
+        var fileOutputPath = Path.Combine(_sumFolderPath, filename);
 
         var user = context.UserProfiles.Single(u => u.UserName == userName);
 
         var post = context.Posts.Single(p => p.Id == postId);
-        
+
         var newSummarization = new Summarization(new CreateFileSummarizationParams
         {
             InputFileName = file.FileName,
-            InputFilePath = xlsxInputPath,
-            OutputSummarizedFilePath = xlsxOutputPath,
+            InputFilePath = fileInputPath,
+            OutputSummarizedFilePath = fileOutputPath,
             CreatedBy = user,
             PostId = postId,
             Post = post,
@@ -131,13 +134,63 @@ public class SummarizationManager
         context.Summarizations.Add(newSummarization);
         context.SaveChanges();
 
-        using (var inputFileStream = new FileStream(xlsxInputPath, FileMode.Create, FileAccess.Write))
+        if (fileExtension == ".xlsx")
+        {
+            DoExcelSummarization(file, fileInputPath, fileOutputPath);
+        }
+
+        if (fileExtension == ".docx")
+        {
+            DoWordSummarization(file, fileInputPath, fileOutputPath);
+        }
+    }
+
+    private static void DoWordSummarization(
+        IFormFile file,
+        string fileInputPath,
+        string fileOutputPath)
+    {
+        using (var inputFileStream = new FileStream(fileInputPath, FileMode.Create, FileAccess.Write))
+        {
+            file.CopyTo(inputFileStream);
+        }
+
+        using (var fs = new FileStream(fileOutputPath, FileMode.Create, FileAccess.Write))
+        {
+            XWPFDocument doc = new XWPFDocument();
+            var p0 = doc.CreateParagraph();
+            p0.Alignment = ParagraphAlignment.CENTER;
+            XWPFRun r0 = p0.CreateRun();
+            r0.FontFamily = "microsoft yahei";
+            r0.FontSize = 18;
+            r0.IsBold = true;
+            r0.SetText("This is title");
+
+            var p1 = doc.CreateParagraph();
+            p1.Alignment = ParagraphAlignment.LEFT;
+            p1.IndentationFirstLine = 500;
+            XWPFRun r1 = p1.CreateRun();
+            r1.FontFamily = "·ÂËÎ";
+            r1.FontSize = 12;
+            r1.IsBold = true;
+            r1.SetText("This is content, content content content content content content content content content");
+
+            doc.Write(fs);
+        }
+    }
+
+    private static void DoExcelSummarization(
+        IFormFile file,
+        string fileInputPath,
+        string fileOutputPath)
+    {
+        using (var inputFileStream = new FileStream(fileInputPath, FileMode.Create, FileAccess.Write))
         {
             file.CopyTo(inputFileStream);
         }
 
         var inputFileRows =
-            xlsxInputPath.ExcelToEnumerable<TextDto>()
+            fileInputPath.ExcelToEnumerable<TextDto>()
                 .ToList();
 
         using var workbook = new XSSFWorkbook();
@@ -164,7 +217,7 @@ public class SummarizationManager
             row.CreateCell(cellIndex).SetCellValue("sum");
         }
 
-        using var fileStream = new FileStream(xlsxOutputPath, FileMode.Create, FileAccess.Write);
+        using var fileStream = new FileStream(fileOutputPath, FileMode.Create, FileAccess.Write);
         workbook.Write(fileStream);
     }
 
@@ -187,12 +240,12 @@ public class SummarizationManager
 
         return file;
     }
-    
+
     public FileDto DownloadSummarizationOutput(int sumId)
     {
         var summarization = context.Summarizations
             .Single(p => p.Id == sumId);
-        
+
         if (summarization.InputFilePath == null)
         {
             throw new BadRequestException("Нет файла суммаризации");

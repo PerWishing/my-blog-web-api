@@ -86,9 +86,9 @@ public class SummarizationsController : ControllerBase
             {
                 var file = formFiles.First();
 
-                if (Path.GetExtension(file.FileName) != ".xlsx")
+                if (Path.GetExtension(file.FileName) != ".xlsx" && Path.GetExtension(file.FileName) != ".docx")
                 {
-                    return BadRequest("Поддерживаются только xlsx файлы");
+                    return BadRequest("Поддерживаются только xlsx и docx файлы");
                 }
 
                 summarizationManager.CreateSummarizationFromFile(
