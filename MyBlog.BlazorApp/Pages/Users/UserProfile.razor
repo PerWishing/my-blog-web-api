@@ -36,14 +36,14 @@
                 @if (!IsBlocked && (IsCurrentUser || IsAdmin))
                 {
                     <div class="mb-2">
-                        <a href="upload-avatar">Upload Avatar</a>
+                        <a href="upload-avatar">Изменить аватар</a>
                     </div>
 
                     @if (!IsEditToggled)
                     {
                         <p>
-                            Info about user: @_userVm.AboutMyself
-                            <button class="btn btn-info mx-2" @onclick="@OnToggleEdit">Edit</button>
+                            Статус пользователя: @_userVm.AboutMyself
+                            <button class="btn btn-info mx-2" @onclick="@OnToggleEdit">Изменить</button>
                         </p>
                     }
                     else
@@ -57,16 +57,16 @@
                 {
                     if (IsFollowed)
                     {
-                        <p class="green-light">Followed by You</p>
-                        <button class="btn btn-danger" @onclick="@OnFollowToggle">Stop follow</button>
+                        <p class="green-light">Вы подписаны</p>
+                        <button class="btn btn-danger" @onclick="@OnFollowToggle">Отписаться</button>
                     }
                     else
                     {
-                        <button class="btn btn-success" @onclick="@OnFollowToggle">Start follow</button>
+                        <button class="btn btn-success" @onclick="@OnFollowToggle">Подписаться</button>
                     }
                     if (IsReader)
                     {
-                        <p class="blue-light">Your Reader</p>
+                        <p class="blue-light">Ваш подписчик</p>
                     }
                 }
             }
@@ -76,12 +76,12 @@
             @if (IsAuth && IsCurrentUser)
             {
                 <div class="mb-2">
-                    <a href="create-post">Create new post</a>
+                    <button class="btn btn-outline-success" @onclick="NavToProjCreateAsync">Создать новый проект</button>
                 </div>
             }
             <div>
-                <button class="btn btn-outline-primary me-2" @onclick="@(() => IsSaved=false)">User's posts</button>
-                <button class="btn btn-outline-primary" @onclick="@(() => IsSaved=true)">User's saved posts</button>
+                <button class="btn btn-outline-primary me-2" @onclick="@(() => IsSaved=false)">Проекты пользователя</button>
+                <button class="btn btn-outline-primary" @onclick="@(() => IsSaved=true)">Подписки пользователя</button>
             </div>
             <div>
                 <CascadingValue Value="@Username" Name="Username">

@@ -3,11 +3,11 @@
     <div>
         @if (!IsSaved)
         {
-            <span class="fs-4 me-1">@(Username)'s posts:</span>
+            <span class="fs-4 me-1">Проекты пользователя @(Username):</span>
         }
         else
         {
-            <span class="fs-4 me-1">@(Username)'s saved posts:</span>
+            <span class="fs-4 me-1">Подписки пользователя @(Username):</span>
         }
         <span class="fs-4 me-1">@_posts.CurrentPage / @_posts.PageCount</span>
         @if ((int)_posts.CurrentPage > 1)

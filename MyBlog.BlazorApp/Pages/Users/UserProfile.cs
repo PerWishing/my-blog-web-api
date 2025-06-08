@@ -93,6 +93,12 @@ namespace MyBlog.BlazorApp.Pages.Users
             await base.OnParametersSetAsync();
 
         }
+        
+        async Task NavToProjCreateAsync()
+        {
+            NavigationManager.NavigateTo($"/create-post");
+        }
+        
         async Task OnToggleEdit()
         {
             if (IsEditToggled)

@@ -45,12 +45,12 @@
     <div class="col-2 py-2">
         @if (IsAuth && !IsAuthor && IsSaved)
         {
-            <span class="text-success me-2">Saved post</span>
-            <button class="btn btn-outline-danger" @onclick="UnsavePostAsync">Delete from saved</button>
+            <span class="text-success me-2">Вы подписаны на проект</span>
+            <button class="btn btn-outline-danger" @onclick="UnsavePostAsync">Отписаться от проекта</button>
         }
         @if (IsAuth && !IsAuthor && !IsSaved)
         {
-            <button class="btn btn-outline-primary" @onclick="SavePostAsync">Save post</button>
+            <button class="btn btn-outline-primary" @onclick="SavePostAsync">Подписаться на проект</button>
         }
         @if (IsAuth && IsAuthor)
         {

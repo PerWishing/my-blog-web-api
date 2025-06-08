@@ -2,8 +2,8 @@
 @using MyBlog.BlazorApp.Services.User;
 @inject IJSRuntime JSRuntime;
 
-<h1>Cropper</h1>
-<h2>1. Load from file</h2>
+<h1>Загрузка аватара</h1>
+<h2>1. Загрузите изображение</h2>
 <InputFile OnChange="OnInputFileChange"></InputFile>
 @if (parsing)
 {
@@ -12,10 +12,10 @@
     </center>
 }
 <center>
-    <h2>Crop Result:</h2>
+    <h2>Аватар:</h2>
     <img id="my-img" width="180"/>
 
-    <button class="btn btn-success" disabled="@(blob == null)" @onclick="UploadHandle">Upload</button>
+    <button class="btn btn-success" disabled="@(blob == null)" @onclick="UploadHandle">Сохранить аватар</button>
 </center>
 @if (file != null)
 {
@@ -48,9 +48,9 @@
             </section>
             <footer class="modal-card-foot">
                 <div>
-                    <button class="button is-success" @onclick="DoneCrop">Done</button>
-                    <button class="button is-success" @onclick="SaveState">SaveState</button>
-                    <button class="button is-success" @onclick="RestoreState">RestoreState</button>
+                    <button class="button is-success" @onclick="DoneCrop">Готово</button>
+                    <button class="button is-success" @onclick="SaveState">Сохранить состояние</button>
+                    <button class="button is-success" @onclick="RestoreState">Убрать изменения</button>
                     <br />
                     @if (cropper != null)
                     {

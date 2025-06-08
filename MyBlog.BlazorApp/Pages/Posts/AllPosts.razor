@@ -3,12 +3,12 @@
 @page "/all-posts/{Page:int?}"
 @page "/all-posts/{Search?}/{Page:int?}"
 
-<PageTitle>All Posts</PageTitle>
+<PageTitle>Все проекты</PageTitle>
 
-<h3>All posts:</h3>
+<h3>Все проекты:</h3>
 <div class="d-flex flex-row mb-3">
     <div class="me-1" style="width:200px">
-        <input class="form-control me-2" type="search" placeholder="Enter post..." aria-label="Search"
+        <input class="form-control me-2" type="search" placeholder="Введите проект..." aria-label="Search"
                @bind="@Search" @bind:event="oninput" @bind:after="PerformSearch">
     </div>
     <div class="d-flex justify-content-end">
