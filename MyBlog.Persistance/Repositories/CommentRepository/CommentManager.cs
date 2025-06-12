@@ -87,7 +87,7 @@ namespace MyBlog.Persistance.Repositories.CommentRepository
                 {
                     Id = p.Id,
                     Text = p.Text,
-                    Date = p.Date,
+                    Date = p.Date.ToShortDateString(),
                     AuthorsName = p.Author.UserName!,
                     PostId = p.Post.Id,
                     LikesCount = await context.LikedComments.Where(x => x.CommentId == p.Id).CountAsync()

@@ -8,7 +8,7 @@
             {
                 <h5 class="text-danger">Admin</h5>
             }
-            <img src="@(_userVm.AvatarSrc)" class="rounded" /> <br />
+            <img src="@(_userVm.AvatarSrc)" class="rounded"/> <br/>
 
             @if (IsAuth)
             {
@@ -48,26 +48,34 @@
                     }
                     else
                     {
-                        <InputText @bind-Value="_userVm.AboutMyself" />
+                        <InputText @bind-Value="_userVm.AboutMyself"/>
                         <button class="btn btn-success" @onclick="@OnToggleEdit">Ok</button>
-                        <br />
+                        <br/>
                     }
                 }
+
                 @if (!IsBlocked && (!IsCurrentUser || IsAdmin))
                 {
-                    if (IsFollowed)
-                    {
-                        <p class="green-light">Вы подписаны</p>
-                        <button class="btn btn-danger" @onclick="@OnFollowToggle">Отписаться</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-success" @onclick="@OnFollowToggle">Подписаться</button>
-                    }
-                    if (IsReader)
-                    {
-                        <p class="blue-light">Ваш подписчик</p>
-                    }
+                    <div class="py-2">
+
+                        <div class="py-2">
+                            Статус пользователя: @_userVm.AboutMyself
+                        </div>
+
+                        @if (IsFollowed)
+                        {
+                            <p class="green-light">Вы подписаны</p>
+                            <button class="btn btn-danger" @onclick="@OnFollowToggle">Отписаться</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-success py-2" @onclick="@OnFollowToggle">Подписаться</button>
+                        }
+                        @if (IsReader)
+                        {
+                            <p class="blue-light">Ваш подписчик</p>
+                        }
+                    </div>
                 }
             }
         </div>
@@ -76,17 +84,21 @@
             @if (IsAuth && IsCurrentUser)
             {
                 <div class="mb-2">
-                    <button class="btn btn-outline-success" @onclick="NavToProjCreateAsync">Создать новый проект</button>
+                    <button class="btn btn-outline-success" @onclick="NavToProjCreateAsync">Создать новый проект
+                    </button>
                 </div>
             }
+
             <div>
-                <button class="btn btn-outline-primary me-2" @onclick="@(() => IsSaved=false)">Проекты пользователя</button>
-                <button class="btn btn-outline-primary" @onclick="@(() => IsSaved=true)">Подписки пользователя</button>
+                <button class="btn btn-outline-primary me-2" @onclick="@(() => IsSaved = false)">Проекты пользователя
+                </button>
+                <button class="btn btn-outline-primary" @onclick="@(() => IsSaved = true)">Подписки пользователя
+                </button>
             </div>
             <div>
                 <CascadingValue Value="@Username" Name="Username">
                     <CascadingValue Value="@IsSaved" Name="IsSaved">
-                        <MyBlog.BlazorApp.Pages.Posts.UserPosts />
+                        <MyBlog.BlazorApp.Pages.Posts.UserPosts/>
                     </CascadingValue>
                 </CascadingValue>
             </div>
@@ -98,13 +110,13 @@
 
             <CascadingValue Value="@Username" Name="Username">
                 <CascadingValue Value="@yes" Name="IsReaders">
-                    <ReadersOrFollowed @ref="childReaders" />
+                    <ReadersOrFollowed @ref="childReaders"/>
                 </CascadingValue>
             </CascadingValue>
 
             <CascadingValue Value="@Username" Name="Username">
                 <CascadingValue Value="@yes" Name="IsFollowedUsers">
-                    <ReadersOrFollowed />
+                    <ReadersOrFollowed/>
                 </CascadingValue>
             </CascadingValue>
         </div>

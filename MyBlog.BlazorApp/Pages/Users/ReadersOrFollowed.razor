@@ -5,7 +5,7 @@
     }
     @if (IsFollowedUsers)
     {
-        <h4>Вы подписаны</h4>
+        <h4>Подписки</h4>
     }
     <input class="form-control me-2" type="search" placeholder="Введите пользователя..." aria-label="Search"
            @bind="@Search" @bind:event="oninput" @bind:after="PerformSearch">

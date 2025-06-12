@@ -77,6 +77,16 @@
     </div>
 </div>
 
+
+@if (IsRendered)
+{
+    <CascadingValue Value="@(IsAuth)" Name="IsAuth">
+        <CascadingValue Value="@(Username)" Name="Username">
+            <MyBlog.BlazorApp.Pages.Comments.Comments PostId="@Id"/>
+        </CascadingValue>
+    </CascadingValue>
+}
+
 <script>
     window.downloadFileFromStream = async (fileName, contentStreamReference) => {
         const arrayBuffer = await contentStreamReference.arrayBuffer();

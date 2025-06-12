@@ -12,7 +12,7 @@ namespace MyBlog.Persistance.Repositories.UserRepository
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ApplicationDbContext context;
-        private readonly float pageResults = 4f;
+        private readonly float pageResults = 6f;
 
         public UserManager(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
