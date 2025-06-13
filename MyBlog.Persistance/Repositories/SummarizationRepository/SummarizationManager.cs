@@ -65,6 +65,7 @@ public class SummarizationManager
             IsFile = sum.InputFilePath != null,
             CreatedAt = sum.CreatedAt.ToShortDateString(),
             CreatedBy = sum.Author.UserName,
+            TopicText = sum.TopicText,
             InputText = sum.InputText,
             OutputText = sum.OutputSummarizedText,
             InputFileName = sum.InputFileName,

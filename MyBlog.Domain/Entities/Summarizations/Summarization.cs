@@ -14,6 +14,8 @@ public class Summarization
         InputText = parameters.InputText;
         OutputSummarizedText = parameters.OutputSummarizedText;
         
+        TopicText = parameters.TopicText;
+        
         Author = parameters.CreatedBy;
         
         CreatedAt = DateTime.Now;

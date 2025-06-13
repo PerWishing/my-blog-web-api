@@ -7,6 +7,9 @@ public class SummarizationResultDto
     public bool IsFile { get; set; }
     public string CreatedAt { get; set; }
     public string CreatedBy { get; set; }
+    
+    public string? TopicText { get; set; }
+    
     public string? InputText { get; set; }
     public string? OutputText { get; set; }
     
